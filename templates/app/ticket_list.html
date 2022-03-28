@@ -1,0 +1,73 @@
+
+{% extends 'base.html' %}
+{% load cms_tags %}
+{% load cache %}
+{% load static %}
+{% block title %} {{ title }} · {{ block.super }} {% endblock title %}
+{% block content %}  
+
+{% cache 500 ticket_list%}
+
+{% block extrajs %}
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.11.5/r-2.2.9/datatables.min.css"/>
+ 
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.11.5/r-2.2.9/datatables.min.js"></script>
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+{% endblock %}
+
+
+<script type="text/javascript" charset="utf-8">
+  $(document).ready(function() {
+      $('#table-ajax').dataTable(
+
+      
+      );
+
+   } );
+</script>
+{%endcache%}
+
+{% comment %} <nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'app:home' %}">Home</a></li>
+    <li class="breadcrumb-item active" aria-current="page">{{ title }}</li>
+  </ol>
+</nav>   {% endcomment %}
+
+{% block table %}
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
+    <h2 class="h2"><span class="text-primary"> {{ title }}</span></h2>
+  {% if request.user.is_superuser and request.user.is_staff %}
+    <div class="btn-toolbar mb-2 mb-md-0">
+      <a class="btn btn-sm btn-outline-primary ajax-load-form" href="{% get_object_url 'create' %}">
+      <i class="fas fa-plus"></i> Create {{ model_verbose_name }}</a>
+    </div>
+  {% endif %}
+    
+
+</div>
+<div class="table-responsive">
+
+<table class="table table-hover table-responsive" id="table-ajax" >
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>{{ object_list|verbose_name:'field:title' }}</th>
+      <th>{{ object_list|verbose_name:'field:ticket_choices' }}</th>
+      <th>{{ object_list|verbose_name:'field:date_sent' }}</th>
+      <th>{{ object_list|verbose_name:'field:sent_by' }}</th>
+      <th>{{ object_list|verbose_name:'field:assigned_to' }}</th>
+      <th style="width: 50px; text-align: center;">Files</th>
+
+      <th style="width: 160px; text-align: center;">Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% include 'app/partials/ticket_list_partial.html' %}
+  </tbody>
+</table>
+
+</div>
+{% endblock table %}
+{% endblock %}

@@ -1,0 +1,37 @@
+{% load cms_tags %}
+{% for ticket in object_list %}
+<tr id="{{ ticket.pk }}">
+    <td>{{ ticket.pk }}</td>
+    <td><a href="{% get_object_url 'detail' ticket %}" class="border-0 ajax-load-form" title="View">
+        {{ ticket.title }}</a></td>
+    <td>{{ ticket.get_ticket_choices_display }}</td>
+    <td>{{ ticket.date_sent}}</td>
+    <td>{{ ticket.sent_by }}</td>
+        <td >
+            <ul style="list-style-type: none;padding: 0;margin: 0;">
+                {% for users in ticket.assigned_to.all %}
+                <li>{{users}}</li>
+                {% endfor %}
+                </ul>
+        </td>
+
+    <td style="text-align: center;">
+        <a href="{% url 'app:file-list' ticket.pk %}" class="btn btn-outline-success btn-sm border-0" title="Files">
+            <i class="fa fa-copy"></i></a></td>
+       <td style="text-align: center;">
+        
+        <a href="{% url 'app:comment-list' ticket.pk %}" class="btn btn-outline-primary btn-sm border-0" title="Comments">
+                <i class="fa fa-comment"></i></a>
+
+            {% if request.user.is_staff and request.user.is_superuser %}
+
+        <a href="{% get_object_url 'update' ticket %}" class="btn btn-outline-info btn-sm border-0 ajax-load-form" title="Edit">
+            <i class="fa fa-edit"></i></a>
+        <a href="{% get_object_url 'delete' ticket %}" class="btn btn-outline-danger btn-sm border-0 ajax-load-form" title="Delete">
+            <i class="fa fa-trash-alt"></i></a>
+            {% endif %}
+    </td>
+    
+</tr>
+
+{% endfor %}

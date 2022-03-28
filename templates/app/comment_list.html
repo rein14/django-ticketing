@@ -1,0 +1,38 @@
+{% extends 'app/ticket_list.html' %}
+{% load cms_tags %}
+{% load static %}
+{% block title %} {{ title }} · {{ block.super }} {% endblock title %}
+ 
+
+
+
+{% block table %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'app:home' %}">Home</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'app:ticket-list' %}">Tickets</a></li>
+    <li class="breadcrumb-item active" aria-current="page">{{ title }}</li>
+  </ol>
+</nav> 
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
+    <h2 class="h2"><span class="text-primary"> {{ title }}</span></h2>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <a class="btn btn-sm btn-outline-primary ajax-load-form" href="{% get_object_url 'create' %}">
+        <i class="fas fa-plus"></i> Add {{ model_verbose_name }}</a>
+    </div>
+</div>
+<table class="table table-hover" id="table-ajax">
+  <thead class="thead-light">
+    <tr>
+      <th>{{ object_list|verbose_name:'field:user' }}</th>
+       <th>{{ object_list|verbose_name:'field:comment' }}</th>
+      <th>{{ object_list|verbose_name:'field:created' }}</th>
+      <th style="width: 160px; text-align: center;">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% include 'app/partials/comment_list_partial.html' %}
+  </tbody>
+</table>
+{% endblock table %}
+ 

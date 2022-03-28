@@ -1,0 +1,73 @@
+<nav id="sidebar">
+<div class="sidebar-top">
+    <div class="sidebar-header">
+    <h3>Document Ticketing</h3>
+    </div>
+
+    {% block navbar %}
+    <ul class="list-unstyled components">
+        <li {% if request.path == '/inbox/' %} class="active"{% endif %}> 
+            <a href="{% url 'app:home' %}">Inbox</a>
+        </li>
+        <li {% if request.path == '/tickets/' %} class="active"{% endif %}>
+            <a href="{% url 'app:home' %}">All Tickets <span
+                    class="sr-only">(current)</span></a>
+        </li>
+        {% comment %} <li>
+            <a href="#">Assigned</a>
+        </li> {% endcomment %}
+        
+
+        <li>
+            <li {% if request.path == '/completed/' %} class="active"{% endif %}> 
+
+            <a href="{% url 'app:completed-tickets' %}">Completed Tickets</a>
+        </li>
+        
+        
+       
+    </ul>
+    
+
+    {% if request.user.is_staff and request.user.is_superuser %}
+    <ul class="list-unstyled components">
+        
+        <li {% if request.path == '/unassigned/' %} class="active"{% endif %}> 
+
+            <a href="{% url 'app:unassigned-list' %}">Unassigned Tickets</a>
+        </li>
+        <li {% if request.path == '/opentickets/' %} class="active"{% endif %}> 
+
+            <a href="{% url 'app:open-tickets' %}">Open Tickets</a>
+        </li>
+        <li {% if request.path == '/archive/' %} class="active"{% endif %}> 
+            <a href="{% url 'app:ticket-archive' %}">Archive</a>
+        </li>
+    </ul>
+    {% comment %} <div class="sidebar-space"></div> {% endcomment %}
+    
+     {% endif %}
+</div>
+    <ul class="list-unstyled components2">
+        <li>
+                    <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Pages</a>
+                    <ul class="collapse list-unstyled" id="pageSubmenu">
+                        <li>
+                            <a href="#">Page 1</a>
+                        </li>
+                        <li>
+                            <a href="#">Page 2</a>
+                        </li>
+                        <li>
+                            <a href="#">Page 3</a>
+                        </li>
+                    </ul>
+                </li>
+        <li {% if request.path == '/account/password_reset/' %} class="active"{% endif %}> 
+            <a href="{% url 'password_reset'%}">Change Password</a>
+        </li>
+      
+    </ul>
+    {% endblock %}
+
+</nav>

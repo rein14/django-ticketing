@@ -1,0 +1,19 @@
+{% load cms_tags %}
+{% for comment in object_list %}
+<tr id="{{ comment.pk }}">
+    <td>{{ comment.user }}</td>
+    <td><a href="{% get_object_url 'detail' comment %}" class="border-0 ajax-load-form" title="View">
+        {{ comment.comment }}</a></td>
+     <td>{{ comment.created|date:'M. d, Y' }}</td>
+    <td style="text-align: center;">
+        
+        <a href="{% get_object_url 'update' comment %}" class="btn btn-outline-info btn-sm border-0 ajax-load-form" title="Edit">
+            <i class="fa fa-edit"></i></a>
+        <a href="{% get_object_url 'delete' comment %}" class="btn btn-outline-danger btn-sm border-0 ajax-load-form" title="Delete">
+            <i class="fa fa-trash-alt"></i></a>
+        
+    </td>
+</tr>
+
+{% endfor %}
+
