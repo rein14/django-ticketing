@@ -37,10 +37,10 @@
 {% block table %}
 
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
-    <h2 class="h2"><span class="text-primary"> {{ title }}</span></h2>
+    <h3 class="h3"><span class="text-primary"> {{ title }}</span></h3>
   {% if request.user.is_superuser and request.user.is_staff %}
     <div class="btn-toolbar mb-2 mb-md-0">
-      <a class="btn btn-sm btn-outline-primary ajax-load-form" href="{% get_object_url 'create' %}">
+      <a class="btn btn-sm btn-primary ajax-load-form" href="{% get_object_url 'create' %}">
       <i class="fas fa-plus"></i> Create {{ model_verbose_name }}</a>
     </div>
   {% endif %}
@@ -60,7 +60,7 @@
       <th>{{ object_list|verbose_name:'field:assigned_to' }}</th>
       <th style="width: 50px; text-align: center;">Files</th>
 
-      <th style="width: 160px; text-align: center;">Action</th>
+      <th style="width: 160px; text-align: center;">Actions</th>
     </tr>
   </thead>
   <tbody>

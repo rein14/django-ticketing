@@ -18,6 +18,7 @@ from django.urls import path, include
 from django.conf import settings
 
 urlpatterns = [
+    path('', include('pwa.urls')),
     path("select2/", include("django_select2.urls")),
     path('', include('django.contrib.auth.urls')),
 

@@ -8,7 +8,7 @@ from cms.views import CoreListView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.views.generic.list import ListView
-
+from account.models import User
 
 @login_required
 def home(request):
@@ -48,12 +48,13 @@ class UnassignedTickets(LoginRequiredMixin, CoreListView):
     model = Ticket
 
     def get_queryset(self):
-        return Ticket.objects.filter(assigned_to=self.request.user)
+        users = User.objects.all()
+        return Ticket.objects.all().exclude(assigned_to__in=users)
 
     def get_context_data(self, *args, **kwargs):
         context = super(UnassignedTickets, self).get_context_data(
             *args, **kwargs)
-        new_context_entry = "Unassigned"
+        new_context_entry = "Unassigned Tickets"
         context["title"] = new_context_entry
         return context
 
