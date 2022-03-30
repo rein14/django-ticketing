@@ -1,7 +1,8 @@
 {% load cms_tags %}
 {% for ticket in object_list %}
 <tr id="{{ ticket.pk }}">
-    <td>{{ ticket.pk }}</td>
+    <td><a href="{% get_object_url 'detail' ticket %}" class="border-0 ajax-load-form" title="View">
+        {{ ticket.pk }}</a></td>
     <td><a href="{% get_object_url 'detail' ticket %}" class="border-0 ajax-load-form" title="View">
         {{ ticket.title }}</a></td>
     <td>{{ ticket.get_ticket_choices_display }}</td>
