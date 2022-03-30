@@ -2,11 +2,13 @@ from django import forms
 from .models import Ticket, Comment, File
 from bootstrap_datepicker_plus import DatePickerInput
 from cms.forms import BootstrapHelperForm
-#from django_select2 import forms as s2forms
+# from django_select2 import forms as s2forms
+
 
 # class TicketWidget(s2forms.ModelSelect2MultipleWidget):
 #     search_fields = [
-#          "assigned_to__icontains",
+#          "username__icontains",
+#          "email__icontains",
 #     ]
 
 class TicketForm(BootstrapHelperForm, forms.ModelForm):
@@ -16,7 +18,7 @@ class TicketForm(BootstrapHelperForm, forms.ModelForm):
                   'assigned_to', 'sent_by')
         widgets = {
             'date_sent': DatePickerInput(format='%Y-%m-%d'),
-            #'assigned_to' : TicketWidget,
+            #'assigned_to': TicketWidget,
         }
 
 

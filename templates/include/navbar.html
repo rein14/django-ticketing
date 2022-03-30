@@ -49,9 +49,19 @@
      {% endif %}
 </div>
     <ul class="list-unstyled components2">
-        <li {% if request.path == '/account/password_reset/' %} class="active"{% endif %}> 
-            <a href="{% url 'password_reset'%}">Change Password</a>
+        <li>
+            <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Account</a>
+            <ul class="collapse list-unstyled" id="pageSubmenu">
+                <li>
+                    <a href="#">Profile</a>
+                </li>
+                <li {% if request.path == '/account/password_reset/' %} class="active"{% endif %}> 
+                    <a href="{% url 'password_reset'%}">Change Password</a>
+                </li>
+            </ul>
         </li>
+        
+        
       
     </ul>
     {% endblock %}
