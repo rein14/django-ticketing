@@ -33,7 +33,7 @@
         {% endfor %}
         
         {% for field in form.visible_fields %}
-        <div class="form-group">
+        <div class="form-group mb-3">
             <label for="{{ field.id_for_label }}">{{ field.label }}{% if field.field.required %}<span
                     class="text-danger ml-1">*</span>{% endif %}</label>
             {% with WIDGET_ERROR_CLASS='is-invalid' %}
