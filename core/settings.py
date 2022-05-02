@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
     'account',
     'cms',
@@ -53,6 +54,8 @@ MIDDLEWARE = [
     'django.middleware.gzip.GZipMiddleware',
 
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
+
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -215,6 +218,10 @@ STATICFILES_DIRS = [Path(BASE_DIR).joinpath('static')]
 MEDIA_URL = '/media/'
 
 MEDIA_ROOT = Path(BASE_DIR).joinpath('media')
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+WHITENOISE_MAX_AGE = 31536000
 
 # Bootstrap 4 message tags and class.
 from django.contrib import messages
