@@ -14,7 +14,7 @@ from pathlib import Path
 
 import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 # Quick-start development settings - unsuitable for production
@@ -60,9 +60,7 @@ DJANGO_NOTIFICATIONS_CONFIG = { 'USE_JSONFIELD': True}
 # ]
 
 MIDDLEWARE = [
-    'django.middleware.gzip.GZipMiddleware',
-    #"debug_toolbar.middleware.DebugToolbarMiddleware",
-
+    # 'django.middleware.gzip.GZipMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
 
@@ -103,7 +101,7 @@ WSGI_APPLICATION = 'core.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
 
