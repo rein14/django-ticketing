@@ -1,1 +1,1 @@
-web: gunicorn demotick.wsgi
+web: gunicorn core.wsgi
