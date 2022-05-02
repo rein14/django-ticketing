@@ -23,7 +23,7 @@
 
      
 
-        {% comment %} <li class="nav-item dropdown me-2">
+        <li class="nav-item dropdown me-2">
 
 
           <a class="nav-link text-primary notification dropdown-toggle"
@@ -35,7 +35,7 @@
           <div class="dropdown-menu dropdown-menu-lg dropdown-menu-center mt-2 py-0">
 
             {% for notification in  user.notifications.unread|slice:"0:5" %}
-            {% live_notify_list list_class="dropdown-menu" %}
+            {% comment %} {% live_notify_list list_class="dropdown-menu" %} {% endcomment %}
 
             <div class="list-group list-group-flush">
                <a href="#" class="list-group-item list-group-item-action border-bottom">
@@ -62,7 +62,7 @@
           </div>
           
         </li>
-         {% endcomment %}
+        
         <li class="nav-item dropdown ms-lg-3">
           <a class="nav-link dropdown-toggle pt-1 px-0" href="/" role="button" data-bs-toggle="dropdown"
             aria-expanded="false">
