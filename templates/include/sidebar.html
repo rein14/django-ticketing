@@ -12,7 +12,7 @@
 </nav>
 
 <nav id="sidebarMenu" class="sidebar d-lg-block bg-gray-800 text-white collapse" data-simplebar>
-<div class="sidebar-inner px-4 pt-3">
+<div class="sidebar-inner px-4 pt-3" >
   <div class="user-card d-flex d-md-none align-items-center justify-content-between justify-content-md-center pb-4">
     <div class="d-flex align-items-center">
       
@@ -26,7 +26,8 @@
     </div>
   </div>
 
-  <ul class="nav flex-column pt-3 pt-md-0">
+  <ul class="nav flex-column pt-3 pt-md-0" style='height: 95vh; justify-content: space-between;'>
+  <div>
     <li class="nav-item">
       <a href="/" class="nav-link d-flex align-items-center">
       
@@ -66,7 +67,7 @@
  {% endif %}
 
     {% if request.user.is_cleared %}
- 
+
     <li role="separator" class="dropdown-divider mt-4 mb-3 border-gray-700"></li>
    
     <li class="nav-item {% if request.path == '/tickets/' %} active {% endif %} ">
@@ -146,9 +147,12 @@
 
     {% endif %}
     {% cache 500 logout%}
-
     <li role="separator" class="dropdown-divider mt-4 mb-3 border-gray-700"></li>
-
+  </div>
+  
+  <div>
+    
+    <li role="separator" class="dropdown-divider mt-4 mb-3 border-gray-700"></li>
     <li class="nav-item">
       <a href="{% url 'account:logout' %}" class="nav-link">
           <span class="sidebar-icon"><span class="fas fa-sign-out-alt text-danger me-2"></span></span>
@@ -156,7 +160,7 @@
       </a>
   </li>
   {% endcache %}
-
+</div>
   </ul>
 
  
