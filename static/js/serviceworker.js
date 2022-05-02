@@ -9,7 +9,7 @@ var filesToCache = [
     '/static/assets/js/umd/popper.min.js',
     '/static/assets/js/bootstrap.min.js',
     '/static/assets/js/smooth-scroll.polyfills.min.js',
-    '/static/assets/js/dist/sweetalert2.all.min.js',
+    '/static/assets/js/sweetalert2.all.min.js',
     '/static/assets/js/simplebar.min.js',
     '/static/assets/js/datepicker.min.js',
     'https://buttons.github.io/buttons.js',
