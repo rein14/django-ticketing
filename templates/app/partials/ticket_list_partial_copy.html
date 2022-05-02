@@ -6,15 +6,8 @@
     <td><a href="{% url 'app:ticket-detail' ticket.pk%}"class="border-0 ajax-load-form" title="View details">
         {{ ticket.title }}</a></td>
     <td>
-
-        {% if ticket.get_ticket_choices_display == "Pending" %}
-        <span class="text-danger">Pending</span>
-        {% elif ticket.get_ticket_choices_display == "Done" %}
-        <span class="text-success">Done</span>
-        {% else %}
-        {{ ticket.status }}
-        {% endif %}
-
+        {{ ticket.get_ticket_choices_display}}
+ 
     </td>
     {% comment %} <td class="one">{{ ticket.folder }}</td> {% endcomment %}
 
