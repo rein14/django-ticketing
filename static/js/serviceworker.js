@@ -6,7 +6,7 @@ var filesToCache = [
 
     'https://code.jquery.com/jquery-3.6.0.min.js',
     '/static/assets/js/on-screen.umd.min.js',
-    '/static/assets/js/umd/popper.min.js',
+    '/static/assets/js/popper.min.js',
     '/static/assets/js/bootstrap.min.js',
     '/static/assets/js/smooth-scroll.polyfills.min.js',
     '/static/assets/js/sweetalert2.all.min.js',
