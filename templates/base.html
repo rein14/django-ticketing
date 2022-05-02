@@ -31,10 +31,10 @@
 <meta name="theme-color" content="#ffffff">
 
  
-<link type="text/css" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.css" rel="stylesheet">
+<link type="text/css" href="/static/assets/vendor/sweetalert2/dist/sweetalert2.min.css" rel="stylesheet">
 
-<link type="text/css" href="https://cdn.jsdelivr.net/npm/notyf@3.10.0/notyf.min.css" rel="stylesheet">
-<link type="text/css" href="{% static 'assets/css/volt.css" rel="stylesheet' %}">
+<link type="text/css" href="/static/assets/vendor/notyf/notyf.min.css" rel="stylesheet">
+<link type="text/css" href="/static/assets/css/volt.css" rel="stylesheet">
 
 <link type="text/css" href="https://appsrv1-147a1.kxcdn.com/volt-dashboard-pro-v131/vendor/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
  
@@ -106,7 +106,6 @@
       {% include 'include/navigation.html' %}
 
       {% block content %}{% endblock content %}     
-      {% cache 500 footer%}
       <footer class="bg-white d-none rounded shadow p-5 mb-4 mt-4">
         <div class="row">
             <div class="col-12 col-md-4 col-xl-6 mb-4 mb-md-0">
@@ -125,7 +124,6 @@
             </div>
         </div>
     </footer>
-    {% endcache%}
       {% include 'cms/modal/modal.html' %}
 
     </main>
