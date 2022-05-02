@@ -1,134 +1,61 @@
-<!--
-
-=========================================================
-* Volt Free - Bootstrap 5 Dashboard
-=========================================================
-
-* Product Page: https://themesberg.com/product/admin-dashboard/volt-bootstrap-5-dashboard
-* Copyright 2021 Themesberg (https://www.themesberg.com)
-* License (https://themesberg.com/licensing)
-
-* Designed and coded by https://themesberg.com
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software. Please contact us to request a removal.
--->
 
 {% load static %}
-{% load cache %}
-{% load pwa %}
-{% load webpush_notifications %}
+{% load notifications_tags %}
+<!-- Core -->
 
-<!DOCTYPE html>
-<html lang="en">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.2/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
 
-<head> 
-  {% progressive_web_app_meta %}
-  {% webpush_header %}
+<!-- Vendor Jon-screen.umd.min.jsS -->
+<script src="https://cdn.jsdelivr.net/npm/onscreen@1.4.0/dist/on-screen.umd.min.js"></script>
 
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<!-- Primary Meta Tags -->
+<!-- Slider -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.6.0/nouislider.min.js"></script>
 
-<title>
-    Ticketing- {% block title %}{% endblock %}
-</title>
+<!-- Smooth scroll -->
+<script src="https://cdn.jsdelivr.net/npm/smoothscroll-polyfill@0.4.4/dist/smoothscroll.min.js"></script>
 
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link rel="apple-touch-icon" sizes="120x120" href="/static/assets/img/favicon/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="32x32" href="/static/assets/img/favicon/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="/static/assets/img/favicon/favicon-16x16.png">
-<link rel="manifest" href="/static/assets/img/favicon/site.webmanifest">
-<link rel="mask-icon" href="/static/assets/img/favicon/safari-pinned-tab.svg" color="#ffffff">
-<meta name="msapplication-TileColor" content="#ffffff">
-<meta name="theme-color" content="#ffffff">
+<!-- Charts -->
+{% comment %} <script src="/static/js/chartist/dist/chartist.min.js"></script>
+<script src="/static/js/chartist-plugin-tooltips/dist/chartist-plugin-tooltip.min.js"></script> {% endcomment %}
 
-<link type="text/css" href="/static/assets/vendor/sweetalert2/dist/sweetalert2.min.css" rel="stylesheet">
+<!-- Datepicker -->
+{% comment %} <script src="/static/js/vanillajs-datepicker/dist/js/datepicker.min.js"></script> {% endcomment %}
 
-<link type="text/css" href="/static/assets/vendor/notyf/notyf.min.css" rel="stylesheet">
-<link type="text/css" href="/static/assets/css/volt.css" rel="stylesheet">
+<!-- Sweet Alerts 2 -->
+<script src="/static/assets/js/sweetalert2.all.min.js"></script>
 
-<link type="text/css" href="https://appsrv1-147a1.kxcdn.com/volt-dashboard-pro-v131/vendor/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+<!-- Moment JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/moment.min.js"></script>
 
-<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.12/css/select2.min.css" type="text/css" media="screen" rel="stylesheet">
-<link href="{% static 'django_select2/django_select2.css' %}" type="text/css" media="screen" rel="stylesheet">
-  <!-- Bootstrap Js CDN --> 
+<!-- Vanilla JS Datepicker -->
+<script src="/static/js/datepicker.min.js"></script>
 
-<!-- Specific Page JS goes HERE  -->    
-{% block extracss %}
+<!-- Notyf -->
+<script src="/static/assets/js/notyf.min.js"></script>
 
-{% endblock  %}
+<!-- Simplebar -->
+<script src="/static/assets/js/simplebar.min.js"></script>
+
+<!-- Github buttons -->
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+
+<!-- Volt JS -->
+<script src="{% static 'notifications/notify.js' %}" type="text/javascript"></script>
+
+<script src="/static/assets/js/volt.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"
+integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.12/js/select2.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+
+<script src="{% static 'django_select2/django_select2.js' %} "></script>
+<script src="{% static 'bootstrap_datepicker_plus/js/datepicker-widget.js' %} "></script>
+<script src="{% static 'cms/js/ajax.js' %}"></script>
 
 
-
-<style>
-  .pb-z {
-    padding-bottom: 11px !important;
-  }
-
-  .select2-container{
-    width: 100%!important;
-    }
-    .select2-search--dropdown .select2-search__field {
-    width: 98%;
-    }
- 
-.float{
-    width: 30px;
-  height: 30px;
-  padding: 6px 0px;
-  border-radius: 15px;
-  font-size: 15px;
-  text-align: center;
-  background-color: #dbdddf1c;
-  color: #19202a;
-}
-
-.btn-upgrade-pro {
-  position: fixed;
-  bottom: 15px;
-  right: 100px;
-   width: 150px;
-}
-  .notification {
-    color: white;
-    text-decoration: none;
-    padding: 15px 26px;
-    position: relative;
-    display: inline-block;
-    border-radius: 2px;
-  }
-   
-  .notification .badge {
-    position: absolute;
-    top: 0px;
-    right:-3px;
-    padding: 5px 10px;
-    color: white;
-  }
- </style>
- 
-</head>
-<body>
-{% block sidebar %}
-    {% include 'include/sidebar.html' %}
-{% endblock sidebar %}
-
-    <main class="content">
-  
-
-{% block navigation %}
-      {% include 'include/navigation.html' %}
-{% endblock navigation %}
-      {% block content %}{% endblock content %}     
-
-      {% include 'cms/modal/modal.html' %}
-
-    </main>
-  {% include 'include/scripts.html' %}
-    
-  <!-- Specific Page JS goes HERE  -->
-  {% block extrajs %}{% endblock  %}  
-
-</body>
-</html>
+ {% comment %} <script src="{% static 'js/notifications.js' %}" type="text/javascript"></script>     {% endcomment %}
+{% load notifications_tags %}
+{% register_notify_callbacks callbacks='fill_notification_badge,my_special_notification_callback' %} 
