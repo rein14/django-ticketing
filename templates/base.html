@@ -8,9 +8,6 @@
 {% load pwa %}
 {% load webpush_notifications %}
 
-{% load notifications_tags %}
-
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -34,9 +31,9 @@
 <meta name="theme-color" content="#ffffff">
 
  
-<link type="text/css" href="/static/assets/sweetalert2/dist/sweetalert2.min.css" rel="stylesheet">
+<link type="text/css" href="/static/assets/vendor/sweetalert2/dist/sweetalert2.min.css" rel="stylesheet">
 
-<link type="text/css" href="/static/assets/notyf/notyf.min.css" rel="stylesheet">
+<link type="text/css" href="/static/assets/vendor/notyf/notyf.min.css" rel="stylesheet">
 <link type="text/css" href="/static/assets/css/volt.css" rel="stylesheet">
 
 <link type="text/css" href="https://appsrv1-147a1.kxcdn.com/volt-dashboard-pro-v131/vendor/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
@@ -129,70 +126,14 @@
         </div>
     </footer>
     {% endcache %}
+      {% include 'cms/modal/modal.html' %}
 
     </main>
     {% endblock body %}
-
-
-<!-- Core -->
-
-<script src="{% static 'assets/@popperjs/core/dist/umd/popper.min.js' %}"></script>
-<script src="{% static 'assets/bootstrap/dist/js/bootstrap.min.js' %}"></script>
-<script src="{% static 'assets/js/volt.js' %}"></script>
-
-<!-- Vendor JS -->
-<script src= "{% static 'assets/onscreen/dist/on-screen.umd.min.js' %}" ></script>
-
-<!-- Slider -->
-<script src="{% static 'assets/nouislider/distribute/nouislider.min.js'%}"></script>
-
-<!-- Smooth scroll -->
-<script src="{% static 'assets/smooth-scroll/dist/smooth-scroll.polyfills.min.js' %}"></script>
-
-<!-- Charts -->
-{% comment %} <script src="/static/assets/vendor/chartist/dist/chartist.min.js"></script>
-<script src="/static/assets/vendor/chartist-plugin-tooltips/dist/chartist-plugin-tooltip.min.js"></script> {% endcomment %}
-
-<!-- Datepicker -->
-{% comment %} <script src="/static/assets/vendor/vanillajs-datepicker/dist/js/datepicker.min.js"></script> {% endcomment %}
-
-<!-- Sweet Alerts 2 -->
-<script src= "{% static 'assets/sweetalert2/dist/sweetalert2.all.min.js' %}"></script>
-
-<!-- Moment JS -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/moment.min.js"></script>
-
-<!-- Vanilla JS Datepicker -->
-<script src="{% static 'assets/vanillajs-datepicker/dist/js/datepicker.min.js' %}"></script>
-
-<!-- Notyf -->
-
-<!-- Simplebar -->
-<script src="{% static 'assets/simplebar/dist/simplebar.min.js' %}"></script>
-
-<!-- Github buttons -->
-<script async defer src="https://buttons.github.io/buttons.js"></script>
-
-<!-- Volt JS -->
-<script src="{% static 'notifications/notify.js' %}" type="text/javascript"></script>
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"
-integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.12/js/select2.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
-
-<script src="{% static 'django_select2/django_select2.js' %} "></script>
-<script src="{% static 'bootstrap_datepicker_plus/js/datepicker-widget.js' %} "></script>
-<script src="{% static 'cms/js/ajax.js' %}"></script>
-
-
- {% comment %} <script src="{% static 'js/notifications.js' %}" type="text/javascript"></script>     {% endcomment %}
- {% comment %} {% register_notify_callbacks callbacks='fill_notification_badge,my_special_notification_callback' %}      {% endcomment %}
+  {% include 'include/scripts.html' %}
+    
   <!-- Specific Page JS goes HERE  -->
   {% block extrajs %}{% endblock  %}  
-  {% include 'cms/modal/modal.html' %}
 
 </body>
 </html>
