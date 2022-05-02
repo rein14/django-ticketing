@@ -34,11 +34,11 @@ var filesToCache = [
     '/static/js/jquery-fileupload/jquery.fileupload.js',
     '/static/js/jquery-fileupload/jquery.iframe-transport.js',
     '/static/js/jquery-fileupload/jquery.ui.widget.js',
-    '/static/account/css/signin.css',
+    // '/static/account/css/signin.css',
     'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap',
     '/static/django_select2/django_select2.css',
     '/static/webpush/webpush.js',
-    '/static/js/notifications.js',
+    // '/static/js/notifications.js',
 
     
     // '/images/icons/icon-72x72.png',
