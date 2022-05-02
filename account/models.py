@@ -1,6 +1,3 @@
-from __future__ import unicode_literals
-from tkinter import CASCADE
-
 from django.db import models
 from django.core.mail import send_mail
 from django.contrib.auth.models import PermissionsMixin
