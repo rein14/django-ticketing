@@ -4,27 +4,39 @@
 {% block content %}   
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="{% url 'app:home' %}">Home</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'app:ticket-list' %}">Tickets</a></li>
-    <li class="breadcrumb-item active" aria-current="page">{{ title }}</li>
-  </ol>
+    <li class="breadcrumb-item"><a href="{{request.META.HTTP_REFERER}}">Back</a></li>
+   <li class="breadcrumb-item active" aria-current="page"> <a href="{{request.get_full_path|slice:-5}}" class="ajax-load-form" title="Edit">
+     {{ title }}</a></li>
+ </ol>
 </nav> 
+
+{% if user.is_superuser and request.user.is_staff %}
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
-    <h1 class="h2"><span class="text-success"> {{ title }}</span></h1>
-    <div class="btn-toolbar mb-2 mb-md-0">
-      <button type="button" class="btn btn-sm btn-outline-primary ajax-upload-files">
-        <i class="fas fa-file-upload"></i> Upload {{ model_verbose_name_plural|lower }}
+  <h5 class="h5"><span class="text-primary"><a href="{{request.get_full_path|slice:-5}}" class="ajax-load-form" title="Edit">
+    {{ detail_title }}</a></span></h5>
+  <div class="btn-toolbar mb-2 mb-md-0">
+      <button type="button" class="btn btn-dark animate-up-2 mr-3 me-2 ajax-upload-files" style="color:white;background: #0C4B33; border-color: #0C4B33 !important">
+        <i class="fas fa-file-upload me-2"></i> Upload {{ model_verbose_name_plural|lower }}
       </button>
+      
+      <a class="btn btn-outline-info animate-up-2 mr-3" href='{{request.get_full_path|slice:-5}}comments'>
+        <i class="fas fa-comments me-2"></i>Comments </a>&nbsp
     </div>
 </div>
+
+
 <div class="card pt-4 pb-4 well text-muted text-center">
   <i class="fas fa-download pb-4" style="font-size: 4rem;"></i>
   <h3>Drop Files Here to Upload</h3>
   <input id="fileupload" type="file" name="file" multiple style="display: none;"
   data-url="{% get_object_url 'upload' %}" data-form-data='{"csrfmiddlewaretoken": "{{ csrf_token }}"}'>
 </div><br>
-<table class="table table-striped table-hover" id="table-ajax">
-  <thead class="thead-light">
+{% endif %}
+
+<div class="card">
+
+<table class="table table-hover" id="table-ajax">
+  <thead class="thead-light d-none">
     <tr>
       <th>{{ object_list|verbose_name:'field:file' }}</th>
       <th>{{ object_list|verbose_name:'field:uploaded_at' }}</th>
@@ -35,6 +47,7 @@
     {% include 'app/partials/file_list_partial.html' %}
   </tbody>
 </table>
+</div>
 <div class="modal fade" id="modal-progress" data-backdrop="static" data-keyboard="false">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -51,6 +64,7 @@
   </div>
 </div>
 {% endblock %}
+
 {% block extrajs %}
 <script src="{% static 'js/jquery-fileupload/jquery.ui.widget.js' %}"></script>
 <script src="{% static 'js/jquery-fileupload/jquery.iframe-transport.js' %}"></script>

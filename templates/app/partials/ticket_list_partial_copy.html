@@ -1,0 +1,126 @@
+ {% for ticket in tickets %}
+<tr id="{{ ticket.pk }}">
+   
+    <td><a href="{% url 'app:ticket-detail' ticket.pk%}" class="border-0 ajax-load-form" title="View details">
+        F0{{ ticket.pk }}</a></td>
+    <td><a href="{% url 'app:ticket-detail' ticket.pk%}"class="border-0 ajax-load-form" title="View details">
+        {{ ticket.title }}</a></td>
+    <td>
+
+        {% if ticket.get_ticket_choices_display == "Pending" %}
+        <span class="text-danger">Pending</span>
+        {% elif ticket.get_ticket_choices_display == "Done" %}
+        <span class="text-success">Done</span>
+        {% else %}
+        {{ ticket.status }}
+        {% endif %}
+
+    </td>
+    {% comment %} <td class="one">{{ ticket.folder }}</td> {% endcomment %}
+
+        {% comment %} <td >
+            <ul style="list-style-type: none;padding: 0;margin: 0;">
+                {% for user in ticket.assigned_to.all %}
+                 <li><a style="background-color:white" href="" class="border-0 ajax-load-form" title="View user details">{{user}}</a></li>
+                 {% endfor %}
+            </ul> 
+        </td> {% endcomment %}
+        <td class="one">{{ ticket.sent_by }}</td>
+        <td>{{ ticket.date_sent}}</td>
+
+
+        <td style="text-align: center;">
+        
+    
+                <div class="dropdown"><button class="btn btn-link text-dark dropdown-toggle dropdown-toggle-split m-0 p-0"
+                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><svg class="icon icon-xs"
+                        fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z">
+                        </path>
+                    </svg> <span class="visually-hidden">Toggle Dropdown</span></button>
+                <div class="dropdown-menu dashboard-dropdown dropdown-menu-start mt-2 py-1">
+                    <a class="dropdown-item d-flex align-items-center" href="{% url 'app:comment-list' ticket.pk %}"><svg
+                            class="dropdown-icon text-gray-400 me-2" fill="currentColor" viewBox="0 0 20 20"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z">
+                            </path>
+                            <path fill-rule="evenodd"
+                                d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"
+                                clip-rule="evenodd"></path>
+                        </svg> Comments </a>
+                        
+                        <a class="dropdown-item d-flex align-items-center" href="{% url 'app:file-list' ticket.pk %}"><svg
+                            class="dropdown-icon text-gray-400 me-2" fill="currentColor" viewBox="0 0 20 20"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z">
+                            </path>
+                        </svg> Files </a>
+
+                        <hr class="dropdown-divider">
+                        <a class="dropdown-item d-flex align-items-center  ajax-load-form" href="{% url 'app:ticket-update' ticket.pk%} "><svg
+                            class="dropdown-icon text-gray-400 me-2" fill="currentColor" viewBox="0 0 20 20"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z">
+                            </path>
+                            <path fill-rule="evenodd"
+                                d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"
+                                clip-rule="evenodd"></path>
+                        </svg> Edit Ticket </a>
+                        
+                        <a class="dropdown-item d-flex align-items-center ajax-load-form" href="{% url 'app:ticket-status-update' ticket.pk%}"><svg
+                            class="dropdown-icon text-gray-400 me-2" fill="currentColor" viewBox="0 0 20 20"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z">
+                            </path>
+                            <path fill-rule="evenodd"
+                                d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"
+                                clip-rule="evenodd"></path>
+                        </svg> Edit Ticket Status</a>
+                        <a class="dropdown-item d-flex align-items-center ajax-load-form" href="{% url 'app:ticket-delete' ticket.pk %}">
+                            
+                            <svg
+                            class="dropdown-icon text-danger me-2 " fill="currentColor" viewBox="0 0 20 20"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd"
+                                d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                                clip-rule="evenodd"></path>
+                        </svg> Delete</a></div>
+            </div>
+            
+                <!--Menu-->
+                {% comment %} <div class="dropdown-menu dropdown-primary">
+                            <hr class="dropdown-divider">
+
+                  <a href="{% url 'app:comment-list' ticket.pk %}" class="dropdown-item btn btn-outline-primary btn-sm border-0" title="Comments">
+                    <i class="fa fa-comments text-primary" aria-hidden="true"></i> Comments</a>
+                
+                    <a href="{% url 'app:file-list' ticket.pk %}" class="dropdown-item btn btn-outline-success btn-sm border-0" title="Files">
+                        <i class="fa fa-copy text-success"></i> Files</a>
+    
+                {% if request.user.is_superuser %}
+                <hr style="margin-top:5px;margin-bottom:5px;">
+                <a href=""{% url 'app:ticket-update' ticket.pk %}"" id="myinput" class="dropdown-item btn btn-outline-info btn-sm border-0 ajax-load-form" title="Edit">
+                <i class="fa fa-edit text-info"></i> Edit Ticket</a>
+                <a href="{% url 'app:ticket-status-update' ticket.pk%}" class="dropdown-item btn-sm border-0 ajax-load-form" title="Edit">
+                    <i class="fa fa-pen text-info"></i> Update Status</a>
+                <a href="{% url 'app:ticket-delete' ticket.pk %}" class="dropdown-item btn btn-outline-danger btn-sm border-0 ajax-load-form" title="Delete">
+                <i class="fa fa-trash-alt text-danger"></i> Delete</a>
+                
+                {% endif %}
+                {% if request.user.is_staff and not request.user.is_superuser %}
+                    <hr style="margin-top:5px;margin-bottom:5px;">
+                <a href="{% url 'app:ticket-delete' ticket.pk %}" class="dropdown-item btn-sm border-0 ajax-load-form" title="Delete">
+                    <i class="fa fa-trash-alt text-danger"></i> Delete</a>
+                    {% endif %}
+                </div>
+              </div> {% endcomment %}
+    </td>
+    
+   
+       
+           
+</tr>
+
+{% endfor %}

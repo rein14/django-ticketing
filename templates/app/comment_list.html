@@ -1,38 +1,143 @@
-{% extends 'app/ticket_list.html' %}
+
+{% extends 'base.html' %}
 {% load cms_tags %}
 {% load static %}
 {% block title %} {{ title }} · {{ block.super }} {% endblock title %}
- 
 
 
+{% block content %}
 
 {% block table %}
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="{% url 'app:home' %}">Home</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'app:ticket-list' %}">Tickets</a></li>
-    <li class="breadcrumb-item active" aria-current="page">{{ title }}</li>
+     <li class="breadcrumb-item"><a href="{{request.META.HTTP_REFERER}}">
+      <svg class="icon icon-xs" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M7.707 14.707a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l2.293 2.293a1 1 0 010 1.414z" clip-rule="evenodd"></path></svg>
+ 
+      Back</a></li>
+    <li class="breadcrumb-item active" aria-current="page"> <a href="{{request.get_full_path|slice:-8}}" class="ajax-load-form" title="Edit">
+      {{ title }}</a></li>
   </ol>
 </nav> 
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
-    <h2 class="h2"><span class="text-primary"> {{ title }}</span></h2>
-    <div class="btn-toolbar mb-2 mb-md-0">
-        <a class="btn btn-sm btn-outline-primary ajax-load-form" href="{% get_object_url 'create' %}">
-        <i class="fas fa-plus"></i> Add {{ model_verbose_name }}</a>
-    </div>
+    <h5 class="h5"><span class="text-primary me-2"> <a href="{{request.get_full_path|slice:-8}}" class="ajax-load-form" title="Edit">
+      {{ detail_title }}</a></span> <a class="small ajax-load-form" href="{{request.path|comment_status_update}}">
+        <i class="far fa-edit me-2"></i></a></h5>
+     <div class="btn-toolbar mb-2 mb-md-0">
+      
+      
+    <div class="btn-toolbar mb-2 mb-md-0"> 
+      {% comment %} <a href="{% get_object_url 'create' %}"
+      class="btn btn-info animate-up-2 mr-3 text-dark mb-3 mb-md-0 ajax-load-form me-2"><i class="far fa-comment me-2"></i>
+      Add {{ model_verbose_name }}</a> {% endcomment %}
+
+      <button type="button" class="btn btn-info animate-up-2 mr-3 me-2" ><a href="{% get_object_url 'create' %}" class="ajax-load-form" style="color:white;">
+        <i class="fas fa-comments me-2"></i> Add {{ model_verbose_name_plural|lower }}</a>
+      </button>
+
+      
+      <a class="btn btn-outline-primary animate-up-2 mr-3 me-2" href="{{request.get_full_path|slice:-8}}files">
+      <i class="far fa-file-alt me-2"></i> Files </a>
+   </div>
+        
+        <div class="dropdown"><button class="btn btn-link text-dark dropdown-toggle dropdown-toggle-split m-0 p-0"
+          data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><svg class="icon icon-xs"
+              fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+              <path
+                  d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z">
+              </path>
+          </svg> <span class="visually-hidden">Toggle Dropdown</span></button>
+      <div class="dropdown-menu dashboard-dropdown dropdown-menu-start mt-2 py-1">  
+              
+              <a class="dropdown-item d-flex align-items-center ajax-load-form" href="{{request.path|comment_status_update}}">
+                <i class="far fa-edit me-2"></i> Edit Ticket Status</a>
+           </div>
+  </div>
+        
+        
+        
+      
+ </div>
 </div>
-<table class="table table-hover" id="table-ajax">
-  <thead class="thead-light">
+ 
+<div class="card">
+  <div class="table-responsive py-4">
+    <table class="table table-flush table-hover" id="table-ajax" data-page-length='10'>
+
+      <thead class="thead-ligh d-none">
     <tr>
       <th>{{ object_list|verbose_name:'field:user' }}</th>
-       <th>{{ object_list|verbose_name:'field:comment' }}</th>
+
+      <th>{{ object_list|verbose_name:'field:comment' }}</th>
       <th>{{ object_list|verbose_name:'field:created' }}</th>
-      <th style="width: 160px; text-align: center;">Actions</th>
-    </tr>
+      <th style="text-align:center">Actions</th>
+     </tr>
   </thead>
   <tbody>
     {% include 'app/partials/comment_list_partial.html' %}
   </tbody>
 </table>
+</div>
+</div>
 {% endblock table %}
- 
+{% endblock content %}
+
+{% block extracss %}
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" />
+
+<style>
+  .table.dataTable.dtr-inline.collapsed>tbody>tr>td.dtr-control:before,
+  table.dataTable.dtr-inline.collapsed>tbody>tr>th.dtr-control:before {
+    top: 37%;
+
+    background-color: #426381;
+  }
+
+</style>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css">
+
+{% endblock extracss %}
+
+
+{% block extrajs %}
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.11.5/r-2.2.9/datatables.min.js"></script>
+<script type="text/javascript" language="javascript"
+  src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+<script src="https://cdn.datatables.net/select/1.3.1/js/dataTables.select.js"></script>
+{% block tick%}
+<script>
+  var table = $('#table-ajax').DataTable({
+    ordering: false,
+    "processing": true,
+     "searching":false,
+     "lengthChange": false,
+     order: [
+      [1, 'asc']
+    ],
+    columnDefs: [{
+      orderable: true,
+      // className: 'select-checkbox',
+      targets: 0
+
+    }],
+    // select: {
+    //   info: true,
+    //   style: 'multi',
+    //   selector: 'td:nth-child(1)'
+    // },
+    "language": {
+      "zeroRecords": "Sorry, no comments yet", //changes words used
+      "lengthMenu": "Show _MENU_comments", //changes words used
+      "info": "&raquo; Showing _START_ to _END_ of _TOTAL_ comments", //changes words used
+      "search": "", //changes words used originally - Search programs:
+      "searchPlaceholder": "Search comments",
+      "infoFiltered": "(filtered from _MAX_ comments)"
+    }
+  });
+
+
+
+</script>
+
+
+{% endblock  %}
+{% endblock %}

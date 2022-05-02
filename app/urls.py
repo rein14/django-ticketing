@@ -1,4 +1,4 @@
-from django.urls import path, include   
+from django.urls import path, include
 from .views import *
 
 app_name = 'app'
@@ -6,17 +6,24 @@ app_name = 'app'
 urlpatterns = [
 
     path('', home, name='home'),
+    path('category/', Category.as_view(), name='category-list'),
+    path('category/<int:pk>/', CategoryDetailView.as_view(), name='category-detail'),
 
-    path('tickets/', TicketList.as_view(), name='ticket-list'),
     path('user-list/', UserTicketList.as_view(), name='user-ticket-list'),
-    path('unassigned/', UnassignedTickets.as_view(), name='unassigned-list'),
-
-    path('archive/', ArchiveList.as_view(), name='ticket-archive'),
     path('inbox/', InboxList.as_view(), name='inbox'),
     path('completed/', CompletedList.as_view(), name='completed-tickets'),
+
+    path('tickets/', TicketList.as_view(), name='ticket-list'),
     path('opentickets/', OpenTicketsList.as_view(), name='open-tickets'),
+    path('unassigned/', UnassignedTickets.as_view(), name='unassigned-list'),
+    path('archive/', ArchiveList.as_view(), name='ticket-archive'),
+
+
     path('ticket/create/', TicketCreate.as_view(), name='ticket-create'),
     path('ticket/update/<int:pk>/', TicketUpdate.as_view(), name='ticket-update'),
+    path('ticket/statusupdate/<int:pk>/',
+         TicketStatusUpdate.as_view(), name='ticket-status-update'),
+
     path('ticket/delete/<int:pk>/', TicketDelete.as_view(), name='ticket-delete'),
     path('ticket/<int:pk>/', TicketDetail.as_view(), name='ticket-detail'),
 
@@ -36,4 +43,6 @@ urlpatterns = [
          CommentDelete.as_view(), name='comment-delete'),
     path('ticket/<int:ticket>/comment/<int:pk>/',
          CommentDetail.as_view(), name='comment-detail'),
+    path('user/<int:pk>/', UserDetail.as_view(), name='user-detail'),
+
 ]

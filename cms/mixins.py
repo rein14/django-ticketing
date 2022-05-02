@@ -30,10 +30,12 @@ class AjaxContextMixin:
             context['title'] = self.event.capitalize() + ' ' + self.model_verbose_name.capitalize()
         else:
             context['title'] = self.model_verbose_name_plural.capitalize()
+            context['detail_title'] = self.model_verbose_name_plural.capitalize()
             if self.kwargs:
                 for key, value in self.kwargs.items():
                     # context['title'] += ' of {}: {}'.format(get_model_name(key, 'verbose_name'), get_kwarg_object(key, value))
-                    context['title'] += ' on {}'.format(get_kwarg_object(key, value))
+                   context['title'] += ' On {}'.format(get_kwarg_object(key, value))
+                   context['detail_title'] = '{}'.format(get_kwarg_object(key, value))
         # context['object_list'] = self.get_queryset()
         context['kwargs'] = self.kwargs
         filter = self.kwargs

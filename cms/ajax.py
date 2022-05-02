@@ -7,7 +7,7 @@ from cms.mixins import (AjaxContextMixin, AjaxObjectMixin, AjaxFormMixin)
 from cms.forms import DynamicForm
 from .utils import get_kwarg_object
 import json
-
+#from .signals import send_contact_email
 
 class AjaxCreateView(AjaxContextMixin, AjaxObjectMixin, AjaxFormMixin, CreateView):
     def dispatch(self, *args, **kwargs):
@@ -102,6 +102,7 @@ class AjaxFilesUpload(AjaxContextMixin, CreateView):
             context = self.get_context_data()
             form = self.form_class(self.request.POST, self.request.FILES)
             if form.is_valid():
+
                 instance = form.save(commit=False)
                 for key, value in kwargs.items():
                     setattr(instance, key, get_kwarg_object(key, value))

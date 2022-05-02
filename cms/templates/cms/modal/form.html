@@ -1,16 +1,21 @@
-{% load cms_tags widget_tweaks %}
-
+{% load widget_tweaks %}
+{% load cache %}
+{% block extracss %}
+{{form.media.css}}
+{% endblock extracss %}
 <form method="post" action="{{ request.path }}" class="ajax-save-form">
     {% csrf_token %}
-    <div class="modal-header">
-        <h3 class="modal-title">{% if not form.instance.pk %}<span class="modal-icon text-primary"> 
-            {{ title }}</span>{% else %}<span class="fas fa-edit modal-icon text-info"> 
-            {{ title }}</span>{% endif %}</h3>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-    <div class="modal-body">
+     <div class="modal-header">
+        <h5 class="modal-title">{% if not form.instance.pk %}<span class="modal-icon text-primary"> 
+            {{ title }}</span>{% else %}<span class=" modal-icon text-primary"> 
+            {{ title }}</span>{% endif %}</h5>
+            <button type="button" class="btn-close ms-auto" data-bs-dismiss="modal" aria-label="Close"></button>
+
+    </div> 
+    <div class="modal-body p-0">
+        <div class="card p-3 p-lg-4">
+
+
         {% if form.errors %}
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
             {% for key, value in form.errors.items %}
@@ -42,17 +47,20 @@
         </div>
         {% endfor %}
     </div>
+</div>
 
     <div class="modal-footer">
-        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"><i class="fa fa-times mr-2"></i> Close</button>
+        <button type="button" class="btn btn-link text-gray-600 ms-auto" data-bs-dismiss="modal">Close</button>
         {% if not form.instance.pk %}
-        <button type="submit" class="btn btn-outline-primary"><i class="fa fa-plus mr-2"></i> {{ title }}</button>
+        <button id='loadOnClick' type="submit" class="btn btn-outline-primary">{{ title }}</button>
         {% else %}
-        <button type="submit" class="btn btn-outline-info"><i class="fa fa-edit mr-2"></i> {{ title }}</button>
+        <button id='loadOnClick' type="submit" class="btn btn-outline-info">{{ title }}</button>
         {% endif %}
     </div>
 </form>
+
 {% block extrajs %}
-{{ form.media }}
- 
+
+{{ form.media.js}}
+
 {% endblock extrajs %}

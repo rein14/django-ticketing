@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-bw7t11v_9=-y)=t4r87lr2+4nd(u+$=sei)jq%6w#(yh(yk+vj
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['demotick.herokuapp.com', '127.0.0.1','127.0.0.2']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -45,9 +45,24 @@ INSTALLED_APPS = [
     'django_cleanup',
     'bootstrap_datepicker_plus',
     'pwa',
+    'notifications',
+    'webpush',
+    #"debug_toolbar",
+
 ]
+DJANGO_NOTIFICATIONS_CONFIG = { 'USE_JSONFIELD': True}
+
+
+# INTERNAL_IPS = [
+#     # ...
+#     "127.0.0.1",
+#     # ...
+# ]
 
 MIDDLEWARE = [
+    'django.middleware.gzip.GZipMiddleware',
+    #"debug_toolbar.middleware.DebugToolbarMiddleware",
+
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -70,6 +85,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'app.context_processors.nav_cats',  #custom context processor
+
             ],
         },
     },
@@ -145,6 +162,9 @@ CACHES = get_cache()
 
 SELECT2_CACHE_BACKEND = "default"
 
+# SELECT2_JS = '/static/django_select2/select2.min.js'
+# SELECT2_CSS = '/static/django_select2/select2.min.css'
+
 AUTH_USER_MODEL = "account.User"
  
 LOGIN_URL = 'account:login'
@@ -153,14 +173,14 @@ LOGOUT_URL = 'account:logout'
 
 LOGIN_REDIRECT_URL = '/'
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  # During development only
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  # During development only
 
-EMAIL_HOST = 'smtp.sendgrid.net'
-EMAIL_PORT = 587
-EMAIL_HOST_USER = 'testsite_app'
-EMAIL_HOST_PASSWORD = 'mys3cr3tp4ssw0rd'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True
-DEFAULT_FROM_EMAIL = 'TestSite Team <noreply@example.com>'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'richrein14@gmail.com'
+EMAIL_HOST_PASSWORD = 'rein144440'
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
 
@@ -222,6 +242,12 @@ MESSAGE_TAGS = {
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+WEBPUSH_SETTINGS = {
+    "VAPID_PUBLIC_KEY": "BCJeqkLUG8eykeModZxnS_62LnEfvrTaDpCjlTjwd7PWCqYQVK_2s833kYZFPFLgwiX3g8zg4DMp9m6aQ_kBdas",
+    "VAPID_PRIVATE_KEY": "2c_by4BIlzAEtlps-DGUUW-6zb16OD__C0909JX0sUU",
+    "VAPID_ADMIN_EMAIL": "richrein14@gmail.com"
+}
 
 PWA_APP_NAME = 'My App'
 PWA_APP_DESCRIPTION = "My app description"

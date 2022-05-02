@@ -1,0 +1,134 @@
+<!--
+
+=========================================================
+* Volt Free - Bootstrap 5 Dashboard
+=========================================================
+
+* Product Page: https://themesberg.com/product/admin-dashboard/volt-bootstrap-5-dashboard
+* Copyright 2021 Themesberg (https://www.themesberg.com)
+* License (https://themesberg.com/licensing)
+
+* Designed and coded by https://themesberg.com
+
+=========================================================
+
+* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software. Please contact us to request a removal.
+-->
+
+{% load static %}
+{% load cache %}
+{% load pwa %}
+{% load webpush_notifications %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head> 
+  {% progressive_web_app_meta %}
+  {% webpush_header %}
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<!-- Primary Meta Tags -->
+
+<title>
+    Ticketing- {% block title %}{% endblock %}
+</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link rel="apple-touch-icon" sizes="120x120" href="/static/assets/img/favicon/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/static/assets/img/favicon/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/static/assets/img/favicon/favicon-16x16.png">
+<link rel="manifest" href="/static/assets/img/favicon/site.webmanifest">
+<link rel="mask-icon" href="/static/assets/img/favicon/safari-pinned-tab.svg" color="#ffffff">
+<meta name="msapplication-TileColor" content="#ffffff">
+<meta name="theme-color" content="#ffffff">
+
+<link type="text/css" href="/static/assets/vendor/sweetalert2/dist/sweetalert2.min.css" rel="stylesheet">
+
+<link type="text/css" href="/static/assets/vendor/notyf/notyf.min.css" rel="stylesheet">
+<link type="text/css" href="/static/assets/css/volt.css" rel="stylesheet">
+
+<link type="text/css" href="https://appsrv1-147a1.kxcdn.com/volt-dashboard-pro-v131/vendor/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.12/css/select2.min.css" type="text/css" media="screen" rel="stylesheet">
+<link href="{% static 'django_select2/django_select2.css' %}" type="text/css" media="screen" rel="stylesheet">
+  <!-- Bootstrap Js CDN --> 
+
+<!-- Specific Page JS goes HERE  -->    
+{% block extracss %}
+
+{% endblock  %}
+
+
+
+<style>
+  .pb-z {
+    padding-bottom: 11px !important;
+  }
+
+  .select2-container{
+    width: 100%!important;
+    }
+    .select2-search--dropdown .select2-search__field {
+    width: 98%;
+    }
+ 
+.float{
+    width: 30px;
+  height: 30px;
+  padding: 6px 0px;
+  border-radius: 15px;
+  font-size: 15px;
+  text-align: center;
+  background-color: #dbdddf1c;
+  color: #19202a;
+}
+
+.btn-upgrade-pro {
+  position: fixed;
+  bottom: 15px;
+  right: 100px;
+   width: 150px;
+}
+  .notification {
+    color: white;
+    text-decoration: none;
+    padding: 15px 26px;
+    position: relative;
+    display: inline-block;
+    border-radius: 2px;
+  }
+   
+  .notification .badge {
+    position: absolute;
+    top: 0px;
+    right:-3px;
+    padding: 5px 10px;
+    color: white;
+  }
+ </style>
+ 
+</head>
+<body>
+{% block sidebar %}
+    {% include 'include/sidebar.html' %}
+{% endblock sidebar %}
+
+    <main class="content">
+  
+
+{% block navigation %}
+      {% include 'include/navigation.html' %}
+{% endblock navigation %}
+      {% block content %}{% endblock content %}     
+
+      {% include 'cms/modal/modal.html' %}
+
+    </main>
+  {% include 'include/scripts.html' %}
+    
+  <!-- Specific Page JS goes HERE  -->
+  {% block extrajs %}{% endblock  %}  
+
+</body>
+</html>

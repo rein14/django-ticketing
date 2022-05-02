@@ -5,10 +5,32 @@ from cms.fields import OrderField
 from cms.mixins import GetAbsoluteUrl
 from pathlib import Path
 #from django.contrib.auth.models import User
-
+import random
 # from django.contrib.auth.models import AbstractUser
 from django.conf import settings
+from django.contrib.auth.models import Group
 
+
+class Folder(models.Model):
+    title = models.CharField(max_length=255, verbose_name='Folder')
+    slug = models.SlugField(default="")
+    group = models.ForeignKey(Group, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.title
+
+    def save(self):
+        self.slug =  slugify('{}'.format(self.title))
+        return super().save()
+
+    class Meta:
+        ordering = ["title"]
+        verbose_name_plural = "Folder Lists"
+
+    # def get_absolute_url(self):
+    #     return reverse("app:ticket-list", kwargs={"folder": self.id})
+    def get_absolute_url(self):
+        return reverse('app:category-detail', kwargs={'pk': self.id})
 
 class Ticket(models.Model):
     PENDING = 1
@@ -17,24 +39,26 @@ class Ticket(models.Model):
         (PENDING, 'Pending'),
         (DONE, 'Done'),
     )
-
+    folder = models.ForeignKey(Folder, verbose_name='Folder', on_delete=models.CASCADE,null=False,blank=False)
     # user = models.ForeignKey(User,
     #                          verbose_name='User', on_delete=models.CASCADE)
     title = models.CharField(max_length=50, verbose_name='Title')
     date_sent = models.DateField(
-        null=True, verbose_name='Date Sent', help_text='YYYY-mm-dd')
+        null=True, verbose_name='Date', help_text='YYYY-mm-dd')
     ticket_choices = models.PositiveSmallIntegerField(
         choices=CHOICES, default=PENDING, verbose_name='status')
-    description = models.TextField(verbose_name="Description")
+    description = models.TextField(verbose_name="Content")
     order = OrderField(blank=True, verbose_name='Order #')
     waiting_for = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='waiting_for', blank=True,
                                     null=True, verbose_name='Waiting For', on_delete=models.CASCADE)
     sent_by = models.CharField(max_length=255, blank=True,
-                               null=True,)
+                               null=True, verbose_name="Sender")
     assigned_to = models.ManyToManyField(settings.AUTH_USER_MODEL,
                                          related_name='assigned_to',
                                          blank=True,
-                                         verbose_name='Assigned to')
+                                         verbose_name='Assigned')
+    assignment = models.CharField(max_length=255,  blank=True,
+                                         verbose_name='Assigned')
     closed_date = models.DateTimeField(blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
@@ -42,14 +66,36 @@ class Ticket(models.Model):
     def __str__(self):
         return self.title
 
-    def assignment(self):
+    def userassignment(self):
         return ",".join([str(p) for p in self.assigned_to.all()])
+
+    def save(self, *args, **kwargs):
+        # self.assignment = [str(p) for p in self.assigned_to.all()]
+        super().save(*args, **kwargs)
 
     def get_fields(self):
         return [(field.verbose_name, field.value_from_object(self)) for field in self.__class__._meta.fields]
 
     # def get_absolute_url(self):
-    #     return reverse('app:ticket-update', kwargs={'pk': self.pk})
+    #     return reverse("todo:task_detail", kwargs={"task_id": self.id})
+
+    # @staticmethod
+    # def get_products_by_id(ids):
+    #     return Ticket.objects.filter(id__in=ids)
+
+    # @staticmethod
+    # def get_all_products():
+    #     return Ticket.objects.all()
+
+    # @staticmethod
+    # def get_all_products_by_categoryid(folder_id):
+    #     if folder_id:
+    #         return Ticket.objects.filter(folder=folder_id)
+    #     else:
+    #         return Ticket.get_all_products()
+
+    # def get_absolute_url(self):
+    #    return reverse('app:ticket-update', kwargs={'pk': self.pk})
 
     class Meta:
         db_table = 'ticket'
@@ -63,8 +109,8 @@ class Comment(models.Model):
         Ticket, on_delete=models.CASCADE, verbose_name='Ticket')
     slug = models.SlugField(max_length=255, verbose_name='Slug', unique=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
-                             verbose_name='User',on_delete=models.CASCADE)
-    comment = models.TextField(blank=False, null=False)
+                             verbose_name='User', on_delete=models.CASCADE)
+    comment = models.TextField(blank=False, null=False, verbose_name='Comment')
     order = OrderField(blank=True, for_fields=[
                        'ticket'], verbose_name='Order #')
     created = models.DateTimeField(auto_now_add=True)
@@ -74,14 +120,17 @@ class Comment(models.Model):
         return str(self.slug)
 
     def save(self, *args, **kwargs):
-        self.slug = slugify('{}-{}-{}'.format('F',
-                                              self.ticket.title, self.ticket.pk))
+        self.slug = slugify('{}-{}'.format('F', random.random(),
+                                           self.ticket.pk))
         super().save(*args, **kwargs)
 
     # def save_model(self, request, obj, form, change):
     #     obj.user = request.user
 
     #     super().save_model(request, obj, form, change)
+
+    def get_absolute_url(self):
+        return reverse("comment_detail", kwargs={"pk": self.pk})
 
     class Meta:
         db_table = 'comment'
@@ -130,3 +179,37 @@ class File(models.Model):
         verbose_name = 'File'
         verbose_name_plural = 'Files'
         ordering = ('order', )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

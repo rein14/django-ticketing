@@ -1,0 +1,4 @@
+{% for object in object_list %}
+<a href="{% url 'app:category-detail' object.pk %}">
+   {{object}}</a>
+{% endfor %}

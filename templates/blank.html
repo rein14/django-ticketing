@@ -1,8 +1,10 @@
-{% extends 'base.html' %}
-{% block content %}
-<div class="col-12 border border-info">
-  <div class="d-flex justify-content-center align-items-center" style="height: 100px">
-    <a href="{% url 'app:ticket-list' %}" class="btn btn-dark">Demo: Tickets CRUD Ajax Modal forms</a>
+{% load static %}
+<link href="{% static 'css/403.css' %}" rel="stylesheet">
+
+ 
+<div id="main">
+  <div class="fof">
+        <h1>Access Denied. <a href="{{request.META.HTTP_REFERER}}"> Go back</a></h1>
+ 
   </div>
 </div>
-{% endblock content %}

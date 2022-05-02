@@ -1,38 +1,70 @@
-{% load cms_tags %}
+{% load cms_tags cache %}
 {% for ticket in object_list %}
 <tr id="{{ ticket.pk }}">
-    <td><a href="{% get_object_url 'detail' ticket %}" class="border-0 ajax-load-form" title="View">
+    <td><a href="{% get_object_url 'detail' ticket %}" class="border-0 ajax-load-form" title="View details">
         {{ ticket.pk }}</a></td>
-    <td><a href="{% get_object_url 'detail' ticket %}" class="border-0 ajax-load-form" title="View">
+    <td><a href="{% get_object_url 'detail' ticket %}" class="border-0 ajax-load-form" title="View details">
         {{ ticket.title }}</a></td>
-    <td>{{ ticket.get_ticket_choices_display }}</td>
+    <td>
+     {{ ticket.get_ticket_choices_display}}
+    </td>
+
+        {% comment %} <td >
+
+            <ol style="list-style-type: none;padding: 0;margin: 0;">
+                {% for user in ticket.assigned_to.all %}
+                 <li style="font-size:inherit" ><a href="{%get_object_url 'detail' user%}" class="ajax-load-form" title="View user details">{{user}}</a></li>
+                  {% endfor %}
+            </ol> 
+
+        </td> {% endcomment %}
+        <td class="one">{{ ticket.sent_by }}</td>
     <td>{{ ticket.date_sent}}</td>
-    <td>{{ ticket.sent_by }}</td>
-        <td >
-            <ul style="list-style-type: none;padding: 0;margin: 0;">
-                {% for users in ticket.assigned_to.all %}
-                <li>{{users}}</li>
-                {% endfor %}
-            </ul>
-        </td>
+        <td style="text-align: center;">
 
-    <td style="text-align: center;">
-        <a href="{% url 'app:file-list' ticket.pk %}" class="btn btn-outline-success btn-sm border-0" title="Files">
-            <i class="fa fa-copy"></i></a></td>
-       <td style="text-align: center;">
-        
-        <a href="{% url 'app:comment-list' ticket.pk %}" class="btn btn-outline-primary btn-sm border-0" title="Comments">
-                <i class="fa fa-comment"></i></a>
+            <div class="dropdown"><button class="btn btn-link text-dark dropdown-toggle dropdown-toggle-split m-0 p-0"
+                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <svg class="icon icon-xs"
+                        fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z">
+                        </path>
+                    </svg> <span class="visually-hidden">Toggle Dropdown</span></button>
+                <div class="dropdown-menu dashboard-dropdown dropdown-menu-start mt-2 py-1">
+                    <a class="dropdown-item d-flex align-items-center" href="{% url 'app:comment-list' ticket.pk %}">
+                        <i class="far fa-comments me-2"></i>  Comments </a>
+                        
+                        <a class="dropdown-item d-flex align-items-center" href="{% url 'app:file-list' ticket.pk %}">
+                            <i class="far fa-file-alt me-2"></i> Files </a>
 
-            {% if request.user.is_staff and request.user.is_superuser %}
 
-        <a href="{% get_object_url 'update' ticket %}" class="btn btn-outline-info btn-sm border-0 ajax-load-form" title="Edit">
-            <i class="fa fa-edit"></i></a>
-        <a href="{% get_object_url 'delete' ticket %}" class="btn btn-outline-danger btn-sm border-0 ajax-load-form" title="Delete">
-            <i class="fa fa-trash-alt"></i></a>
-            {% endif %}
+                        {% if request.user.is_cleared %}
+                         <hr class="dropdown-divider">
+                        <a class="dropdown-item d-flex align-items-center  ajax-load-form" href="{% get_object_url 'update' ticket %} ">
+                            <i class="far fa-edit me-2"></i>  Edit Ticket </a>
+                            
+                        <a class="dropdown-item d-flex align-items-center ajax-load-form" href="{% url 'app:ticket-status-update' ticket.pk%}">
+                            <i class="far fa-edit me-2"></i>  Edit Ticket Status</a>
+                        <a class="dropdown-item d-flex align-items-center ajax-load-form" href="{% get_object_url 'delete' ticket %}">
+                            
+                            <svg
+                            class="dropdown-icon text-danger me-2 " fill="currentColor" viewBox="0 0 20 20"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd"
+                                d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                                clip-rule="evenodd"></path>
+                        </svg> Delete</a>
+                             {% endif %}
+                        </div>
+            </div>
+            
+          
     </td>
     
+   
+       
+
+           
 </tr>
 
 {% endfor %}

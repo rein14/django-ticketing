@@ -16,22 +16,32 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
+from app import views
+
+
+handler403 = views.handler404
 
 urlpatterns = [
-    path('', include('pwa.urls')),
     path("select2/", include("django_select2.urls")),
+    path('', include('pwa.urls')),
+    path('webpush/', include('webpush.urls')),
+
     path('', include('django.contrib.auth.urls')),
+    path('inbox/notifications/', include('notifications.urls', namespace='notifications')),
+
 
     path('admin/', admin.site.urls),
     path('account/', include('account.urls')),
     path('account/', include('django.contrib.auth.urls')),
     path('cms/', include('cms.urls')),
     path('', include('app.urls')),
+    # path('__debug__/', include('debug_toolbar.urls')),
+
 ]
 
 if settings.DEBUG:
     from django.conf.urls.static import static
     from django.contrib.staticfiles.views import serve
     from django.views.decorators.cache import never_cache
-    urlpatterns.append(path('static/<path:path>', never_cache(serve)))
+   # urlpatterns.append(path('static/<path:path>', never_cache(serve)))
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

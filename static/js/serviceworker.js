@@ -3,35 +3,43 @@ var filesToCache = [
     '/offline',
 
     // '/css/django-pwa-app.css',
-    
-    'https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css',
-    'https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css',
-    'https://code.jquery.com/jquery-3.6.0.min.js',
-    'https://pro.fontawesome.com/releases/v5.10.0/css/all.css',
-    'https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js',
-    'https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js',
-    'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment.min.js',
+
+     'https://code.jquery.com/jquery-3.6.0.min.js',
+    '/static/assets/vendor/onscreen/dist/on-screen.umd.min.js',
+    '/static/assets/vendor/@popperjs/core/dist/umd/popper.min.js',
+    '/static/assets/vendor/bootstrap/dist/js/bootstrap.min.js',
+    '/static/assets/vendor/smooth-scroll/dist/smooth-scroll.polyfills.min.js',
+    '/static/assets/vendor/sweetalert2/dist/sweetalert2.all.min.js',
+    '/static/assets/vendor/simplebar/dist/simplebar.min.js',
+    '/static/assets/vendor/vanillajs-datepicker/dist/js/datepicker.min.js',
+    'https://buttons.github.io/buttons.js',
+     '/static/notifications/notify.js',
     'https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js',
     'https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js',
     'https://cdn.datatables.net/v/bs4/dt-1.11.5/r-2.2.9/datatables.min.css',
     'https://cdn.datatables.net/v/bs4/dt-1.11.5/r-2.2.9/datatables.min.js',
     'https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js',
-    'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/fonts/glyphicons-halflings-regular.woff2',
-    'http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/fonts/glyphicons-halflings-regular.woff2',
     'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js',
     'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js',
-    '/static/js/scripts.js',
+    '/static/assets/js/volt.js',
+    '/static/assets/vendor/sweetalert2/dist/sweetalert2.min.css',
+    '/static/assets/vendor/notyf/notyf.min.css',
+    '/static/assets/css/volt.css',
+    'https://appsrv1-147a1.kxcdn.com/volt-dashboard-pro-v131/vendor/@fortawesome/fontawesome-free/css/all.min.css',
+    '/static/cms/js/ajax.js',
     '/static/bootstrap_datepicker_plus/css/datepicker-widget.css',
-    '/static/bootstrap_datepicker_plus /js/datepicker-widget.js',
+    '/static/bootstrap_datepicker_plus/js/datepicker-widget.js',
     '/static/js/ajax_fileupload.js',
     '/static/js/jquery-fileupload/jquery.fileupload.js',
     '/static/js/jquery-fileupload/jquery.iframe-transport.js',
     '/static/js/jquery-fileupload/jquery.ui.widget.js',
     '/static/account/css/signin.css',
-    '/static/css/style2.css',
-    '/static/css/base.css',
-    '/static/img/bootstrap-solid.svg',
-    ' https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700',
+    'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap',
+    '/static/django_select2/django_select2.css',
+    '/static/webpush/webpush.js',
+    // '/static/js/notifications.js',
+
+    
     // '/images/icons/icon-72x72.png',
     // '/images/icons/icon-96x96.png',
     // '/images/icons/icon-128x128.png',
@@ -57,9 +65,9 @@ self.addEventListener("install", event => {
     this.skipWaiting();
     event.waitUntil(
         caches.open(staticCacheName)
-            .then(cache => {
-                return cache.addAll(filesToCache);
-            })
+        .then(cache => {
+            return cache.addAll(filesToCache);
+        })
     )
 });
 
@@ -69,9 +77,9 @@ self.addEventListener('activate', event => {
         caches.keys().then(cacheNames => {
             return Promise.all(
                 cacheNames
-                    .filter(cacheName => (cacheName.startsWith("django-pwa-")))
-                    .filter(cacheName => (cacheName !== staticCacheName))
-                    .map(cacheName => caches.delete(cacheName))
+                .filter(cacheName => (cacheName.startsWith("django-pwa-")))
+                .filter(cacheName => (cacheName !== staticCacheName))
+                .map(cacheName => caches.delete(cacheName))
             );
         })
     );
@@ -81,11 +89,11 @@ self.addEventListener('activate', event => {
 self.addEventListener("fetch", event => {
     event.respondWith(
         caches.match(event.request)
-            .then(response => {
-                return response || fetch(event.request);
-            })
-            .catch(() => {
-                return caches.match('offline');
-            })
+        .then(response => {
+            return response || fetch(event.request);
+        })
+        .catch(() => {
+            return caches.match('offline');
+        })
     )
 });

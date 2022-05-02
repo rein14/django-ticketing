@@ -1,0 +1,201 @@
+{% load static %}
+{% load cache %}
+{% load pwa_webpush %}
+{% comment %} {% load webpush_notifications %} {% endcomment %}
+
+
+<!doctype html>
+<html lang="en">
+
+<head>
+  {% progressive_web_app_meta %}
+  {% comment %} {% webpush_header %} {% endcomment %}
+  <meta charset="utf-8">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+   
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"/>
+    {% comment %}
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" />
+  {% endcomment %}
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css"
+    integrity="sha512-vKMx8UnXk60zUwyUnUPM3HbQo8QfmNx7+ltw8Pm5zLusl1XIfwcxo8DbWCqMGKaWeNxWA8yrx5v3SaVpMvR3CA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link href="{% static 'css/style2.css' %}" rel="stylesheet">
+  <link href="{% static 'css/volt.css' %}" rel="stylesheet">
+ 
+  {% block extracss %}{% endblock %}
+  <title>{% block title %}Document TIcketing{% endblock title %}</title>
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.12/css/select2.min.css"/>
+  <link href="{% static 'bootstrap_datepicker_plus/css/datepicker-widget.css' %} " type="text/css" media="all" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.12/css/select2.min.css" type="text/css" media="screen" rel="stylesheet">
+  <link href="{% static 'django_select2/django_select2.css' %}" type="text/css" media="screen" rel="stylesheet">
+  <!-- Bootstrap Js CDN --> 
+
+    {% comment %} {{ form.media.css }}
+    {{ form.media.js }} {% endcomment %}
+   <style>
+    .select2-container{
+      width: 100%!important;
+      }
+      .select2-search--dropdown .select2-search__field {
+      width: 98%;
+      }
+      .text-primary {
+        color: #116acb!important;
+    }
+  .float{
+      width: 30px;
+    height: 30px;
+    padding: 6px 0px;
+    border-radius: 15px;
+    font-size: 15px;
+    text-align: center;
+    background-color: #dbdddf1c;
+    color: #19202a;
+  }
+div.dataTables_wrapper div.dataTables_length select {
+    width: auto;
+    display: inline-block
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+ } 
+
+   </style>
+
+
+  </head>
+
+<body class="">
+  {% block body %}
+  
+
+  {% if messages %}
+  <ul class="messages">
+      {% for message in messages %}
+      <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
+          {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
+          {{ message }}
+      </li>
+      {% endfor %}
+  </ul>
+  {% endif %}
+  <div class="wrapper">
+    <!-- Sidebar  -->
+    {% include 'include/navbar.html' %}
+
+    <!-- Page Content  -->
+    <div id="content">
+      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+
+          <button type="button" id="sidebarCollapse" class="btn btn-black">
+            <i class="fas fa-align-left"></i>
+           </button>
+
+           
+          <ul class="dropdown nav navbar-nav ml-auto">
+            <li class="nav-item active">
+              <a class="nav-link" href="{% url 'account:logout' %}"> Sign out <i class="fas fa-sign-out-alt"></i></a>
+            </li>
+            
+
+          </ul>
+          
+        </div>
+        
+      </nav>
+      <div class="content-scrollable">
+
+      {% block content %}{% endblock content %}
+    </div>
+  </div>
+
+  </div>
+  {% comment %} {% webpush_button %} {% endcomment %}
+
+  {% endblock body %}
+  <!-- jQuery CDN -->
+  {% block js %}
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+  integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+  integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous">
+ </script>
+ <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" 
+ integrity="sha384-+YQ4JLhjyBLPDQt//I+STsc9iw4uQqACwlvpslubQzn4u2UU2UFM80nGisd026JF" crossorigin="anonymous"></script>
+ 
+ <script src="{% static 'cms/js/ajax.js' %}"></script>
+  <script src="{% static 'js/scripts.js' %}"></script>
+  <script src="{% static 'js/topbar.min.js' %}"></script>
+
+  {% comment %} <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script> {% endcomment %}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/js/select2.min.js" defer></script>
+  <!-- Bootstrap core JS-->
+ 
+  <script
+  src="https://code.jquery.com/ui/1.13.0-rc.3/jquery-ui.js"
+  integrity="sha256-tYLuvehjddL4JcVWw1wRMB0oPSz7fKEpdZrIWf3rWNA="
+  crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"
+    integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+ 
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.12/js/select2.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+   
+    <script src="{% static 'django_select2/django_select2.js' %} "></script>
+    <script src="{% static 'bootstrap_datepicker_plus/js/datepicker-widget.js' %} "></script>
+
+    
+{% comment %} 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.7/js/select2.min.js"
+  integrity="sha256-GHC3xFbrevQ0aRcWg5JElUOncXYXxTtMOuA74cWAPTw="
+  crossorigin="anonymous">
+</script> {% endcomment %}
+
+{% comment %} <script
+  src="{% static 'js/django_select2.js' %}">
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.12/js/select2.min.js"></script>> {% endcomment %}
+{% block pagejs %}
+  <script type="text/javascript">
+    $(document).ready(function () {
+      $('#sidebarCollapse').on('click', function () {
+        $('#sidebar').toggleClass('active');
+      });
+    });
+  
+  </script>
+  <script>
+    document.addEventListener("contextmenu", function (e){
+      e.preventDefault();
+  }, false);
+  </script>
+  
+  {% endblock pagejs %}
+  {% comment %} {{ form.media }} {% endcomment %}
+ 
+{% comment %} {{ form.media}} {% endcomment %}
+  {% block extrajs %}
+  
+  {% endblock extrajs %}
+  {% endblock js %}
+  {% include 'cms/modal/modal.html' %}
+
+</body>
+
+</html>

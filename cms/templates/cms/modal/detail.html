@@ -1,24 +1,49 @@
-<div class="modal-header">
-    <h3 class="modal-title"><span class="modal-icon text-primary"> 
-        {{ title }}</span></h3>
-    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-    </button>
-</div>
 
-<div class="modal-body">
+ 
+ <div class="modal-body">
+    
     <form>
         <fieldset disabled>
+       
+      
         {% for field in form.visible_fields %}
-            <div class="form-group row align-items-center">
-                <label for="{{ field.id_for_label }}" class="col-sm-3 col-form-label col-form-label-sm">{{ field.label }}:</label>
-                <div class="col-sm">{{ field }}</div>
+        <div class="form-group mt-4">
+            
+             {% with WIDGET_ERROR_CLASS='is-invalid' %}
+                 <div class="form-group">
+                    {{ field }}                
+                
             </div>
+            {% endwith %}
+            
+        </div>
         {% endfor %}
+    
+     {% if comment_overlap %}
+
+    <div class="form-row" style="font-size:inherit">
+        <div class="col-6">
+            <a  href="{% url 'app:comment-list' ticket.pk %}" title="View comments">
+
+ 
+            <span class="text-primary">{{ comment_count.count }}  Comments on this </span>
+        </a>
+        </div>
+
+        <div class="col-6" style="font-size:inherit" >
+            <a style="font-size:inherit" href="{% url 'app:file-list' ticket.pk %}" title="View files">
+
+             <span style="font-size:inherit" class="text-success">{{ file_count.count }}  Files Association</span>
+        </a>
+         </div>
+      </div>
+           {% endif %}
+ 
         </fieldset>
+    </div>
+
     </form>
 </div>
-
 <div class="modal-footer">
-    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"><i class="fa fa-times mr-2"></i> Close</button>
+    <button type="button" class="btn btn-link text-gray-600 ms-auto" data-bs-dismiss="modal">Close</button>
 </div>

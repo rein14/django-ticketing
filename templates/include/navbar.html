@@ -1,69 +1,87 @@
 <nav id="sidebar">
 <div class="sidebar-top">
     <div class="sidebar-header">
-    <h3>Document Ticketing</h3>
+    <h3>Document</h3>
     </div>
 
     {% block navbar %}
+
     <ul class="list-unstyled components">
-        <li {% if request.path == '/inbox/' %} class="active"{% endif %}> 
-            <a href="{% url 'app:home' %}">Inbox</a>
-        </li>
+        
+        {% if request.user.is_staff or request.user.is_superuser %}
         <li {% if request.path == '/tickets/' %} class="active"{% endif %}>
-            <a href="{% url 'app:home' %}">All Tickets <span
+            <a href="{% url 'app:home' %}"><i class="fa fa-envelopes-bulk"></i> All Tickets <span
                     class="sr-only">(current)</span></a>
-        </li>
-        {% comment %} <li>
-            <a href="#">Assigned</a>
-        </li> {% endcomment %}
-        
-
-        <li>
-            <li {% if request.path == '/completed/' %} class="active"{% endif %}> 
-
-            <a href="{% url 'app:completed-tickets' %}">Completed Tickets</a>
-        </li>
-        
-        
-       
-    </ul>
-    
-
-    {% if request.user.is_staff and request.user.is_superuser %}
-    <ul class="list-unstyled components">
-        
-        <li {% if request.path == '/unassigned/' %} class="active"{% endif %}> 
-
-            <a href="{% url 'app:unassigned-list' %}">Unassigned Tickets</a>
         </li>
         <li {% if request.path == '/opentickets/' %} class="active"{% endif %}> 
 
-            <a href="{% url 'app:open-tickets' %}">Open Tickets</a>
+            <a href="{% url 'app:open-tickets' %}"><i class="fa fa-envelope-open"></i> Open Tickets</a>
         </li>
-        <li {% if request.path == '/archive/' %} class="active"{% endif %}> 
-            <a href="{% url 'app:ticket-archive' %}">Archive</a>
-        </li>
-    </ul>
-    {% comment %} <div class="sidebar-space"></div> {% endcomment %}
-    
-     {% endif %}
-</div>
-    <ul class="list-unstyled components2">
+        {% endif %}
+
+        {% if not request.user.is_staff or not request.user.is_superuser %}
+        <li {% if request.path == '/inbox/' %} class="active"{% endif %}> 
+            <a href="{% url 'app:home' %}"><i class="fa fa-envelope-o"></i> Inbox</a>
         <li>
-            <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Account</a>
-            <ul class="collapse list-unstyled" id="pageSubmenu">
-                <li>
-                    <a href="#">Profile</a>
-                </li>
-                <li {% if request.path == '/account/password_reset/' %} class="active"{% endif %}> 
-                    <a href="{% url 'password_reset'%}">Change Password</a>
-                </li>
-            </ul>
+            <li {% if request.path == '/completed/' %} class="active"{% endif %}> 
+    
+            <a href="{% url 'app:completed-tickets' %}">Completed Tickets</a>
+        </li>
+    </li>
+        {% endif %}
+  {% if request.user.is_cleared %}
+    <li {% if request.path == '/archive/' %} class="active"{% endif %}> 
+        <a href="{% url 'app:ticket-archive' %}"><i class="fa fa-briefcase"></i> Archive</a>
+    </li>
+    {% endif %}
+
+
+      
+
+    
+    </ul>
+    
+    <ul class="list-unstyled components">
+
+    <li>
+
+        <a href="#categories" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+            
+            <i class="fa fa-folder"></i> Folders</a>
+        <ul class="collapse show list-unstyled content-scrollable" id="categories">
+           
+           {% for folder in nav_folder%}
+           <li>
+            <a class="nav-link" href="{{ folder.get_absolute_url }}"><span class="sidebar-text">{{folder|lower|capfirst}} Folder</span></a>
         </li>
         
-        
-      
-    </ul>
+           {% endfor %} 
+           <li><a style="text-decoration: underline" href="{% url 'app:category-list' %}">See all Folders <i class="fa fa-arrow-up-right-from-square"></i></a></li>
+
+   
+        </ul>
+       
+    </li> 
+</ul>
+
+<ul class="list-unstyled components">
+    <li>
+        <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fa fa-user-circle"></i> {{user}}</a>
+        <ul class="collapse list-unstyled" id="pageSubmenu">
+         
+            <li {% if request.path == '/account/password_reset/' %} class="active"{% endif %}> 
+                <a href="{% url 'password_reset'%}">Change Password</a>
+            </li>
+        </ul>
+    </li>
+    
+    
+  
+</ul>
+    {% comment %} <div class="sidebar-space"></div> {% endcomment %}
+</div>
+
     {% endblock %}
 
 </nav>
+

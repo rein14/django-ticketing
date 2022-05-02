@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Ticket, Comment, File
+from .models import Folder, Ticket, Comment, File
 
 
 class FileInline(admin.StackedInline):
@@ -28,10 +28,10 @@ class TicketAdmin(admin.ModelAdmin):
     inlines = (CommentInline, FileInline, )
     save_as = True
     save_on_top = True
-    list_display = ('title', 'ticket_choices', 'date_sent', 'get_files_count')
+    list_display = ('title', 'ticket_choices', 'date_sent','folder', 'get_files_count')
     list_display_links = ('title', )
     search_fields = ('title', )
-    fields = (('title', ), ('ticket_choices', 'date_sent'),
+    fields = (('title','folder' ), ('ticket_choices', 'date_sent'),
               )
 
     def get_files_count(self, instance):
@@ -44,4 +44,23 @@ class TicketAdmin(admin.ModelAdmin):
         return super().get_inline_instances(request, obj)
 
 
+class FolderAdmin(admin.ModelAdmin):
+    save_as = True
+    list_display = ('title', ('group'),)
+    list_display_links = ('title', )
+    search_fields = ('title', )
+    fields = (('title','group', ), 
+              )
+
+    # def get_files_count(self, instance):
+    #     return instance.ticket_set.count()
+    # get_files_count.short_description = 'Files'
+
+    # def get_inline_instances(self, request, obj=None):
+    #     if not obj:
+    #         return list()
+    #     return super().get_inline_instances(request, obj)
+
+
 admin.site.register(Ticket, TicketAdmin)
+admin.site.register(Folder, FolderAdmin)

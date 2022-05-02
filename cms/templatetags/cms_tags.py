@@ -74,6 +74,27 @@ def get_field_verbose_name(object, field):
 
 register.filter('field_verbose_name', get_field_verbose_name)
 
+# @register.filter
+# def comment_to_file(value):
+#     return value.replace('/comme', '/fisle')
+
+@register.filter
+def comment_status_update(value):
+    url=value.split('/')
+    url.remove('comments')
+    url.insert(2,'statusupdate')
+    new_url='/'.join(url)
+    return new_url
+    
+@register.filter
+def file_status_update(value):
+    url=value.split('/')
+    url.remove('files')
+    url.insert(2,'statusupdate')
+    new_url='/'.join(url)
+    return new_url
+
+
 
 # @register.filter(name='model_name')
 # def get_model_name(object, with_app=True):
