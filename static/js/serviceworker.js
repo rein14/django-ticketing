@@ -2,7 +2,7 @@ var staticCacheName = "django-pwa-v" + new Date().getTime();
 var filesToCache = [
     '/offline',
 
-    '/css/django-pwa-app.css',
+    // '/css/django-pwa-app.css',
 
     'https://code.jquery.com/jquery-3.6.0.min.js',
     '/static/assets/js/on-screen.umd.min.js',
