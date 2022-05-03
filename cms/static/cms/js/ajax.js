@@ -50,7 +50,7 @@ $(document).ready(function () {
           } else {
             $("#table-ajax tbody").html(data.html_list);
           }
-          // toastr["success"](data.message);
+          toastr["success"](data.message);
         } else {
           $("#modal-ajax .modal-content").html(data.html_form);
           // toastr["error"](data.message);

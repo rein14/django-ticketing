@@ -26,7 +26,7 @@
     </div>
   </div>
 
-  <ul class="nav flex-column pt-3 pt-md-0" style='height: 95vh; justify-content: space-between;'>
+  <ul class="nav flex-column pt-3 pt-md-0" style='margin-bottom: 100%; justify-content: space-between;'>
   <div>
     <li class="nav-item">
       <a href="/" class="nav-link d-flex align-items-center">
@@ -53,7 +53,7 @@
         <span class="sidebar-icon">
           <i class="fa fa-box-open me-2"></i>
         </span>
-        <span class="sidebar-text">Pending Memos</span>
+        <span class="sidebar-text">All Memos</span>
       </a>
     </li>
     <li class="nav-item {% if request.path == '/completed/' %} active {% endif %}">
@@ -146,20 +146,19 @@
     
 
     {% endif %}
-    {% cache 500 logout%}
-    <li role="separator" class="dropdown-divider mt-4 mb-3 border-gray-700"></li>
+     <li role="separator" class="dropdown-divider mt-4 mb-3 border-gray-700"></li>
   </div>
   
   <div>
     
     <li role="separator" class="dropdown-divider mt-4 mb-3 border-gray-700"></li>
+    
     <li class="nav-item">
       <a href="{% url 'account:logout' %}" class="nav-link">
           <span class="sidebar-icon"><span class="fas fa-sign-out-alt text-danger me-2"></span></span>
           <span>Logout</span>
       </a>
   </li>
-  {% endcache %}
 </div>
   </ul>
 

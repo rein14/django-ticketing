@@ -1,4 +1,117 @@
-{% for object in object_list %}
-<a href="{% url 'app:category-detail' object.pk %}">
-   {{object}}</a>
-{% endfor %}
+{% extends 'base.html' %}
+{% load cms_tags %}
+ {% load static %}
+{% block title %} {{ title }} · {{ block.super }} {% endblock title %}
+ 
+
+{% block content %}
+{% block table %}
+<div id="myDIV" class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 pt-3 mb-3">
+  <h5 class="h5"><span class="text-primary">
+
+   <i class="fa fa-folder me-2"></i>{{ title }}</span></h5>
+
+    {% if request.user.is_cleared%}
+    <div class="btn-toolbar mb-2 mb-md-0">
+
+    <div class="btn-toolbar mb-2 mb-md-0 me-2">   <a href="{% get_object_url 'create' %}"
+      class="btn btn-sm btn-gray-800 d-inline-flex align-items-center ajax-load-form ">
+      <i class="fas fa-plus me-2"></i>
+      Create {{ model_verbose_name }}</a>
+   
+  </div>
+  
+
+</div>
+    {% endif %}
+
+</div>
+
+<div class="card">
+  <div class="table-responsive py-4">
+    <table class="table table-flush table-hover" id="table-ajax" data-page-length='10'>
+
+      <thead class="thead-light ">
+        {% comment %} <tr> {% endcomment %}
+          {% comment %} <th data-sortable="" style="width: 18.3791%;"> {% endcomment %}
+        <tr>
+          <th>{{ object_list|verbose_name:'field:title' }}</th>
+          <th>{{ object_list|verbose_name:'field:group' }}</th>
+          {% comment %} <th>{{ object_list|verbose_name:'field:folder' }}</th> {% endcomment %}
+          <th style="text-align:center">Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% include 'app/partials/folder_list_partial.html' %} 
+      </tbody>
+
+    </table>
+  </div>
+</div>
+{% endblock table %}
+{% endblock content %}
+
+
+
+{% block extracss %}
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" />
+
+<style>
+  .table.dataTable.dtr-inline.collapsed>tbody>tr>td.dtr-control:before,
+  table.dataTable.dtr-inline.collapsed>tbody>tr>th.dtr-control:before {
+    top: 37%;
+
+    background-color: #426381;
+  }
+
+</style>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css">
+
+{% endblock extracss %}
+
+{% block extrajs %}
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.11.5/r-2.2.9/datatables.min.js"></script>
+<script type="text/javascript" language="javascript"
+  src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+<script src="https://cdn.datatables.net/select/1.3.1/js/dataTables.select.js"></script>
+
+{% block tick%}
+<script>
+  var table_folder = $('#table-ajax').DataTable({
+    ordering: false,
+    "processing": true,
+     order: [
+      [1, 'asc']
+    ],
+    columnDefs: [{
+      orderable: true,
+      // className: 'select-checkbox',
+      targets: 0
+
+    }],
+    // select: {
+    //   info: true,
+    //   style: 'multi',
+    //   selector: 'td:nth-child(1)'
+    // },
+    "language": {
+      "zeroRecords": "Sorry, no entries to display here", //changes words used
+      "lengthMenu": "Show _MENU_ Folder", //changes words used
+      "info": "&raquo; Showing _START_ to _END_ of _TOTAL_ Folders", //changes words used
+      "search": "", //changes words used originally - Search programs:
+      "searchPlaceholder": "Search",
+      "infoFiltered": "(filtered from _MAX_ )"
+    }
+  });
+
+
+{% comment %}  
+  setInterval( function () {
+    table.ajax.refresh(); // user paging is not reset on reload
+}, 3000 ); {% endcomment %}
+</script>
+
+{% endblock  %}
+
+{% endblock %}

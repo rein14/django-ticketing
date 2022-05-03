@@ -25,12 +25,15 @@ class Folder(models.Model):
 
     class Meta:
         ordering = ["title"]
+        verbose_name = 'Folder'
+
         verbose_name_plural = "Folder Lists"
 
     # def get_absolute_url(self):
     #     return reverse("app:ticket-list", kwargs={"folder": self.id})
     def get_absolute_url(self):
-        return reverse('app:category-detail', kwargs={'pk': self.id})
+        return reverse('app:folder-detail', kwargs={'pk': self.id})
+
 
 class Ticket(models.Model):
     PENDING = 1

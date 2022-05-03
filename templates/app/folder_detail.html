@@ -67,7 +67,7 @@
 
 <div class="card">
   <div class="table-responsive py-4">
-    <table class="table table-flush table-hover" id="table-aja" data-page-length='10'>
+    <table class="table table-flush table-hover" id="table-ajax" data-page-length='10'>
 
       <thead class="thead-light">
         <tr>
@@ -109,6 +109,8 @@
   li.selected {
     color: blue;
     text-decoration: underline;
+    font-weight: 600;
+
 
   }
 </style>
@@ -120,7 +122,7 @@
 
 {% block tick%}
 <script>
-  var table = $('#table-aja').DataTable({
+  var table = $('#table-ajax').DataTable({
     ordering: false,
     "processing": true,
   

@@ -33,7 +33,7 @@ urlpatterns = [
 
     path('admin/', admin.site.urls),
     path('account/', include('account.urls')),
-    path('account/', include('django.contrib.auth.urls')),
+    # path('account/', include('django.contrib.auth.urls')),
     path('cms/', include('cms.urls')),
     path('', include('app.urls')),
     # path('__debug__/', include('debug_toolbar.urls')),

@@ -5,7 +5,7 @@ from unicodedata import category
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy, reverse
 from .models import Folder, Ticket, Comment, File
-from .forms import TicketForm, CommentForm, FileForm, TicketUpdateForm,TicketStatusUpdateForm, TicketDetailForm
+from .forms import TicketForm, CommentForm, FileForm, TicketUpdateForm,TicketStatusUpdateForm, TicketDetailForm,CategoryForm
 from cms.ajax import (AjaxCreateView, AjaxDetailView,
                       AjaxUpdateView, AjaxDeleteView, AjaxFilesUpload)
 from cms.views import CoreDetailView, CoreListView
@@ -33,17 +33,39 @@ def handler404(request, exception):
 @login_required
 def home(request):
     # return render(request, 'blank.html', context={'title': 'Blank page'})
-    if request.user.is_staff or request.user.is_superuser:
+    if request.user.is_cleared:
         return redirect('app:ticket-list')
 
-    elif not request.user.is_staff or request.user.is_superuser:
+    elif not request.user.is_cleared:
         return redirect('app:inbox')
     # return redirect('app:inbox')
 
 
-class Category(LoginRequiredMixin, ListView):
+class FolderList(LoginRequiredMixin, CoreListView):
     model = Folder
-    template = 'folder.html'
+ 
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(FolderList, self).get_context_data(*args, **kwargs)
+        new_context_entry = "All Folders"
+        context["title"] = new_context_entry
+        return context
+
+    @permit_if_role_in(['is_cleared', ])
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+
+class FolderCreate(LoginRequiredMixin, AjaxCreateView):
+    model = Ticket
+    form_class = CategoryForm
+
+    @permit_if_role_in(['is_cleared', ])
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+    # def get_redirect_url(self):
+    #     return reverse_lazy('app:home')
+
 
 
 class CategoryDetailView(LoginRequiredMixin, DetailView):
@@ -87,10 +109,9 @@ class TicketList(LoginRequiredMixin, CoreListView):
         context["title"] = new_context_entry
         return context
 
-        from webpush import send_user_notification
-
-        payload = {"head": "Welcome!", "body": "Hello World"}
-        send_user_notification(user='atila@gmail.com', payload=payload, ttl=1000)
+    @permit_if_role_in(['is_cleared', ])
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
 
 
 class UserTicketList(LoginRequiredMixin, CoreListView):
@@ -465,7 +486,7 @@ class CommentDetail(LoginRequiredMixin, AjaxDetailView):
 class FileList(LoginRequiredMixin, CoreListView):
     model = File
 
-    @permit_if_role_in(['is_cleared', ])
+    #@permit_if_role_in(['is_cleared', ])
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
 

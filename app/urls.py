@@ -6,8 +6,10 @@ app_name = 'app'
 urlpatterns = [
 
     path('', home, name='home'),
-    path('category/', Category.as_view(), name='category-list'),
-    path('category/<int:pk>/', CategoryDetailView.as_view(), name='category-detail'),
+    path('tickets/folder/', FolderList.as_view(), name='folder-list'),
+    path('folder/<int:pk>/folder', CategoryDetailView.as_view(), name='folder-detail'),
+    path('category/create/', FolderCreate.as_view(), name='folder-create'),
+
 
     path('user-list/', UserTicketList.as_view(), name='user-ticket-list'),
     path('inbox/', InboxList.as_view(), name='inbox'),

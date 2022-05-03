@@ -3,11 +3,11 @@
 {% block extracss %}
 {{form.media.css}}
 {% endblock extracss %}
-<form method="post" action="{{ request.path }}" class="ajax-save-form">
+<form method="post" {% if not form.instance.pk %} action="{{ request.path }}" {% endif %} class="ajax-save-form">
     {% csrf_token %}
      <div class="modal-header">
-        <h5 class="modal-title">{% if not form.instance.pk %}<span class="modal-icon text-primary"> 
-            {{ title }}</span>{% else %}<span class=" modal-icon text-primary"> 
+        <h5 class="modal-title">{% if not form.instance.pk %}<span class=" text-primary"> <i class="fas fa-plus"></i> 
+            {{ title }}</span>{% else %} <span class="text-primary"><i class="fa fa-edit"></i>
             {{ title }}</span>{% endif %}</h5>
             <button type="button" class="btn-close ms-auto" data-bs-dismiss="modal" aria-label="Close"></button>
 
@@ -20,7 +20,7 @@
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
             {% for key, value in form.errors.items %}
                 <div class="fieldWrapper">
-                    {{ key }}: {{ value|striptags }}
+                {{ key }}: {{ value|striptags }}
                 </div>
             {% endfor %}
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">

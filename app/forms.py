@@ -1,5 +1,5 @@
 from django import forms
-from .models import Ticket, Comment, File
+from .models import Folder, Ticket, Comment, File
 from bootstrap_datepicker_plus import DatePickerInput
 from cms.forms import BootstrapHelperForm
 from django_select2 import forms as s2forms
@@ -11,6 +11,14 @@ class TicketWidget(s2forms.ModelSelect2MultipleWidget):
         "first_name__icontains",
         "roles__icontains",
     ]
+
+
+class CategoryForm(BootstrapHelperForm, forms.ModelForm):
+
+    class Meta:
+        model = Folder
+        fields = ('title', 'group',)
+       
 
 
 class TicketForm(BootstrapHelperForm, forms.ModelForm):

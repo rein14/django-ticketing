@@ -4,27 +4,32 @@
 {% block content %}   
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="{{request.META.HTTP_REFERER}}">Back</a></li>
+    <li class="breadcrumb-item"><a href="{{request.META.HTTP_REFERER}}">
+      <svg class="icon icon-xs" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M7.707 14.707a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l2.293 2.293a1 1 0 010 1.414z" clip-rule="evenodd"></path></svg>
+      Back</a></li>
    <li class="breadcrumb-item active" aria-current="page"> <a href="{{request.get_full_path|slice:-5}}" class="ajax-load-form" title="Edit">
      {{ title }}</a></li>
  </ol>
 </nav> 
 
-{% if user.is_superuser and request.user.is_staff %}
+
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
   <h5 class="h5"><span class="text-primary"><a href="{{request.get_full_path|slice:-5}}" class="ajax-load-form" title="Edit">
     {{ detail_title }}</a></span></h5>
   <div class="btn-toolbar mb-2 mb-md-0">
+    {% if user.is_cleared %}
+
       <button type="button" class="btn btn-dark animate-up-2 mr-3 me-2 ajax-upload-files" style="color:white;background: #0C4B33; border-color: #0C4B33 !important">
         <i class="fas fa-file-upload me-2"></i> Upload {{ model_verbose_name_plural|lower }}
       </button>
-      
+      {% endif %}
+
       <a class="btn btn-outline-info animate-up-2 mr-3" href='{{request.get_full_path|slice:-5}}comments'>
         <i class="fas fa-comments me-2"></i>Comments </a>&nbsp
     </div>
 </div>
 
-
+{% if user.is_cleared %}
 <div class="card pt-4 pb-4 well text-muted text-center">
   <i class="fas fa-download pb-4" style="font-size: 4rem;"></i>
   <h3>Drop Files Here to Upload</h3>
