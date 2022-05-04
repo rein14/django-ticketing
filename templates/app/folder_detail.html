@@ -31,7 +31,7 @@
  
       Back</a></li>
     <li class="breadcrumb-item active" aria-current="page"> <a href="{{request.get_full_path|slice:-8}}" class="ajax-load-form" title="Edit">
-      {{ title }}</a></li>
+      {{object|lower|capfirst}}</a></li>
   </ol>
 </nav>
 
