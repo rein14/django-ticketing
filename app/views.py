@@ -45,19 +45,12 @@ class FolderList(LoginRequiredMixin, CoreListView):
     model = Folder
  
 
-    def get_context_data(self, *args, **kwargs):
-        context = super(FolderList, self).get_context_data(*args, **kwargs)
-        new_context_entry = "All Folders"
-        context["title"] = new_context_entry
-        return context
-
-    @permit_if_role_in(['is_cleared', ])
-    def dispatch(self, request, *args, **kwargs):
-        return super().dispatch(request, *args, **kwargs)
+class FolderDelete(LoginRequiredMixin, AjaxDeleteView):
+    model = Folder
 
 
 class FolderCreate(LoginRequiredMixin, AjaxCreateView):
-    model = Ticket
+    model = Folder
     form_class = CategoryForm
 
     @permit_if_role_in(['is_cleared', ])

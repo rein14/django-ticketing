@@ -7,8 +7,8 @@
     {% csrf_token %}
      <div class="modal-header">
         <h5 class="modal-title">{% if not form.instance.pk %}<span class=" text-primary"> <i class="fas fa-plus"></i> 
-            {{ title }}</span>{% else %} <span class="text-primary"><i class="fa fa-edit"></i>
-            {{ title }}</span>{% endif %}</h5>
+            Create</span>{% else %} <span class="text-primary"><i class="fa fa-edit"></i>
+            Update</span>{% endif %}</h5>
             <button type="button" class="btn-close ms-auto" data-bs-dismiss="modal" aria-label="Close"></button>
 
     </div> 

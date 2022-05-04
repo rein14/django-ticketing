@@ -6,7 +6,7 @@ app_name = 'app'
 urlpatterns = [
 
     path('', home, name='home'),
-    path('tickets/folder/', FolderList.as_view(), name='folder-list'),
+    path('folder/', FolderList.as_view(), name='folder-list'),
     path('folder/<int:pk>/folder', CategoryDetailView.as_view(), name='folder-detail'),
     path('category/create/', FolderCreate.as_view(), name='folder-create'),
 

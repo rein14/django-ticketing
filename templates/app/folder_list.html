@@ -31,7 +31,7 @@
   <div class="table-responsive py-4">
     <table class="table table-flush table-hover" id="table-ajax" data-page-length='10'>
 
-      <thead class="thead-light ">
+      <thead class="thead-light">
         {% comment %} <tr> {% endcomment %}
           {% comment %} <th data-sortable="" style="width: 18.3791%;"> {% endcomment %}
         <tr>
@@ -78,39 +78,37 @@
 
 {% block tick%}
 <script>
-  var table_folder = $('#table-ajax').DataTable({
-    ordering: false,
-    "processing": true,
-     order: [
-      [1, 'asc']
-    ],
-    columnDefs: [{
-      orderable: true,
-      // className: 'select-checkbox',
-      targets: 0
+   var table = $('#table-ajax').DataTable({
+     ordering: false,
+     "processing": true,
 
-    }],
-    // select: {
-    //   info: true,
-    //   style: 'multi',
-    //   selector: 'td:nth-child(1)'
-    // },
-    "language": {
-      "zeroRecords": "Sorry, no entries to display here", //changes words used
-      "lengthMenu": "Show _MENU_ Folder", //changes words used
-      "info": "&raquo; Showing _START_ to _END_ of _TOTAL_ Folders", //changes words used
-      "search": "", //changes words used originally - Search programs:
-      "searchPlaceholder": "Search",
-      "infoFiltered": "(filtered from _MAX_ )"
-    }
-  });
-
-
-{% comment %}  
-  setInterval( function () {
-    table.ajax.refresh(); // user paging is not reset on reload
-}, 3000 ); {% endcomment %}
-</script>
+      order: [
+       [1, 'asc']
+     ],
+     columnDefs: [{
+       orderable: true,
+       // className: 'select-checkbox',
+       targets: 0
+ 
+     }],
+     // select: {
+     //   info: true,
+     //   style: 'multi',
+     //   selector: 'td:nth-child(1)'
+     // },
+     "language": {
+       "zeroRecords": "Sorry, no comments yet", //changes words used
+       "lengthMenu": "Show _MENU_comments", //changes words used
+       "info": "&raquo; Showing _START_ to _END_ of _TOTAL_ comments", //changes words used
+       "search": "", //changes words used originally - Search programs:
+       "searchPlaceholder": "Search comments",
+       "infoFiltered": "(filtered from _MAX_ comments)"
+     }
+   });
+ 
+ 
+ 
+ </script>
 
 {% endblock  %}
 
