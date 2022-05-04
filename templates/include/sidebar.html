@@ -68,7 +68,7 @@
 
     {% if request.user.is_cleared %}
 
-    <li role="separator" class="dropdown-divider mt-4 mb-3 border-gray-700"></li>
+    <li role="separator" class="dropdown- divider mt-4 mb-3 border-gray-700"></li>
    
     <li class="nav-item {% if request.path == '/tickets/' %} active {% endif %} ">
       <a href="{% url 'app:home' %}" class="nav-link">
@@ -131,12 +131,12 @@
               </li>
 
           {% endfor %}
-        <li class="">
-          <a class="nav-link" href="">
+        <li class="nav-item">
+          <a class="nav-link" href=" {% url 'app:folder-list' %}">
             <span class="sidebar-icon">
-              <i class="fa fa-plus"></i>
+              <i class="fa fa-link"></i>
             </span>
-            <span class="sidebar-text">Add Folder</span>
+            <span class="sidebar-text"><u>Show More</u> </span>
           </a>    
             </li>
         </ul>

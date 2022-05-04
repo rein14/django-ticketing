@@ -31,12 +31,12 @@
   <div class="table-responsive py-4">
     <table class="table table-flush table-hover" id="table-ajax" data-page-length='10'>
 
-      <thead class="thead-light">
+      <thead class="thead-light d-none">
         {% comment %} <tr> {% endcomment %}
           {% comment %} <th data-sortable="" style="width: 18.3791%;"> {% endcomment %}
         <tr>
           <th>{{ object_list|verbose_name:'field:title' }}</th>
-          <th>{{ object_list|verbose_name:'field:group' }}</th>
+          {% comment %} <th>{{ object_list|verbose_name:'field:group' }}</th> {% endcomment %}
           {% comment %} <th>{{ object_list|verbose_name:'field:folder' }}</th> {% endcomment %}
           <th style="text-align:center">Actions</th>
         </tr>
@@ -97,12 +97,12 @@
      //   selector: 'td:nth-child(1)'
      // },
      "language": {
-       "zeroRecords": "Sorry, no comments yet", //changes words used
-       "lengthMenu": "Show _MENU_comments", //changes words used
-       "info": "&raquo; Showing _START_ to _END_ of _TOTAL_ comments", //changes words used
+       "zeroRecords": "Sorry, no folder created yet", //changes words used
+       "lengthMenu": "Show _MENU_folders", //changes words used
+       "info": "&raquo; Showing _START_ to _END_ of _TOTAL_ folders", //changes words used
        "search": "", //changes words used originally - Search programs:
-       "searchPlaceholder": "Search comments",
-       "infoFiltered": "(filtered from _MAX_ comments)"
+       "searchPlaceholder": "Search for folder",
+       "infoFiltered": "(filtered from _MAX_ folders)"
      }
    });
  

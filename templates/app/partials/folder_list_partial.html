@@ -3,15 +3,15 @@
 {% for folder in folder_list  %}
          <tr id="{{folder.pk}}">
          
-         <td>
+         <td class="fw-bold">  <a href="{{ folder.get_absolute_url }}"><i class="far fa-folder me-2"></i>
          
-            {{folder.title}}f
+            {{folder.title}}</a>
          </td>
          
-         <td>
+         {% comment %} <td>
          
             {{folder.group}}
-         </td>
+         </td> {% endcomment %}
          
        
          <td style="text-align:center"> 
