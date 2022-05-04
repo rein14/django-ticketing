@@ -4,6 +4,8 @@
 {% block title %} {{ title }} · {{ block.super }} {% endblock title %}
  
 
+
+
 {% block content %}
 {% block table %}
 <div id="myDIV" class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 pt-3 mb-3">
@@ -31,7 +33,7 @@
   <div class="table-responsive py-4">
     <table class="table table-flush table-hover" id="table-ajax" data-page-length='10'>
 
-      <thead class="thead-light d-none">
+      <thead class="thead-light">
         {% comment %} <tr> {% endcomment %}
           {% comment %} <th data-sortable="" style="width: 18.3791%;"> {% endcomment %}
         <tr>
@@ -56,7 +58,6 @@
 
 {% block extracss %}
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" />
-
 <style>
   .table.dataTable.dtr-inline.collapsed>tbody>tr>td.dtr-control:before,
   table.dataTable.dtr-inline.collapsed>tbody>tr>th.dtr-control:before {

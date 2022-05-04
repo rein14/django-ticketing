@@ -8,11 +8,23 @@
     <div class="d-flex justify-content-between w-100" id="navbarSupportedContent">
       <div class="d-flex align-items-center">
         <!-- Search form -->
-        <button id="sidebar-toggle"
+        {% comment %} <button id="sidebar-toggle"
           class="sidebar-toggle me-3 btn btn-icon-only d-none d-lg-inline-block align-items-center justify-content-center">
         <i class="fa fa-question-circle"></i> 
-        </button>
-
+        </button> {% endcomment %}
+        {% block nav %}
+<nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+             <li class="breadcrumb-item"><a href="{{request.META.HTTP_REFERER}}">
+              <svg class="icon icon-xs" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M7.707 14.707a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l2.293 2.293a1 1 0 010 1.414z" clip-rule="evenodd"></path></svg>
+         
+              Back</a></li>
+            <li class="breadcrumb-item active" aria-current="page"> <a href="{{request.get_full_path|slice:-8}}" class="ajax-load-form" title="Edit">
+              {{         title }}</a></li>
+          </ol>
+        </nav> 
+        {% endblock %}
+        
       </div>
 
       
