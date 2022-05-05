@@ -45,12 +45,16 @@ $(document).ready(function () {
       success: function (data) {
         if (data.form_is_valid) {
           $("#modal-ajax").modal("hide");
+ 
           if (data.redirect) {
             top.location = data.redirect;
           } else {
+            $("#table-ajax").DataTable().destroy(); //this will flush DT's cache
+
             $("#table-ajax tbody").html(data.html_list);
+            $("#table-ajax").DataTable().ajax.draw();
           }
-          toastr["success"](data.message);
+          // toastr["success"](data.message);
         } else {
           $("#modal-ajax .modal-content").html(data.html_form);
           // toastr["error"](data.message);

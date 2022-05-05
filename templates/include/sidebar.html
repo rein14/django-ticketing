@@ -144,14 +144,21 @@
       </div>
     </li>
     
-
+    <li role="separator" class="dropdown-divider mt-4 mb-3 border-gray-700"></li>
+    <li class="nav-item">
+      <a href="{% url 'account:logout' %}" class="nav-link">
+          <span class="sidebar-icon"><span class="fas fa-users me-2"></span></span>
+          <span>Users</span>
+      </a>
+  </li>
     {% endif %}
    </div>
   
-  <div>
+  <div class="">
     
-    <li role="separator" class="dropdown-divider mt-4 mb-3 border-gray-700"></li>
-    
+   
+  <li role="separator" class="dropdown-divider mt-4 mb-3 border-gray-700"></li>
+
     <li class="nav-item">
       <a href="{% url 'account:logout' %}" class="nav-link">
           <span class="sidebar-icon"><span class="fas fa-sign-out-alt text-danger me-2"></span></span>

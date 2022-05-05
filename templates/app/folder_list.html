@@ -8,7 +8,7 @@
 
 {% block content %}
 {% block table %}
-<div id="myDIV" class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 pt-3 mb-3">
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 pt-3 mb-3">
   <h5 class="h5"><span class="text-primary">
 
    <i class="fa fa-folder me-2"></i>{{ title }}</span></h5>
@@ -38,7 +38,7 @@
           {% comment %} <th data-sortable="" style="width: 18.3791%;"> {% endcomment %}
         <tr>
           <th>{{ object_list|verbose_name:'field:title' }}</th>
-          {% comment %} <th>{{ object_list|verbose_name:'field:group' }}</th> {% endcomment %}
+          <th style="text-align:center">{{ object_list|verbose_name:'field:last_modified' }}</th>
           {% comment %} <th>{{ object_list|verbose_name:'field:folder' }}</th> {% endcomment %}
           <th style="text-align:center">Actions</th>
         </tr>
@@ -80,31 +80,25 @@
 {% block tick%}
 <script>
    var table = $('#table-ajax').DataTable({
-     ordering: false,
-     "processing": true,
+     ordering: true,
 
       order: [
        [1, 'asc']
      ],
-     columnDefs: [{
-       orderable: true,
-       // className: 'select-checkbox',
-       targets: 0
- 
-     }],
+
      // select: {
      //   info: true,
      //   style: 'multi',
      //   selector: 'td:nth-child(1)'
      // },
-     "language": {
+     {% comment %} "language": {
        "zeroRecords": "Sorry, no folder created yet", //changes words used
        "lengthMenu": "Show _MENU_folders", //changes words used
        "info": "&raquo; Showing _START_ to _END_ of _TOTAL_ folders", //changes words used
        "search": "", //changes words used originally - Search programs:
        "searchPlaceholder": "Search for folder",
        "infoFiltered": "(filtered from _MAX_ folders)"
-     }
+     } {% endcomment %}
    });
  
  

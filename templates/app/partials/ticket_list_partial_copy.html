@@ -18,8 +18,10 @@
                  {% endfor %}
             </ul> 
         </td> {% endcomment %}
-        <td class="one">{{ ticket.sent_by }}</td>
         <td>{{ ticket.date_sent}}</td>
+
+        <td class="one">{{ ticket.sent_by }}</td>
+        <td>{{ ticket.last_modified}}</td>
 
 
         <td style="text-align: center;">

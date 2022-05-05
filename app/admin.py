@@ -9,8 +9,8 @@ class FileInline(admin.StackedInline):
     verbose_name_plural = verbose_name
     fk_name = 'ticket'
     extra = 0
-    readonly_fields = ('uploaded_at',)
-    fields = (('file', 'uploaded_at'),)
+    readonly_fields = ('creation_date',)
+    fields = (('file', 'creation_date'),)
 
 
 class CommentInline(admin.StackedInline):
@@ -46,10 +46,10 @@ class TicketAdmin(admin.ModelAdmin):
 
 class FolderAdmin(admin.ModelAdmin):
     save_as = True
-    list_display = ('title', ('group'),)
+    list_display = ('title', ('creation_date'),)
     list_display_links = ('title', )
     search_fields = ('title', )
-    fields = (('title','group', ), 
+    fields = (('title', ), 
               )
 
     # def get_files_count(self, instance):

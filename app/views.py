@@ -5,7 +5,7 @@ from unicodedata import category
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy, reverse
 from .models import Folder, Ticket, Comment, File
-from .forms import TicketForm, CommentForm, FileForm, TicketUpdateForm,TicketStatusUpdateForm, TicketDetailForm,CategoryForm
+from .forms import FolderForm, TicketForm, CommentForm, FileForm, TicketUpdateForm,TicketStatusUpdateForm, TicketDetailForm
 from cms.ajax import (AjaxCreateView, AjaxDetailView,
                       AjaxUpdateView, AjaxDeleteView, AjaxFilesUpload)
 from cms.views import CoreDetailView, CoreListView
@@ -24,6 +24,8 @@ from django.contrib import messages
 from django.views.generic import ListView,DetailView
 
 from webpush import send_user_notification
+from django.shortcuts import redirect, render
+from notifications.signals import notify
 
 def handler404(request, exception):
     return render(request, 'blank.html')
@@ -51,7 +53,7 @@ class FolderDelete(LoginRequiredMixin, AjaxDeleteView):
 
 class FolderCreate(LoginRequiredMixin, AjaxCreateView):
     model = Folder
-    form_class = CategoryForm
+    form_class = FolderForm
 
     @permit_if_role_in(['is_cleared', ])
     def dispatch(self, request, *args, **kwargs):
@@ -59,11 +61,13 @@ class FolderCreate(LoginRequiredMixin, AjaxCreateView):
     # def get_redirect_url(self):
     #     return reverse_lazy('app:home')
 
-
-
-class CategoryDetailView(LoginRequiredMixin, DetailView):
+class FolderUpdate(LoginRequiredMixin, AjaxUpdateView):
     model = Folder
+    form_class = FolderForm
 
+
+class FolderDetailView(LoginRequiredMixin, DetailView):
+    model = Folder
    
     # Add the product of this category to the context
     def get_context_data(self, **kwargs):
@@ -207,7 +211,7 @@ class OpenTicketsList(LoginRequiredMixin, CoreListView):
         context["title"] = new_context_entry
         return context
 
-from notifications.signals import notify
+
 
 class TicketCreate(LoginRequiredMixin, AjaxCreateView):
     model = Ticket
@@ -253,6 +257,7 @@ class TicketCreate(LoginRequiredMixin, AjaxCreateView):
         notify.send(sender, recipient=recipient, verb=ticket.title,description=ticket.description)
 
         return super().form_valid(form)
+
 
     # def post(self, request, *args, **kwargs):
     #     form = self.get_form()

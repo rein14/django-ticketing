@@ -6,26 +6,26 @@ app_name = 'app'
 urlpatterns = [
 
     path('', home, name='home'),
+    
     path('folder/', FolderList.as_view(), name='folder-list'),
-    path('folder/<int:pk>/folder', CategoryDetailView.as_view(), name='folder-detail'),
-    path('category/create/', FolderCreate.as_view(), name='folder-create'),
-
+    path('folder/<int:pk>/folder', FolderDetailView.as_view(), name='folder-detail'),
+    path('folder/create/', FolderCreate.as_view(), name='folder-create'),
+    path('folder/delete/<int:pk>/', FolderDelete.as_view(), name='folder-delete'),
+    path('folder/update/<int:pk>/', FolderUpdate.as_view(), name='folder-update'),
 
     path('user-list/', UserTicketList.as_view(), name='user-ticket-list'),
     path('inbox/', InboxList.as_view(), name='inbox'),
     path('completed/', CompletedList.as_view(), name='completed-tickets'),
 
-    path('tickets/', TicketList.as_view(), name='ticket-list'),
     path('opentickets/', OpenTicketsList.as_view(), name='open-tickets'),
     path('unassigned/', UnassignedTickets.as_view(), name='unassigned-list'),
     path('archive/', ArchiveList.as_view(), name='ticket-archive'),
 
-
+    path('tickets/', TicketList.as_view(), name='ticket-list'),
     path('ticket/create/', TicketCreate.as_view(), name='ticket-create'),
     path('ticket/update/<int:pk>/', TicketUpdate.as_view(), name='ticket-update'),
     path('ticket/statusupdate/<int:pk>/',
          TicketStatusUpdate.as_view(), name='ticket-status-update'),
-
     path('ticket/delete/<int:pk>/', TicketDelete.as_view(), name='ticket-delete'),
     path('ticket/<int:pk>/', TicketDetail.as_view(), name='ticket-detail'),
 

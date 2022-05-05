@@ -8,10 +8,10 @@
             {{folder.title}}</a>
          </td>
          
-         {% comment %} <td>
+         <td style="text-align:center">
          
-            {{folder.group}}
-         </td> {% endcomment %}
+            {{folder.last_modified}}
+         </td>
          
        
          <td style="text-align:center"> 
@@ -37,7 +37,7 @@
                          d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"
                          clip-rule="evenodd"></path>
                  </svg> Edit</a>
-                 <a class="dropdown-item d-flex align-items-center ajax-load-form" href="">
+                 <a class="dropdown-item d-flex align-items-center ajax-load-form" href="{% get_object_url 'delete' folder%}">
                      
                      <svg
                      class="dropdown-icon text-danger me-2 " fill="currentColor" viewBox="0 0 20 20"

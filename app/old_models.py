@@ -14,8 +14,8 @@ from django.contrib.auth.models import Group
 from django.utils import timezone
 
 class TimeStamped(models.Model):
-    creation_date = models.DateTimeField(editable=False)
-    last_modified = models.DateTimeField(editable=False)
+    creation_date = models.DateTimeField(editable=True)
+    last_modified = models.DateTimeField(editable=True)
 
     def save(self, *args, **kwargs):
         if not self.creation_date:
@@ -77,7 +77,10 @@ class Ticket(TimeStamped):
                                          related_name='assigned_to',
                                          blank=True,
                                          verbose_name='Assigned')
-   
+    assignment = models.CharField(max_length=255,  blank=True,
+                                         verbose_name='Assigned')
+    closed_date = models.DateTimeField(blank=True, null=True)
+
 
     def __str__(self):
         return self.title
@@ -161,7 +164,8 @@ class File(TimeStamped):
     #                          verbose_name='User', on_delete=models.CASCADE)
     file = models.FileField(upload_to='files/', null=True,
                             blank=True, max_length=255, verbose_name='Filename')
-    
+    uploaded_at = models.DateTimeField(
+        auto_now_add=True, null=True, blank=True, verbose_name='File uploaded at')
     order = OrderField(blank=True, for_fields=[
                        'ticket'], verbose_name='Order #')
 

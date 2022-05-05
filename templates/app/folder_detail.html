@@ -90,9 +90,11 @@
           {% comment %} <th>{{ object_list|verbose_name:'field:folder' }}</th> {% endcomment %}
 
           {% comment %} <th>Assigned To</th> {% endcomment %}
-          <th class="one">Sent By</th>
-
           <th>Date Sent</th>
+
+          <th class="one">Sent By</th>
+          <th>Last Name</th>
+
           <th style=""></th>
         </tr>
       </thead>
@@ -136,7 +138,7 @@
 {% block tick%}
 <script>
   var table = $('#table-ajax').DataTable({
-    ordering: false,
+    ordering: true,
     "processing": true,
   
     order: [

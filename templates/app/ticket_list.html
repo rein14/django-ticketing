@@ -34,7 +34,7 @@
     </svg> <span class="visually-hidden">Toggle Dropdown</span></button>
 <div class="dropdown-menu dashboard-dropdown dropdown-menu-start mt-2 py-1">  
         
-        <a class="dropdown-item d-flex align-items-center ajax-load-form" href="">
+        <a class="dropdown-item d-flex align-items-center ajax-load-form" href="{% url 'app:folder-create' %}">
           <i class="fas fa-plus me-2"></i> Create a new folder</a>
      </div>
 </div>
@@ -59,9 +59,12 @@
           {% comment %} <th>{{ object_list|verbose_name:'field:folder' }}</th> {% endcomment %}
 
           {% comment %} <th>{{ object_list|verbose_name:'field:assigned_to' }}</th> {% endcomment %}
+          <th>{{ object_list|verbose_name:'field:date_sent' }}</th>
+
           <th class="one">{{ object_list|verbose_name:'field:sent_by' }}</th>
 
-          <th>{{ object_list|verbose_name:'field:date_sent' }}</th>
+          <th class="one">{{ object_list|verbose_name:'field:last_modified' }}</th>
+
           <th style="text-align:center">Actions</th>
         </tr>
       </thead>
@@ -91,6 +94,11 @@
 
 </style>
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css">
+<style>
+span.select2-container {
+  z-index:10050;
+}
+</style>
 
 {% endblock extracss %}
 
@@ -102,11 +110,11 @@
 
 {% block tick%}
 <script>
+  $(document).ready( function () {
   var table = $('#table-ajax').DataTable({
-    ordering: false,
+    ordering: true,
     "processing": true,
-    url: "/tickets/",
-
+ 
     order: [
       [1, 'asc']
     ],
@@ -131,11 +139,9 @@
     }
   });
 
+} );
 
- 
-  setInterval( function () {
-    table.ajax.refresh(); // user paging is not reset on reload
-}, 3000 );
+
 </script>
 
 {% endblock  %}

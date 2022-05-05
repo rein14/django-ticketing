@@ -7,7 +7,7 @@
        
       
         {% for field in form.visible_fields %}
-        <div class="form-group mt-4">
+        <div class="form-group mt-4 mb-3">
             
              {% with WIDGET_ERROR_CLASS='is-invalid' %}
                  <div class="form-group">
@@ -21,19 +21,19 @@
     
      {% if comment_overlap %}
 
-    <div class="form-row" style="font-size:inherit">
-        <div class="col-6">
+    <div class="form-row small">
+        <div class="col-sm-6 mb-3">
             <a  href="{% url 'app:comment-list' ticket.pk %}" title="View comments">
 
  
-            <span class="text-primary">{{ comment_count.count }}  Comments on this </span>
+            <span class="text-info" style=""><span class="mb-3">{{ comment_count.count }}</span>  <i class="fa fa-comments"></i>Comments</span>
         </a>
         </div>
 
         <div class="col-6" style="font-size:inherit" >
             <a style="font-size:inherit" href="{% url 'app:file-list' ticket.pk %}" title="View files">
 
-             <span style="font-size:inherit" class="text-success">{{ file_count.count }}  Files Association</span>
+             <span style="font-size:inherit" class="text-success">{{ file_count.count }}  <i class="fa fa-file"></i> Files Association</span>
         </a>
          </div>
       </div>

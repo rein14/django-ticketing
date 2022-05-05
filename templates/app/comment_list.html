@@ -4,10 +4,6 @@
 {% load static %}
 {% block title %} {{ title }} · {{ block.super }} {% endblock title %}
 
-
-{% block breadcrumb %}{% endblock breadcrumb %}
-
-
 {% block nav %}
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb">
@@ -24,16 +20,6 @@
 {% block content %}
 
 {% block table %}
-{% comment %} <nav aria-label="breadcrumb">
-  <ol class="breadcrumb">
-     <li class="breadcrumb-item"><a href="{{request.META.HTTP_REFERER}}">
-      <svg class="icon icon-xs" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M7.707 14.707a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l2.293 2.293a1 1 0 010 1.414z" clip-rule="evenodd"></path></svg>
- 
-      Back</a></li>
-    <li class="breadcrumb-item active" aria-current="page"> <a href="{{request.get_full_path|slice:-8}}" class="ajax-load-form" title="Edit">
-      {{ title }}</a></li>
-  </ol>
-</nav>  {% endcomment %}
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
   <h5 class="h5"><span class="text-primary me-2"> <a href="{{request.get_full_path|slice:-8}}" class="ajax-load-form" title="Edit">
       {{ detail_title }}</a></span>     {% if request.user.is_cleared %}<a class="small ajax-load-form" href="{{request.path|comment_status_update}}">
@@ -87,7 +73,7 @@
       <th>{{ object_list|verbose_name:'field:user' }}</th>
 
       <th>{{ object_list|verbose_name:'field:comment' }}</th>
-      <th>{{ object_list|verbose_name:'field:created' }}</th>
+      <th>{{ object_list|verbose_name:'field:last_modified' }}</th>
       <th style="text-align:center">Actions</th>
      </tr>
   </thead>

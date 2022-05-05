@@ -85,6 +85,13 @@
     width: 65px;
     display: inline-block;
 } 
+.sidebar-footer{
+  height: 50px;
+  position: absolute;
+   bottom: 0;
+  list-style-type: none;
+  padding-bottom:5.5em;
+  }
  </style>
  
 </head>
@@ -107,7 +114,7 @@
           <div class="d-flex justify-content-between w-100" id="navbarSupportedContent">
             <div class="d-flex align-items-center">
              
-              
+
               {% block nav %}
               <button id="sidebar-toggle"
               class="sidebar-toggle me-3 btn btn-icon-only d-none d-lg-inline-block align-items-center justify-content-center">
@@ -123,7 +130,7 @@
       
            
       
-              <li class="nav-item dropdown me-2">
+              <li class="nav-item dropdown">
       
       
                 <a class="nav-link text-primary notification dropdown-toggle"
@@ -170,13 +177,13 @@
                     <img class="avatar rounded-circle" alt="Image placeholder" src="/static/assets/img/team/download.png">
                     <div class="media-body ms-2 text-dark align-items-center d-none d-lg-block">
                       <span class="mb-0 font-small fw-bold text-gray-900">
-                        <strong>{{user}} ({{user.roles|lower|capfirst}})</strong>
+                        <strong>{{user}}</strong>
                       </span>
                     </div>
                   </div>
                 </a>
                 <div class="dropdown-menu dashboard-dropdown dropdown-menu-end mt-2 py-1">
-      
+                  
                   <a class="dropdown-item d-flex align-items-center" href="/settings.html">
                     <svg class="dropdown-icon text-gray-400 me-2" fill="currentColor" viewBox="0 0 20 20"
                       xmlns="http://www.w3.org/2000/svg">
