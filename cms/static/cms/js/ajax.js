@@ -52,7 +52,7 @@ $(document).ready(function () {
             $("#table-ajax").DataTable().destroy(); //this will flush DT's cache
 
             $("#table-ajax tbody").html(data.html_list);
-            $("#table-ajax").DataTable().ajax.draw();
+            $("#table-ajax").DataTable();
           }
           // toastr["success"](data.message);
         } else {

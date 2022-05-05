@@ -113,8 +113,10 @@ span.select2-container {
   $(document).ready( function () {
   var table = $('#table-ajax').DataTable({
     ordering: true,
-    "processing": true,
- 
+     "processing": true,
+    //"serverSide": true,
+    //any other configuration options
+   // "ajax": "/tickets",
     order: [
       [1, 'asc']
     ],
@@ -138,6 +140,8 @@ span.select2-container {
       "infoFiltered": "(filtered from _MAX_ entries)"
     }
   });
+
+
 
 } );
 

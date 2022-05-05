@@ -12,6 +12,12 @@ class TicketWidget(s2forms.ModelSelect2MultipleWidget):
         "roles__icontains",
     ]
 
+class FolderWidget(s2forms.Select2Widget):
+    search_fields = [
+
+        "title__icontains",
+    ]
+
 
 class FolderForm(BootstrapHelperForm, forms.ModelForm):
 
@@ -29,6 +35,7 @@ class TicketForm(BootstrapHelperForm, forms.ModelForm):
                   'assigned_to', 'sent_by','folder',)
         widgets = {
             'assigned_to': TicketWidget,
+            'folder': FolderWidget,
         }
 
 
