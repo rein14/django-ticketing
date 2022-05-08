@@ -24,7 +24,7 @@ class AjaxCreateView(AjaxContextMixin, AjaxObjectMixin, AjaxFormMixin, CreateVie
 class AjaxUpdateView(AjaxContextMixin, AjaxObjectMixin, AjaxFormMixin, UpdateView):
     def dispatch(self, *args, **kwargs):
         self.event = 'update'
-        self.template = 'form'
+        self.template = 'updateform'
         return super().dispatch(*args, **kwargs)
 
 

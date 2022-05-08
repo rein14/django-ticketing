@@ -86,6 +86,15 @@
         <span class="sidebar-text">Open Memos</span>
       </a>
     </li>
+    <li class="nav-item {% if request.path == '/unassigned/' %} active {% endif %}">
+      <a href="{% url 'app:unassigned-list' %}" class="nav-link">
+        <span class="sidebar-icon">
+          <i class="fa fa-user-times me-2"></i>
+        </span>
+        <span class="sidebar-text">Unassigned</span>
+      </a>
+    </li>
+
     <li class="nav-item {% if request.path == '/archive/' %} active {% endif %}">
       <a href="{% url 'app:ticket-archive' %}" class="nav-link">
         <span class="sidebar-icon">
@@ -126,7 +135,10 @@
              {% for folder in nav_folder%}
               <li class="nav-item">
                 <a class="nav-link" href="{{ folder.get_absolute_url }}">
-                  <span class="sidebar-text">{{folder|lower|capfirst}} Folder</span>
+                  <span class="sidebar-text">
+                    <i class="far fa-folder me-2"></i>
+
+                    {{folder|lower|capfirst}} Folder</span>
                 </a>
               </li>
 

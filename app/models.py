@@ -13,6 +13,7 @@ from django.contrib.auth.models import Group
 
 from django.utils import timezone
 
+
 class TimeStamped(models.Model):
     creation_date = models.DateTimeField(editable=False)
     last_modified = models.DateTimeField(editable=False)
@@ -31,6 +32,7 @@ class TimeStamped(models.Model):
 class Folder(TimeStamped):
     title = models.CharField(max_length=255, verbose_name='Folder')
     slug = models.SlugField(default="")
+    order = OrderField(blank=True, verbose_name='Order #')
     # group = models.ForeignKey(Group, on_delete=models.CASCADE)
  
     def __str__(self):
@@ -41,10 +43,10 @@ class Folder(TimeStamped):
         return super().save()
 
     class Meta:
-        ordering = ["title"]
+        db_table = 'folder'
         verbose_name = 'Folder'
-
-        verbose_name_plural = "Folder Lists"
+        verbose_name_plural = "Folders"
+        ordering = ('order', )
 
     # def get_absolute_url(self):
     #     return reverse("app:ticket-list", kwargs={"folder": self.id})
@@ -119,6 +121,9 @@ class Ticket(TimeStamped):
         verbose_name = 'Ticket'
         verbose_name_plural = 'Tickets'
 
+    def get_absolute_url(self):
+        return reverse('app:ticket-list')
+
 
 class Comment(TimeStamped):
     ticket = models.ForeignKey(
@@ -172,13 +177,13 @@ class File(TimeStamped):
     def __str__(self):
         return self.filename
 
-    def save(self, *args, **kwargs):
-        if self.pk:
-            old_file = File.objects.get(pk=self.pk).file
-            if not old_file == self.file:
-                storage = old_file.storage
-                if storage.exists(old_file.name):
-                    storage.delete(old_file.name)
+    # def save(self, *args, **kwargs):
+    #     if self.pk:
+    #         old_file = File.objects.get(pk=self.pk).file
+    #         if not old_file == self.file:
+    #             storage = old_file.storage
+    #             if storage.exists(old_file.name):
+    #                 storage.delete(old_file.name)
 
         super().save(*args, **kwargs)
 

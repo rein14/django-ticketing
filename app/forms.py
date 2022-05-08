@@ -2,6 +2,7 @@ from django import forms
 from .models import Folder, Ticket, Comment, File
 from bootstrap_datepicker_plus import DatePickerInput
 from cms.forms import BootstrapHelperForm
+from django.forms import inlineformset_factory
 from django_select2 import forms as s2forms
 
 
@@ -37,6 +38,8 @@ class TicketForm(BootstrapHelperForm, forms.ModelForm):
             'assigned_to': TicketWidget,
             'folder': FolderWidget,
         }
+
+
 
 
 class TicketDetailForm(BootstrapHelperForm, forms.ModelForm):
@@ -98,3 +101,20 @@ class FileForm(BootstrapHelperForm, forms.ModelForm):
     class Meta:
         model = File
         fields = ('file', )
+
+
+# TicketMetaInlineFormset = inlineformset_factory(
+#     Ticket,
+#     File,
+#     form=FileForm,
+#     extra=1,
+#     # max_num=5,
+#     # fk_name=None,
+#     # fields=None, exclude=None, can_order=False,
+#     # can_delete=True, max_num=None, formfield_callback=None,
+#     # widgets=None, validate_max=False, localized_fields=None,
+#     # labels=None, help_texts=None, error_messages=None,
+#     # min_num=None, validate_min=False, field_classes=None
+# )
+
+TicketFileFormSet = inlineformset_factory(Ticket, File, form=FileForm, extra=1, can_delete=False)

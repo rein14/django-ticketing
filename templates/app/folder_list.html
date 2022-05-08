@@ -34,13 +34,11 @@
     <table class="table table-flush table-hover" id="table-ajax" data-page-length='10'>
 
       <thead class="thead-light">
-        {% comment %} <tr> {% endcomment %}
-          {% comment %} <th data-sortable="" style="width: 18.3791%;"> {% endcomment %}
+
         <tr>
           <th>{{ object_list|verbose_name:'field:title' }}</th>
           <th style="text-align:center">{{ object_list|verbose_name:'field:last_modified' }}</th>
-          {% comment %} <th>{{ object_list|verbose_name:'field:folder' }}</th> {% endcomment %}
-          <th style="text-align:center">Actions</th>
+           <th style="text-align:center">Actions</th>
         </tr>
       </thead>
 
@@ -78,32 +76,44 @@
 <script src="https://cdn.datatables.net/select/1.3.1/js/dataTables.select.js"></script>
 
 {% block tick%}
-<script>
-   var table = $('#table-ajax').DataTable({
-     ordering: true,
-
+   <script>
+    $(document).ready( function () {
+    var table = $('#table-ajax').DataTable({
+      ordering: true,
+       "processing": true,
+      //"serverSide": true,
+      //any other configuration options
+     // "ajax": "/tickets",
       order: [
-       [1, 'asc']
-     ],
-
-     // select: {
-     //   info: true,
-     //   style: 'multi',
-     //   selector: 'td:nth-child(1)'
-     // },
-     {% comment %} "language": {
-       "zeroRecords": "Sorry, no folder created yet", //changes words used
-       "lengthMenu": "Show _MENU_folders", //changes words used
-       "info": "&raquo; Showing _START_ to _END_ of _TOTAL_ folders", //changes words used
-       "search": "", //changes words used originally - Search programs:
-       "searchPlaceholder": "Search for folder",
-       "infoFiltered": "(filtered from _MAX_ folders)"
-     } {% endcomment %}
-   });
- 
- 
- 
- </script>
+        [1, 'asc']
+      ],
+      columnDefs: [{
+        orderable: true,
+        // className: 'select-checkbox',
+        targets: 0
+  
+      }],
+      // select: {
+      //   info: true,
+      //   style: 'multi',
+      //   selector: 'td:nth-child(1)'
+      // },
+      "language": {
+        "zeroRecords": "Sorry, no entries to display here", //changes words used
+        "lengthMenu": "Show _MENU_ entries", //changes words used
+        "info": "&raquo; Showing _START_ to _END_ of _TOTAL_ endtries", //changes words used
+        "search": "", //changes words used originally - Search programs:
+        "searchPlaceholder": "Search memos",
+        "infoFiltered": "(filtered from _MAX_ entries)"
+      }
+    });
+  
+  
+  
+  } );
+  
+  
+  </script>
 
 {% endblock  %}
 

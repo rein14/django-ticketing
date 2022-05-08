@@ -26,6 +26,8 @@ var filesToCache = [
     '/static/assets/js/volt.js',
 
     '/static/assets/css/volt.css',
+
+    '/static/assets/css/toastr.css',
     'https://appsrv1-147a1.kxcdn.com/volt-dashboard-pro-v131/vendor/@fortawesome/fontawesome-free/css/all.min.css',
     '/static/cms/js/ajax.js',
     '/static/bootstrap_datepicker_plus/css/datepicker-widget.css',
@@ -34,7 +36,6 @@ var filesToCache = [
     '/static/js/jquery-fileupload/jquery.fileupload.js',
     '/static/js/jquery-fileupload/jquery.iframe-transport.js',
     '/static/js/jquery-fileupload/jquery.ui.widget.js',
-    // '/static/account/css/signin.css',
     'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap',
     '/static/django_select2/django_select2.css',
     '/static/webpush/webpush.js',

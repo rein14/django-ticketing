@@ -14,6 +14,25 @@ function getCookie(name) {
   return cookieValue;
 }
 
+
+
+function getCookie(name) {
+  var cookieValue = null;
+  if (document.cookie && document.cookie !== '') {
+      var cookies = document.cookie.split(';');
+      for (var i = 0; i < cookies.length; i++) {
+          var cookie = cookies[i].trim();
+          // Does this cookie string begin with the name we want?
+          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+              cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+              break;
+          }
+      }
+  }
+  return cookieValue;
+}
+var csrftoken = getCookie('csrftoken');
+
 $.ajaxSetup({
   headers: { "X-CSRFToken": getCookie("csrftoken") },
 });
@@ -36,10 +55,15 @@ $(document).ready(function () {
   };
 
   var saveForm = function () {
-    var form = $(this);
-    $.ajax({
+    var form = $('form');
+    let formData = new FormData($('form#mainform')[0])
+    let action = form.attr("action")
+    formData.append("action", action)
+
+    
+     $.ajax({
       url: form.attr("action"),
-      data: form.serialize(),
+      data: formData,
       type: form.attr("method"),
       dataType: "json",
       success: function (data) {
@@ -54,13 +78,16 @@ $(document).ready(function () {
             $("#table-ajax tbody").html(data.html_list);
             $("#table-ajax").DataTable();
           }
-          // toastr["success"](data.message);
+          
+            toastr["success"](data.message);
         } else {
           $("#modal-ajax .modal-content").html(data.html_form);
-          // toastr["error"](data.message);
-        }
+            // toastr["error"](data.message);
+            // Display an error notificatio
+            // Display a success notification
+         }
       },
-      error: function (xhr, status, error) {
+      error: function (xhr, status, error) {M
         var err = JSON.parse(xhr.responseText);
         toastr["error"](err.message);
       },
@@ -68,6 +95,42 @@ $(document).ready(function () {
     return false;
   };
 
+
+  var saveUpdateForm = function () {
+    var form = $('form');
+    $.ajax({
+      url: form.attr("action"),
+      data: form.serialize(),
+      type: form.attr("method"),
+      dataType: 'json',
+      success: function (data) {
+        if (data.form_is_valid) {
+          $("#modal-ajax").modal("hide");
+ 
+          if (data.redirect) {
+            top.location = data.redirect;
+          } else {
+            $("#table-ajax").DataTable().destroy(); //this will flush DT's cache
+
+            $("#table-ajax tbody").html(data.html_list);
+            $("#table-ajax").DataTable();
+          }
+          
+            toastr["success"](data.message);
+        } else {
+          $("#modal-ajax .modal-content").html(data.html_form);
+            // toastr["error"](data.message);
+            // Display an error notificatio
+            // Display a success notification
+         }
+      },
+      error: function (xhr, status, error) {M
+        var err = JSON.parse(xhr.responseText);
+        toastr["error"](err.message);
+      },
+    });
+    return false;
+  };
   // var saveForm = function () {
   //   var form = $(this);
   //   $.ajax({
@@ -96,6 +159,8 @@ $(document).ready(function () {
 
   $("body").on("click", ".ajax-load-form", loadForm);
   $("body").on("submit", ".ajax-save-form", saveForm);
+  $("body").on("submit", ".ajax-save-update-form", saveUpdateForm);
+
 
   // Order table rows
   // $(".order").sortable({

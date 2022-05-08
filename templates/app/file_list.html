@@ -9,7 +9,7 @@
              <li class="breadcrumb-item"><a href="{{request.META.HTTP_REFERER}}">
               <svg class="icon icon-xs" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M7.707 14.707a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l2.293 2.293a1 1 0 010 1.414z" clip-rule="evenodd"></path></svg>
          
-              Backs</a></li>
+              Back</a></li>
             <li class="breadcrumb-item active" aria-current="page"> <a href="{{request.get_full_path|slice:-8}}" class="ajax-load-form" title="Edit">
               {{ title }}s</a></li>
           </ol>
@@ -20,7 +20,7 @@
 {% block content %}   
 
 
-
+{% block table %}
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
   <h5 class="h5"><span class="text-primary"><a href="{{request.get_full_path|slice:-5}}" class="ajax-load-form" title="Edit">
     {{ detail_title }}</a></span></h5>
@@ -47,13 +47,16 @@
 {% endif %}
 
 <div class="card">
+  <div class="table-responsive py-4">
 
-<table class="table table-hover" id="table-ajax">
-  <thead class="thead-light d-none">
+  <table class="table table-flush table-hover" id="table-ajax" data-page-length='10'>
+    <thead class="thead-light">
     <tr>
       <th>{{ object_list|verbose_name:'field:file' }}</th>
       <th>{{ object_list|verbose_name:'field:creation_date' }}</th>
+      {% if  user.is_cleared %}
       <th style="width: 125px; text-align: center;">Actions</th>
+      {% endif %}
     </tr>
   </thead>
   <tbody>
@@ -61,6 +64,10 @@
   </tbody>
 </table>
 </div>
+</div>
+{% endblock table %}
+
+
 <div class="modal fade" id="modal-progress" data-backdrop="static" data-keyboard="false">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -78,9 +85,61 @@
 </div>
 {% endblock %}
 
+{% block extracss %}
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" />
+
+<style>
+  .table.dataTable.dtr-inline.collapsed>tbody>tr>td.dtr-control:before,
+  table.dataTable.dtr-inline.collapsed>tbody>tr>th.dtr-control:before {
+    top: 37%;
+
+    background-color: #426381;
+  }
+
+</style>
+
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css">
+
+{% endblock extracss %}
+
 {% block extrajs %}
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.11.5/r-2.2.9/datatables.min.js"></script>
+<script type="text/javascript" language="javascript"
+  src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+<script src="https://cdn.datatables.net/select/1.3.1/js/dataTables.select.js"></script>
+
 <script src="{% static 'js/jquery-fileupload/jquery.ui.widget.js' %}"></script>
 <script src="{% static 'js/jquery-fileupload/jquery.iframe-transport.js' %}"></script>
 <script src="{% static 'js/jquery-fileupload/jquery.fileupload.js' %}"></script>
 <script src="{% static 'js/ajax_fileupload.js' %}"></script>
-{% endblock extrajs %}
+
+
+{% block tick%}
+<script>
+  var table = $('#table-ajax').DataTable({
+    "ordering": false,
+    "searching":false,
+    "lengthChange": false,
+ 
+
+    columnDefs: [{
+      orderable: true,
+      // className: 'select-checkbox',
+      targets: 0
+
+    }],
+    // select: {
+    //   info: true,
+    //   style: 'multi',
+    //   selector: 'td:nth-child(1)'
+    // },
+   
+  });
+
+
+
+</script>
+
+
+{% endblock  %}
+{% endblock %}

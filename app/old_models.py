@@ -1,233 +1,495 @@
-from django.db import models
-from django.urls import reverse
-from django.utils.text import slugify
-from cms.fields import OrderField
-from cms.mixins import GetAbsoluteUrl
-from pathlib import Path
-#from django.contrib.auth.models import User
-import random
-# from django.contrib.auth.models import AbstractUser
+from multiprocessing import context
+from pyexpat import model
+from re import template
+from unicodedata import category
+from django.shortcuts import render, redirect
+from django.urls import reverse_lazy, reverse
+from .models import Folder, Ticket, Comment, File
+from .forms import FolderForm, TicketForm, CommentForm, FileForm, TicketUpdateForm,TicketStatusUpdateForm, TicketDetailForm, TicketFileFormSet
+from cms.ajax import (AjaxCreateView, AjaxDetailView,
+                      AjaxUpdateView, AjaxDeleteView, AjaxFilesUpload)
+from cms.views import CoreDetailView, CoreListView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
+# from django.views.generic.list import ListView
+from account.models import User
+from .permissions import permit_if_role_in
+from django.shortcuts import render
+from django.core.mail import send_mail
 from django.conf import settings
-from django.contrib.auth.models import Group
+from django.shortcuts import get_object_or_404
+import datetime
+from django.http import HttpResponse
+from django.contrib import messages
+from django.views.generic import ListView,DetailView
+
+from webpush import send_user_notification
+from django.shortcuts import redirect, render
+from notifications.signals import notify
+
+def handler404(request, exception):
+    return render(request, 'blank.html')
 
 
-from django.utils import timezone
 
-class TimeStamped(models.Model):
-    creation_date = models.DateTimeField(editable=True)
-    last_modified = models.DateTimeField(editable=True)
+@login_required
+def home(request):
+    # return render(request, 'blank.html', context={'title': 'Blank page'})
+    if request.user.is_cleared:
+        return redirect('app:ticket-list')
 
-    def save(self, *args, **kwargs):
-        if not self.creation_date:
-            self.creation_date = timezone.now()
-
-        self.last_modified = timezone.now()
-        return super(TimeStamped, self).save(*args, **kwargs)
-
-    class Meta:
-        abstract = True
+    elif not request.user.is_cleared:
+        return redirect('app:inbox')
+    # return redirect('app:inbox')
 
 
-class Folder(TimeStamped):
-    title = models.CharField(max_length=255, verbose_name='Folder')
-    slug = models.SlugField(default="")
-    # group = models.ForeignKey(Group, on_delete=models.CASCADE)
+class FolderList(LoginRequiredMixin, CoreListView):
+    model = Folder
  
-    def __str__(self):
-        return self.title
-
-    def save(self):
-        self.slug =  slugify('{}'.format(self.title))
-        return super().save()
-
-    class Meta:
-        ordering = ["title"]
-        verbose_name = 'Folder'
-
-        verbose_name_plural = "Folder Lists"
-
-    # def get_absolute_url(self):
-    #     return reverse("app:ticket-list", kwargs={"folder": self.id})
-    def get_absolute_url(self):
-        return reverse('app:folder-detail', kwargs={'pk': self.id})
-
-
-class Ticket(TimeStamped):
-    PENDING = 1
-    CLOSED = 2
-    CHOICES = (
-        (PENDING, 'Pending'),
-        (CLOSED, 'Closing'),
-    )
-    folder = models.ForeignKey(Folder, verbose_name='Folder', on_delete=models.CASCADE,null=False,blank=False)
-    # user = models.ForeignKey(User,
-    #                          verbose_name='User', on_delete=models.CASCADE)
-    title = models.CharField(max_length=50, verbose_name='Title')
-    date_sent = models.DateField(
-        null=True, verbose_name='Date', help_text='YYYY-mm-dd')
-    ticket_choices = models.PositiveSmallIntegerField(
-        choices=CHOICES, default=PENDING, verbose_name='status')
-    description = models.TextField(verbose_name="Content")
-    order = OrderField(blank=True, verbose_name='Order #')
-    waiting_for = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='waiting_for', blank=True,
-                                    null=True, verbose_name='Waiting For', on_delete=models.CASCADE)
-    sent_by = models.CharField(max_length=255, blank=True,
-                               null=True, verbose_name="Sender")
-    assigned_to = models.ManyToManyField(settings.AUTH_USER_MODEL,
-                                         related_name='assigned_to',
-                                         blank=True,
-                                         verbose_name='Assigned')
-    assignment = models.CharField(max_length=255,  blank=True,
-                                         verbose_name='Assigned')
-    closed_date = models.DateTimeField(blank=True, null=True)
-
-
-    def __str__(self):
-        return self.title
-
-    def userassignment(self):
-        return ",".join([str(p) for p in self.assigned_to.all()])
-
-    def save(self, *args, **kwargs):
-        # self.assignment = [str(p) for p in self.assigned_to.all()]
-        super().save(*args, **kwargs)
-
-    def get_fields(self):
-        return [(field.verbose_name, field.value_from_object(self)) for field in self.__class__._meta.fields]
-
-    # def get_absolute_url(self):
-    #     return reverse("todo:task_detail", kwargs={"task_id": self.id})
-
-    # @staticmethod
-    # def get_products_by_id(ids):
-    #     return Ticket.objects.filter(id__in=ids)
-
-    # @staticmethod
-    # def get_all_products():
-    #     return Ticket.objects.all()
-
-    # @staticmethod
-    # def get_all_products_by_categoryid(folder_id):
-    #     if folder_id:
-    #         return Ticket.objects.filter(folder=folder_id)
-    #     else:
-    #         return Ticket.get_all_products()
 
-    # def get_absolute_url(self):
-    #    return reverse('app:ticket-update', kwargs={'pk': self.pk})
+class FolderDelete(LoginRequiredMixin, AjaxDeleteView):
+    model = Folder
 
-    class Meta:
-        db_table = 'ticket'
-        ordering = ['order']
-        verbose_name = 'Ticket'
-        verbose_name_plural = 'Tickets'
 
+class FolderCreate(LoginRequiredMixin, AjaxCreateView):
+    model = Folder
+    form_class = FolderForm
 
-class Comment(TimeStamped):
-    ticket = models.ForeignKey(
-        Ticket, on_delete=models.CASCADE, verbose_name='Ticket')
-    slug = models.SlugField(max_length=255, verbose_name='Slug', unique=True)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL,
-                             verbose_name='User', on_delete=models.CASCADE)
-    comment = models.TextField(blank=False, null=False, verbose_name='Comment')
-    order = OrderField(blank=True, for_fields=[
-                       'ticket'], verbose_name='Order #')
+    @permit_if_role_in(['is_cleared', ])
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+    # def get_redirect_url(self):
+    #     return reverse_lazy('app:home')
 
+class FolderUpdate(LoginRequiredMixin, AjaxUpdateView):
+    model = Folder
+    form_class = FolderForm
 
-    def __str__(self):
-        return str(self.slug)
 
-    def save(self, *args, **kwargs):
-        self.slug = slugify('{}-{}'.format('F', random.random(),
-                                           self.ticket.pk))
-        super().save(*args, **kwargs)
+class FolderDetailView(LoginRequiredMixin, DetailView):
+    model = Folder
+   
+    # Add the product of this category to the context
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # This line retrieve all the products of this category
+        if self.request.user.is_cleared: 
+            context['tickets'] = Ticket.objects.filter(folder=self.object)
+        else:
+            context['tickets'] = Ticket.objects.filter(folder=self.object).filter(assigned_to=self.request.user)
+        return context
 
-    # def save_model(self, request, obj, form, change):
-    #     obj.user = request.user
 
-    #     super().save_model(request, obj, form, change)
+class TicketList(LoginRequiredMixin, CoreListView):
+    model = Ticket
 
-    def get_absolute_url(self):
-        return reverse("comment_detail", kwargs={"pk": self.pk})
+    def get_context_data(self, *args, **kwargs):
+        context = super(TicketList, self).get_context_data(*args, **kwargs)
+        new_context_entry = "All Memos"
+        context["title"] = new_context_entry
+        return context
 
-    class Meta:
-        db_table = 'comment'
-        verbose_name = 'Comment'
-        verbose_name_plural = 'Comments'
-        ordering = ('order', 'last_modified')
+    @permit_if_role_in(['is_cleared', ])
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
 
 
-class File(TimeStamped):
-    ticket = models.ForeignKey(
-        Ticket, on_delete=models.CASCADE, verbose_name='Ticket')
-    # user = models.ForeignKey(settings.AUTH_USER_MODEL,
-    #                          verbose_name='User', on_delete=models.CASCADE)
-    file = models.FileField(upload_to='files/', null=True,
-                            blank=True, max_length=255, verbose_name='Filename')
-    uploaded_at = models.DateTimeField(
-        auto_now_add=True, null=True, blank=True, verbose_name='File uploaded at')
-    order = OrderField(blank=True, for_fields=[
-                       'ticket'], verbose_name='Order #')
+class UserTicketList(LoginRequiredMixin, CoreListView):
+    model = Ticket
 
-    @property
-    def filename(self):
-        return Path(self.file.name).name
+    def get_queryset(self):
+        return Ticket.objects.filter(assigned_to=self.request.user)
 
-    def __str__(self):
-        return self.filename
+    def get_context_data(self, *args, **kwargs):
+        context = super(UserTicketList, self).get_context_data(*args, **kwargs)
+        new_context_entry = "Pending Memos"
+        context["title"] = new_context_entry
+        return context
 
-    def save(self, *args, **kwargs):
-        if self.pk:
-            old_file = File.objects.get(pk=self.pk).file
-            if not old_file == self.file:
-                storage = old_file.storage
-                if storage.exists(old_file.name):
-                    storage.delete(old_file.name)
 
-        super().save(*args, **kwargs)
+class UnassignedTickets(LoginRequiredMixin, CoreListView):
+    model = Ticket
 
-    def delete(self, *args, **kwargs):
-        storage = self.file.storage
-        if storage.exists(self.file.name):
-            storage.delete(self.file.name)
-        super().delete(*args, **kwargs)
+    @permit_if_role_in(['is_cleared', ])
+    # @method_decorator(user_is_registrar)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
 
-    class Meta:
-        db_table = 'file'
-        verbose_name = 'File'
-        verbose_name_plural = 'Files'
-        ordering = ('order', )
+    def get_queryset(self):
+        users = User.objects.all()
+        return Ticket.objects.all().exclude(assigned_to__in=users)
 
+    def get_context_data(self, *args, **kwargs):
+        context = super(UnassignedTickets, self).get_context_data(
+            *args, **kwargs)
+        new_context_entry = "Unassigned Memos"
+        context["title"] = new_context_entry
+        return context
 
 
+class InboxList(LoginRequiredMixin, CoreListView):
+    model = Ticket
+    # queryset = Ticket.objects.filter(
+    #     assigned_to=request.user).exclude(ticket_choices__exact=2)
+    context_object_name = 'inbox'
+
+    def get_queryset(self):
+        return Ticket.objects.filter(assigned_to=self.request.user).exclude(ticket_choices__exact=2)
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(InboxList, self).get_context_data(*args, **kwargs)
+        new_context_entry = "Inbox"
+        context["title"] = new_context_entry
+        return context
 
 
+class CompletedList(LoginRequiredMixin, CoreListView):
+    model = Ticket
+    # queryset = Ticket.objects.filter(
+    #     assigned_to=request.user).exclude(ticket_choices__exact=1)
+    context_object_name = 'completed'
 
+    def get_queryset(self):
+        return Ticket.objects.filter(assigned_to=self.request.user).exclude(ticket_choices__exact=1)
 
+    def get_context_data(self, *args, **kwargs):
+        context = super(CompletedList, self).get_context_data(*args, **kwargs)
+        new_context_entry = "Completed memos"
+        context["title"] = new_context_entry
+        return context
 
 
+class ArchiveList(LoginRequiredMixin, CoreListView):
+    model = Ticket
+    context_object_name = 'archive_list'
 
+    @permit_if_role_in(['is_cleared', ])
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
 
+    def get_queryset(self):
+        return Ticket.objects.filter(ticket_choices__exact=2)
 
+    def get_context_data(self, *args, **kwargs):
+        context = super(ArchiveList, self).get_context_data(*args, **kwargs)
+        new_context_entry = "Archives"
+        context["title"] = new_context_entry
+        return context
 
 
+class OpenTicketsList(LoginRequiredMixin, CoreListView):
+    model = Ticket
+    queryset = Ticket.objects.exclude(ticket_choices__exact=2)
+    context_object_name = 'openticket_list'
 
+    @permit_if_role_in(['is_cleared', ])
+    # @method_decorator(user_is_registrar)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
 
+    def get_context_data(self, *args, **kwargs):
+        context = super(OpenTicketsList, self).get_context_data(
+            *args, **kwargs)
+        new_context_entry = "Open Tickets"
+        context["title"] = new_context_entry
+        return context
 
 
+
+class TicketCreate(LoginRequiredMixin, AjaxCreateView):
+    model = Ticket
+    form_class = TicketForm
+
+    # @permit_if_role_in(['is_cleared', ])
+    # def dispatch(self, request, *args, **kwargs):
+    #     return super().dispatch(request, *args, **kwargs)
+    # def get_redirect_url(self):
+    #     return reverse_lazy('app:home')
 
+    def get_context_data(self, **kwargs):                
+        context = super(TicketCreate, self).get_context_data(**kwargs)
+        #self.object = self.get_object() #removed
 
+        if self.request.POST:
+            context["file_upload"] = TicketFileFormSet(self.request.POST, self.request.FILES, instance=self.object)
+        else:
+            context["file_upload"] = TicketFileFormSet(instance=self.object)
+        return context
 
 
+    def form_valid(self, form):
+        context = self.get_context_data()
+        file_upload = context["file_upload"]
+    
+        self.object = form.save(commit=False)
+        if file_upload.is_valid():
+            file_upload.instance = self.object
+            file_upload.save()
+            file_upload.save_m2m
+        sender = User.objects.get(id=1)
+        recipient = User.objects.get(id=1)
+    
+        from webpush import send_user_notification
 
+        user = self.request.user
+        ticket = get_object_or_404(Ticket, id=self.object.id)
 
+        payload = {"head": "New Ticket", "body": ticket.title}
+        send_user_notification(user=user, payload=payload, ttl=1000)
+        notify.send(sender, recipient=recipient, verb=ticket.title,description=ticket.description)
 
+        return super().form_valid(form)
 
 
 
+    # def post(self, request, *args, **kwargs):
+    #     form = self.get_form()
 
+    #     if form.is_valid():
+    #         form.save()
 
+    #         ticket = self.object
 
+    #         # mail notification to owner of ticket
+    #         # notification_subject = "[#"  + "] New followup"
+    #         # notification_body = "Hi,\n\n new followup created for ticket #" \
+    #         #                     + str('ticket.id') \
+    #         #                     + " (http://localhost:8000/ticket/" \
+    #         #                     + str('jdks') \
+    #         #                     + "/)\n\nTitle: " + form.data['title'] \
+    #         #                     + "\n\n" + form.data['description']
 
+    #         subject = 'welcome to GFG world'
+    #         # message = f'Hi {''}, thank you for registering in geeksforgeeks.'
+    #         message = 'Hi, thank you for registering in geeksforgeeks.'
+    #         email_from = settings.EMAIL_HOST_USER
+    #         recipient_list = ['richmondnyamekye14@gmail.com', ]
+    #         send_mail(subject, message, email_from, recipient_list)
+
+    #     return super(TicketDetail, self).post(request, *args, **kwargs)
+
+
+class TicketUpdate(LoginRequiredMixin, AjaxUpdateView):
+    model = Ticket
+    form_class = TicketUpdateForm
+
+    def form_valid(self, form):
+
+            form.instance.user = self.request.user
+
+            my_object = form.save()
+
+            ticket = get_object_or_404(Ticket, id=my_object.id)
+
+            # notification_subject = "[#" +  "] New followup"
+            # notification_body = "Hi,\n\n a new comment has been to ticket #" \
+            #     + str(ticket.id) \
+            #     + " (http://localhost:8000/ticket/" \
+            #     + str(ticket.id) \
+            #     + "/)\n\nTitle: " + str(ticket.user) \
+            #     + "\n\n" + form.data['comment']
+            # # message = f'Hi {''}, thank you for registering in geeksforgeeks.'
+            # # message = 'Hi, thank you for registering in geeksforgeeks.'
+            # email_from = settings.EMAIL_HOST_USER
+            # recipient_list = ['richmondnyamekye14@gmail.com', ]
+            # send_mail(notification_subject, notification_body,
+            #           email_from, recipient_list)
+            sender = User.objects.get(id=1)
+            recipient = User.objects.get(id=1)
+
+            
+            from webpush import send_user_notification
+
+            user = self.request.user
+            payload = {"head": 'Status update', "body": 'Status update for: '+ ticket.title}
+            send_user_notification(user=user, payload=payload, ttl=1000)
+            notify.send(sender, recipient=recipient, verb='Status Update', description='Status update for '+ ticket.title)
+
+            return super().form_valid(form)
+
+
+class TicketStatusUpdate(LoginRequiredMixin, AjaxUpdateView):
+    model = Ticket
+    form_class = TicketStatusUpdateForm
+
+
+    def form_valid(self, form):
+
+        form.instance.user = self.request.user
+
+        my_object = form.save()
+
+        ticket = get_object_or_404(Ticket, id=my_object.id)
+
+        # notification_subject = "[#" +  "] New followup"
+        # notification_body = "Hi,\n\n a new comment has been to ticket #" \
+        #     + str(ticket.id) \
+        #     + " (http://localhost:8000/ticket/" \
+        #     + str(ticket.id) \
+        #     + "/)\n\nTitle: " + str(ticket.user) \
+        #     + "\n\n" + form.data['comment']
+        # # message = f'Hi {''}, thank you for registering in geeksforgeeks.'
+        # # message = 'Hi, thank you for registering in geeksforgeeks.'
+        # email_from = settings.EMAIL_HOST_USER
+        # recipient_list = ['richmondnyamekye14@gmail.com', ]
+        # send_mail(notification_subject, notification_body,
+        #           email_from, recipient_list)
+        sender = User.objects.get(id=1)
+        recipient = User.objects.get(id=1)
+
+        
+        from webpush import send_user_notification
+
+        user = self.request.user
+        payload = {"head": 'Status update', "body": 'Status update for: '+ ticket.title}
+        send_user_notification(user=user, payload=payload, ttl=1000)
+        notify.send(sender, recipient=recipient, verb='Status Update', description='Status update for '+ ticket.title)
+
+        return super().form_valid(form)
+
+
+class TicketDelete(LoginRequiredMixin, AjaxDeleteView):
+    model = Ticket
+
+
+class TicketDetail(LoginRequiredMixin, AjaxDetailView):
+    model = Ticket
+    form_class = TicketDetailForm
+
+    # form_class = TicketForm
+    def get_context_data(self, *args, **kwargs):
+        context = super(TicketDetail, self).get_context_data(
+            *args, **kwargs)
+        b = Ticket.objects.get(pk=self.object.id)
+        # b = Ticket.objects.all()
+        # new_context_entry = "Open Tickets"
+        context["comment_overlap"] = 'none of your business'
+        context["comment_count"] = b.comment_set.all()
+        context["file_count"] = b.file_set.all()
+        return context
+
+
+class CommentList(LoginRequiredMixin, CoreListView):
+    model = Comment
+
+    def get_queryset(self, **kwargs):
+        if self.request.user.is_cleared:
+            return Comment.objects.all()
+        else:
+            return Comment.objects.filter(user=self.request.user)
+
+    def get_context_data(self, **kwargs):
+        return super().get_context_data(**kwargs)
+
+   
+
+class CommentCreate(LoginRequiredMixin, AjaxCreateView):
+    model = Comment
+    form_class = CommentForm
+
+    # @permit_if_role_in(['is_cleared', ])
+    # @method_decorator(user_is_registrar)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+   
+
+    def form_valid(self, form):
+
+        form.instance.user = self.request.user
+
+        my_object = form.save()
+
+        comment = get_object_or_404(Comment, id=my_object.id)
+
+        # notification_subject = "[#" +  "] New followup"
+        # notification_body = "Hi,\n\n a new comment has been to ticket #" \
+        #     + str(ticket.id) \
+        #     + " (http://localhost:8000/ticket/" \
+        #     + str(ticket.id) \
+        #     + "/)\n\nTitle: " + str(ticket.user) \
+        #     + "\n\n" + form.data['comment']
+        # # message = f'Hi {''}, thank you for registering in geeksforgeeks.'
+        # # message = 'Hi, thank you for registering in geeksforgeeks.'
+        # email_from = settings.EMAIL_HOST_USER
+        # recipient_list = ['richmondnyamekye14@gmail.com', ]
+        # send_mail(notification_subject, notification_body,
+        #           email_from, recipient_list)
+        sender = User.objects.get(id=1)
+        recipient = User.objects.get(id=1)
+
+        
+        from webpush import send_user_notification
+
+        user = self.request.user
+        payload = {"head": 'New comment for '+ str(comment.ticket), "body": comment.comment}
+        send_user_notification(user=user, payload=payload, ttl=1000)
+        notify.send(sender, recipient=recipient, verb='COMMENT', description=comment.comment)
+
+        return super().form_valid(form)
+
+    # def form_valid(self, form):
+    #     """Force the user to request.user"""
+    #     self.object = form.save(commit=False)
+    #     self.object.user_id = self.request.user.id
+    #     self.object.save()
+
+    #     return super(CommentCreate, self).form_valid(form)
+
+
+class CommentUpdate(LoginRequiredMixin, AjaxUpdateView):
+    model = Comment
+    form_class = CommentForm
+
+    # @method_decorator(user_is_commissioner)
+    # @method_decorator(user_is_registrar)
+    @permit_if_role_in(['is_cleared', ])
+    # @method_decorator(user_is_registrar)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+
+class CommentDelete(LoginRequiredMixin, AjaxDeleteView):
+    model = Comment
+
+
+class CommentDetail(LoginRequiredMixin, AjaxDetailView):
+    model = Comment
+
+    @permit_if_role_in(['is_cleared', ])
+    def dispatch(self, *args, **kwargs):
+        self.event = 'detail'
+        self.template = 'comment_detail'
+        return super().dispatch(*args, **kwargs)
+
+    
+
+class FileList(LoginRequiredMixin, CoreListView):
+    model = File
+
+    #@permit_if_role_in(['is_cleared', ])
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+
+class FileUpload(LoginRequiredMixin, AjaxFilesUpload):
+    model = File
+    form_class = FileForm
+
+    @permit_if_role_in(['is_cleared', ])
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+
+class FileDelete(LoginRequiredMixin, AjaxDeleteView):
+    model = File
+
+    @permit_if_role_in(['is_cleared', ])
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+
+class UserDetail(LoginRequiredMixin, AjaxDetailView):
+    model = User
 
 

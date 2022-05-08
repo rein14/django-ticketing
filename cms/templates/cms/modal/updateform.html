@@ -3,13 +3,14 @@
 {% block extracss %}
 {{form.media.css}}
 {% endblock extracss %}
-<form  enctype="multipart/form-data" method="post" action="{{ request.path }}" {% if 'comment' in request.path %} class="ajax-save-update-form"{% else %}class="ajax-save-form" { {% endif %}}  id="ajax-save">
+<form  enctype="multipart/form-data" method="post" action="{{ request.path }}" class="ajax-save-update-form"  id="ajax-save">
     {% csrf_token %}
      <div class="modal-header">
         <h5 class="modal-title">{% if not form.instance.pk %}<span class=" text-primary"> <i class="fas fa-plus"></i> 
             Create</span>{% else %} <span class="text-primary"><i class="fa fa-edit"></i>
             Update</span>{% endif %}</h5>
             <button type="button" class="btn-close ms-auto" data-bs-dismiss="modal" aria-label="Close"></button>
+
     </div> 
     <div class="modal-body p-0">
         <div class="card p-3 p-lg-4">
@@ -76,7 +77,7 @@
         {% if not form.instance.pk %}
         <button id='loadOnClick' type="submit" class="btn btn-outline-primary">{{ title }}</button>
         {% else %}
-        <button id='loadOnClick' type="submito" class="btn btn-outline-info">{{ title }}</button>
+        <button id='loadOnClick' type="submit" class="btn btn-outline-info">{{ title }}</button>
         {% endif %}
     </div>
 </form>
@@ -84,4 +85,5 @@
 {% block extrajs %}
 
 {{ form.media.js}}
+
 {% endblock extrajs %}

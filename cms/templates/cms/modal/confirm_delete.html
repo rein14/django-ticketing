@@ -1,5 +1,5 @@
 {% load cms_tags %}
-<form  method="post" action="{{ request.path }}" class="ajax-save-form">
+<form  method="post" action="{{ request.path }}" class="ajax-save-update-form">
   {% csrf_token %}
   <div class="modal-header">
     {% comment %} <h4 class="modal-title"><span class=" text-danger"> {{ title }}</span></h4>

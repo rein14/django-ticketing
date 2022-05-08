@@ -35,6 +35,7 @@
  
 <link type="text/css" href="/static/assets/css/sweetalert2.min.css" rel="stylesheet">
 
+<link type="text/css" href="/static/assets/css/toastr.css">
 <link type="text/css" href="/static/assets/css/notyf.min.css" rel="stylesheet">
 <link type="text/css" href="/static/assets/css/volt.css" rel="stylesheet">
 
@@ -50,6 +51,23 @@
 
 
 <style>
+  toastr.options = {
+    "closeButton": true,
+    "debug": false,
+    "newestOnTop": false,
+    "progressBar": false,
+    "positionClass": "toast-bottom-right",
+    "preventDuplicates": false,
+    "onclick": null,
+    "showDuration": "300",
+    "hideDuration": "1000",
+    "timeOut": "5000",
+    "extendedTimeOut": "1000",
+    "showEasing": "swing",
+    "hideEasing": "linear",
+    "showMethod": "fadeIn",
+    "hideMethod": "fadeOut"
+  }
   .pb-z {
     padding-bottom: 11px !important;
   }
@@ -109,7 +127,7 @@
 
 
 
-      <nav class="navbar navbar-top navbar-expand navbar-dashboard navbar-dark ps-0 pe-2 pb-z">
+      <nav class="navbar navbar-top navbar-sticky navbar-expand navbar-dashboard navbar-dark ps-0 pe-2 pb-z">
         <div class="container-fluid px-0">
           <div class="d-flex justify-content-between w-100" id="navbarSupportedContent">
             <div class="d-flex align-items-center">

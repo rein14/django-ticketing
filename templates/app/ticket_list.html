@@ -10,6 +10,7 @@
   <h5 class="h5"><span class="text-primary">
       {% if request.path == '/tickets/' %}<i class="fa fa-mail-bulk me-2"></i>{% endif %}
       {% if request.path == '/opentickets/' %}<i class="far fa-envelope-open me-2"></i>{% endif %}
+      {% if request.path == '/unassigned/' %}<i class="fa fa-user-times me-2"></i>{% endif %}
       {% if request.path == '/archive/' %}<i class="fa fa-archive me-2"></i>{% endif %}
       {% if request.path == '/inbox/' %}<i class="fa fa-inbox me-2"></i>{% endif %}
       {% if request.path == '/completed/' %}<i class="fa fa-archive me-2"></i>{% endif %}

@@ -5,7 +5,7 @@ from unicodedata import category
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy, reverse
 from .models import Folder, Ticket, Comment, File
-from .forms import FolderForm, TicketForm, CommentForm, FileForm, TicketUpdateForm,TicketStatusUpdateForm, TicketDetailForm
+from .forms import FolderForm, TicketForm, CommentForm, FileForm, TicketUpdateForm,TicketStatusUpdateForm, TicketDetailForm, TicketFileFormSet
 from cms.ajax import (AjaxCreateView, AjaxDetailView,
                       AjaxUpdateView, AjaxDeleteView, AjaxFilesUpload)
 from cms.views import CoreDetailView, CoreListView
@@ -26,6 +26,7 @@ from django.views.generic import ListView,DetailView
 from webpush import send_user_notification
 from django.shortcuts import redirect, render
 from notifications.signals import notify
+from django.db import transaction
 
 def handler404(request, exception):
     return render(request, 'blank.html')
@@ -78,23 +79,6 @@ class FolderDetailView(LoginRequiredMixin, DetailView):
         else:
             context['tickets'] = Ticket.objects.filter(folder=self.object).filter(assigned_to=self.request.user)
         return context
-
-
-# class TicketList(LoginRequiredMixin, CoreListView):
-#     model = Ticket
-
-#     def get_queryset(self):
-#         if self.request.user.is_cleared:
-#            # folders = get_object_or_404(Folder, self.)
-#             return Ticket.objects.all()
-#         else:
-#             return Ticket.objects.filter(assigned_to=self.request.user)
-    
-#     def get_context_data(self, *args, **kwargs):
-#         context = super(TicketList, self).get_context_data(*args, **kwargs)
-#         new_context_entry = "All Tickets"
-#         context["title"] = new_context_entry
-#         return context
 
 
 class TicketList(LoginRequiredMixin, CoreListView):
@@ -217,46 +201,57 @@ class TicketCreate(LoginRequiredMixin, AjaxCreateView):
     model = Ticket
     form_class = TicketForm
 
-    @permit_if_role_in(['is_cleared', ])
-    def dispatch(self, request, *args, **kwargs):
-        return super().dispatch(request, *args, **kwargs)
+    # @permit_if_role_in(['is_cleared', ])
+    # def dispatch(self, request, *args, **kwargs):
+    #     return super().dispatch(request, *args, **kwargs)
     # def get_redirect_url(self):
     #     return reverse_lazy('app:home')
 
+    # def get_context_data(self, **kwargs):                
+    #     context = super(TicketCreate, self).get_context_data(**kwargs)
+    #     #self.object = self.get_object() #removed
+
+    #     if self.request.POST:
+    #         context["file_upload"] = TicketFileFormSet(self.request.POST, self.request.FILES, instance=self.object)
+    #     else:
+    #         context["file_upload"] = Tick(instance=self.object)
+    #     return context
+
+
+
+    def get_context_data(self, **kwargs):                
+        context = super(TicketCreate, self).get_context_data(**kwargs)
+        #self.object = self.get_object() #removed
+
+        if self.request.POST:
+            context["file_upload"] = TicketFileFormSet(self.request.POST, self.request.FILES, instance=self.object)
+        else:
+            context["file_upload"] = TicketFileFormSet(instance=self.object)
+        return context
+
+
     def form_valid(self, form):
-        my_object = form.save()
+        context = self.get_context_data()
+        file_upload = context["file_upload"]
+        self.object = form.save()
+        if file_upload.is_valid():
+            file_upload.instance = self.object
+            file_upload.save()
+        # sender = User.objects.get(id=1)
+        # recipient = User.objects.get(id=1)
+    
+        # from webpush import send_user_notification
 
-        ticket = get_object_or_404(Ticket, id=my_object.id)
+        # user = self.request.user
+        # ticket = get_object_or_404(Ticket, id=self.object.id)
 
-    #     notification_subject = " New Ticket"
-    #     notification_body = "Hello,\n\n A new ticket ticket  (" + form.data['title'] +")" \
-    #     +" See details at " "http://localhost:8000/inbox/" 
-        
-    #     email_from = settings.EMAIL_HOST_USER
-    #     recipient_list = ['richmondnyamekye14@gmail.com', ]
-    #     send_mail(notification_subject, notification_body,
-    #               email_from, recipient_list)
-
-
-    #     # notification_body = "Hi,\n\n a new comment has bee to ticket #" \
-    #     #     + str(ticket.id) \
-    #     #     + " (http://localhost:8000/ticket/" \
-    #     #     + str(ticket.id) \
-    #     #     + "/)\n\nTitle: " + str(ticket.user) \
-    #     #     + "\n\n" + form.data['comment']
-        sender = User.objects.get(id=1)
-        recipient = User.objects.get(id=1)
-
-        
-        from webpush import send_user_notification
-
-        user = self.request.user
-
-        payload = {"head": "New Ticket", "body": ticket.title}
-        send_user_notification(user=user, payload=payload, ttl=1000)
-        notify.send(sender, recipient=recipient, verb=ticket.title,description=ticket.description)
+        # payload = {"head": "New Ticket", "body": ticket.title}
+        # send_user_notification(user=user, payload=payload, ttl=1000)
+        # notify.send(sender, recipient=recipient, verb=ticket.title,description=ticket.description)
 
         return super().form_valid(form)
+
+
 
 
     # def post(self, request, *args, **kwargs):
@@ -403,10 +398,12 @@ class CommentList(LoginRequiredMixin, CoreListView):
 class CommentCreate(LoginRequiredMixin, AjaxCreateView):
     model = Comment
     form_class = CommentForm
-
+ 
     # @permit_if_role_in(['is_cleared', ])
     # @method_decorator(user_is_registrar)
     def dispatch(self, request, *args, **kwargs):
+        self.event = 'create'
+        self.template = 'conment_form'
         return super().dispatch(request, *args, **kwargs)
 
    
@@ -475,8 +472,8 @@ class CommentDetail(LoginRequiredMixin, AjaxDetailView):
 
     @permit_if_role_in(['is_cleared', ])
     def dispatch(self, *args, **kwargs):
-        self.event = 'detail'
-        self.template = 'comment_detail'
+        self.event = 'detdail'
+        self.template = 'comment_ndetail'
         return super().dispatch(*args, **kwargs)
 
     
