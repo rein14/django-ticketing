@@ -115,8 +115,7 @@ span.select2-container {
   var table = $('#table-ajax').DataTable({
     ordering: true,
      "processing": true,
-    //"serverSide": true,
-    //any other configuration options
+     //any other configuration options
    // "ajax": "/tickets",
     order: [
       [1, 'asc']
@@ -143,12 +142,26 @@ span.select2-container {
   });
 
 
+} );
+
+
+</script>
+<script>
+  $(document).ready( function () {
+
+  setInterval(function(){
+    $.ajax({    
+       url: '{% url 'app:open-tickets' %}',
+          success: function(data) {
+            $('#table-ajax').DataTable();
+          }
+    });
+}, 10000)
 
 } );
 
 
 </script>
-
 {% endblock  %}
 
 {% endblock %}

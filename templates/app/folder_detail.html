@@ -84,6 +84,7 @@
 
       <thead class="thead-light">
         <tr>
+ 
           <th>#</th>
           <th>title</th>
           <th>Status</th>
@@ -190,5 +191,25 @@
     $(this).addClass('selected');
   });
 </script>
+<script>
+  $(document).ready( function () {
 
+  setInterval(function(){
+    $.ajax({    
+       url: '{% url 'app:folder-detail' last_folder_pk %}',
+          success: function(data) {
+
+            $("#table-ajax").DataTable().destroy(); //this will flush DT's cache
+
+            $("#table-ajax tbody").html(data.html_list);
+            // $("#table-ajax tbody").clear().rows.add(data.html_list).draw();
+            $("#table-ajax").DataTabhle();       
+             }
+    });
+}, 10000)
+
+} );
+
+
+</script>
 {% endblock %}

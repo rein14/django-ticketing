@@ -112,6 +112,7 @@ $(document).ready(function () {
             $("#table-ajax").DataTable().destroy(); //this will flush DT's cache
 
             $("#table-ajax tbody").html(data.html_list);
+            // $("#table-ajax tbody").clear().rows.add(data.html_list).draw();
             $("#table-ajax").DataTable();
           }
           
@@ -119,7 +120,7 @@ $(document).ready(function () {
         } else {
           $("#modal-ajax .modal-content").html(data.html_form);
             // toastr["error"](data.message);
-            // Display an error notificatio
+            // Display an error notificatiod
             // Display a success notification
          }
       },

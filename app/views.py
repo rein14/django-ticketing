@@ -83,6 +83,7 @@ class FolderDetailView(LoginRequiredMixin, DetailView):
         # This line retrieve all the products of this category
         if self.request.user.is_cleared: 
             context['tickets'] = Ticket.objects.filter(folder=self.object)
+            context['last_folder_pk']=self.object.pk
         else:
             context['tickets'] = Ticket.objects.filter(folder=self.object).filter(assigned_to=self.request.user)
         return context

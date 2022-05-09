@@ -1,9 +1,7 @@
 {% load cache %}
-{% cache 500 nav%}
-<nav id="sidebar" class="navbar navbar-dark navbar-theme-primary px-4 col-12 d-lg-none">
+ <nav id="sidebar" class="navbar navbar-dark navbar-theme-primary px-4 col-12 d-lg-none">
   <a class="navbar-brand me-lg-5" href="/">
-      <img class="navbar-brand-dark" src="/static/assets/img/brand/light.svg" alt="Volt logo" /> <img class="navbar-brand-light" src="/static/assets/img/brand/dark.svg" alt="Volt logo" />
-  </a>
+Document Ticketing  </a>
   <div class="d-flex align-items-center">
       <button class="navbar-toggler d-lg-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -29,8 +27,7 @@
   <ul class="nav flex-column pt-3 pt-md-0" style='margin-bottom: 100%; justify-content: space-between;'>
   <div>
 
-{% endcache %}
-    
+     
     {% if not request.user.is_cleared %}
      <li role="separator" class="dropdown-divider mt-4 mb-3 border-gray-700"></li>
 

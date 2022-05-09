@@ -35,7 +35,7 @@ class TicketForm(BootstrapHelperForm, forms.ModelForm):
         fields = ('title', 'date_sent', 'description',
                   'assigned_to', 'sent_by','folder',)
         widgets = {
-            'assigned_to': TicketWidget,
+           #x 'assigned_to': TicketWidget,
             'folder': FolderWidget,
         }
 
@@ -46,7 +46,7 @@ class TicketFolderForm(BootstrapHelperForm, forms.ModelForm):
         fields = ('title', 'date_sent', 'description',
                   'assigned_to', 'sent_by',)
         widgets = {
-            'assigned_to': TicketWidget,
+           # 'assigned_to': TicketWidget,
          }
 
 
@@ -56,9 +56,7 @@ class TicketDetailForm(BootstrapHelperForm, forms.ModelForm):
         model = Ticket
         fields = ('title', 'date_sent','assigned_to',  'description',  'sent_by',)
 
-        widgets = {
-             'assigned_to': TicketWidget,
-        }
+ 
 
 
 class TicketUpdateForm(BootstrapHelperForm, forms.ModelForm):
@@ -70,7 +68,7 @@ class TicketUpdateForm(BootstrapHelperForm, forms.ModelForm):
         fields = ('title', 'date_sent', 'description', 'sent_by')
         widgets = {
             'date_sent': DatePickerInput(format='%Y-%m-%d'),
-            'assigned_to': TicketWidget,
+            #'assigned_to': TicketWidget,
         }
 
 
@@ -92,7 +90,7 @@ class TicketStatusUpdateForm(BootstrapHelperForm, forms.ModelForm):
         fields = ('title', 'ticket_choices', 'assigned_to', 'waiting_for',)
         widgets = {
         
-            'assigned_to': TicketWidget,
+            #'assigned_to': TicketWidget,
         }
 
 
