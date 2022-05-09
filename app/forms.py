@@ -39,6 +39,15 @@ class TicketForm(BootstrapHelperForm, forms.ModelForm):
             'folder': FolderWidget,
         }
 
+class TicketFolderForm(BootstrapHelperForm, forms.ModelForm):
+
+    class Meta:
+        model = Ticket
+        fields = ('title', 'date_sent', 'description',
+                  'assigned_to', 'sent_by',)
+        widgets = {
+            'assigned_to': TicketWidget,
+         }
 
 
 

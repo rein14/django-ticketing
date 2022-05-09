@@ -3,7 +3,7 @@
 {% block extracss %}
 {{form.media.css}}
 {% endblock extracss %}
-<form  enctype="multipart/form-data" method="post" action="{{ request.path }}" {% if 'comment' in request.path %} class="ajax-save-update-form"{% else %}class="ajax-save-form" { {% endif %}}  id="ajax-save">
+<form  enctype="multipart/form-data" method="post" action="{{ request.path }}" {% if 'comment' in request.path %}class="ajax-save-update-form"{% else %}class="ajax-save-form"{% endif %}  id="ajax-save">
     {% csrf_token %}
      <div class="modal-header">
         <h5 class="modal-title">{% if not form.instance.pk %}<span class=" text-primary"> <i class="fas fa-plus"></i> 
@@ -13,7 +13,6 @@
     </div> 
     <div class="modal-body p-0">
         <div class="card p-3 p-lg-4">
-
 
         {% if form.errors %}
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -29,9 +28,8 @@
         {% endif %}
 
         {% for hidden in form.hidden_fields %}
-            {{ hidden }}
+            {{ hidden }} 
         {% endfor %}
-
         {% for field in form.visible_fields %}
         <div class="form-group mb-3">
             <label for="{{ field.id_for_label }}">{{ field.label }}{% if field.field.required %}<span

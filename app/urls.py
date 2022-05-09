@@ -12,6 +12,8 @@ urlpatterns = [
     path('folder/create/', FolderCreate.as_view(), name='folder-create'),
     path('folder/delete/<int:pk>/', FolderDelete.as_view(), name='folder-delete'),
     path('folder/update/<int:pk>/', FolderUpdate.as_view(), name='folder-update'),
+    path('ticket/createfolder/', TicketFolderCreate.as_view(), name='ticket-folder-create'),
+
 
     path('user-list/', UserTicketList.as_view(), name='user-ticket-list'),
     path('inbox/', InboxList.as_view(), name='inbox'),

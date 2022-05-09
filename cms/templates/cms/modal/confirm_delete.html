@@ -1,7 +1,8 @@
 {% load cms_tags %}
-<form  method="post" action="{{ request.path }}" class="ajax-save-update-form">
+<form  method="post" action="{{ request.path }}" {% if '/folder/delete/' in request.path %}class="ajax-save-form" {% else %} class="ajax-save-update-form" {% endif %}>
   {% csrf_token %}
   <div class="modal-header">
+    {{request.path}}
     {% comment %} <h4 class="modal-title"><span class=" text-danger"> {{ title }}</span></h4>
     <small class="modal-subtitle"></small>
     <button type="button" class="close" data-dismiss="modal" aria-label="Close">

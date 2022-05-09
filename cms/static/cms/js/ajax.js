@@ -59,7 +59,6 @@ $(document).ready(function () {
     let formData = new FormData($('form#mainform')[0])
     let action = form.attr("action")
     formData.append("action", action)
-
     
      $.ajax({
       url: form.attr("action"),

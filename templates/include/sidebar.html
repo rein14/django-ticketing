@@ -28,13 +28,7 @@
 
   <ul class="nav flex-column pt-3 pt-md-0" style='margin-bottom: 100%; justify-content: space-between;'>
   <div>
-    <li class="nav-item">
-      <a href="/" class="nav-link d-flex align-items-center">
-      
-        <span class="mt-1 ms-1 sidebar-text">Document Memo</span>
 
-      </a>
-    </li>
 {% endcache %}
     
     {% if not request.user.is_cleared %}
@@ -71,7 +65,7 @@
     <li role="separator" class="dropdown- divider mt-4 mb-3 border-gray-700"></li>
    
     <li class="nav-item {% if request.path == '/tickets/' %} active {% endif %} ">
-      <a href="{% url 'app:home' %}" class="nav-link">
+      <a href="{% url 'app:ticket-list' %}" class="nav-link">
         <span class="sidebar-icon">
           <i class="fa fa-mail-bulk me-2"></i>
         </span> 
@@ -79,7 +73,7 @@
       </a>
     </li>
     <li class="nav-item {% if request.path == '/opentickets/' %} active {% endif %}">
-      <a href="{% url 'app:open-tickets' %}" class="nav-link">
+      <a href="{% url 'app:home' %}" class="nav-link">
         <span class="sidebar-icon">
           <i class="far fa-envelope-open me-2"></i>
         </span>
@@ -158,20 +152,21 @@
     
     <li role="separator" class="dropdown-divider mt-4 mb-3 border-gray-700"></li>
     <li class="nav-item">
-      <a href="{% url 'account:logout' %}" class="nav-link">
+      <a href="/admin/account/user" class="nav-link">
           <span class="sidebar-icon"><span class="fas fa-users me-2"></span></span>
           <span>Users</span>
       </a>
   </li>
     {% endif %}
+    <li role="separator" class="dropdown-divider mt-4 mb-3 border-gray-700"></li>
+
    </div>
   
-  <div class="">
+  <div id='logout_sidebar_button'>
     
    
-  <li role="separator" class="dropdown-divider mt-4 mb-3 border-gray-700"></li>
-
-    <li class="nav-item">
+ 
+    <li class="nav-item" >
       <a href="{% url 'account:logout' %}" class="nav-link">
           <span class="sidebar-icon"><span class="fas fa-sign-out-alt text-danger me-2"></span></span>
           <span>Logout</span>

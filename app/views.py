@@ -5,7 +5,8 @@ from unicodedata import category
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy, reverse
 from .models import Folder, Ticket, Comment, File
-from .forms import FolderForm, TicketForm, CommentForm, FileForm, TicketUpdateForm,TicketStatusUpdateForm, TicketDetailForm, TicketFileFormSet
+from .forms import FolderForm, TicketForm, CommentForm, FileForm, TicketUpdateForm, TicketStatusUpdateForm, TicketDetailForm, TicketFileFormSet, TicketFolderForm
+
 from cms.ajax import (AjaxCreateView, AjaxDetailView,
                       AjaxUpdateView, AjaxDeleteView, AjaxFilesUpload)
 from cms.views import CoreDetailView, CoreListView
@@ -37,7 +38,7 @@ def handler404(request, exception):
 def home(request):
     # return render(request, 'blank.html', context={'title': 'Blank page'})
     if request.user.is_cleared:
-        return redirect('app:ticket-list')
+        return redirect('app:open-tickets')
 
     elif not request.user.is_cleared:
         return redirect('app:inbox')
@@ -51,6 +52,9 @@ class FolderList(LoginRequiredMixin, CoreListView):
 class FolderDelete(LoginRequiredMixin, AjaxDeleteView):
     model = Folder
 
+    def get_success_url(self):
+        return reverse('app:folder-list')
+
 
 class FolderCreate(LoginRequiredMixin, AjaxCreateView):
     model = Folder
@@ -61,6 +65,8 @@ class FolderCreate(LoginRequiredMixin, AjaxCreateView):
         return super().dispatch(request, *args, **kwargs)
     # def get_redirect_url(self):
     #     return reverse_lazy('app:home')
+
+
 
 class FolderUpdate(LoginRequiredMixin, AjaxUpdateView):
     model = Folder
@@ -79,6 +85,11 @@ class FolderDetailView(LoginRequiredMixin, DetailView):
         else:
             context['tickets'] = Ticket.objects.filter(folder=self.object).filter(assigned_to=self.request.user)
         return context
+
+    def get(self, request, *args, **kwargs):
+        response = super().get(request, *args, **kwargs)
+        request.session['last_folder_pk'] = self.object.pk
+        return response
 
 
 class TicketList(LoginRequiredMixin, CoreListView):
@@ -180,7 +191,8 @@ class ArchiveList(LoginRequiredMixin, CoreListView):
 
 class OpenTicketsList(LoginRequiredMixin, CoreListView):
     model = Ticket
-    queryset = Ticket.objects.exclude(ticket_choices__exact=2)
+    users = User.objects.all()
+    queryset = Ticket.objects.exclude(ticket_choices__exact=2).filter(assigned_to__in=users)
     context_object_name = 'openticket_list'
 
     @permit_if_role_in(['is_cleared', ])
@@ -252,33 +264,48 @@ class TicketCreate(LoginRequiredMixin, AjaxCreateView):
         return super().form_valid(form)
 
 
+class TicketFolderCreate(LoginRequiredMixin, AjaxCreateView):
+    model = Ticket
+    form_class = TicketFolderForm
 
+    def get_context_data(self, **kwargs):                
+        context = super(TicketFolderCreate, self).get_context_data(**kwargs)
+        #self.object = self.get_object() #removed
 
-    # def post(self, request, *args, **kwargs):
-    #     form = self.get_form()
+        if self.request.POST:
+            context["file_upload"] = TicketFileFormSet(self.request.POST, self.request.FILES, instance=self.object)
+        else:
+            context["file_upload"] = TicketFileFormSet(instance=self.object)
+        return context
 
-    #     if form.is_valid():
-    #         form.save()
+    def get_success_url(self):
+        folder_pk = self.request.session.get('last_folder_pk')
+        return reverse('app:folder-detail', kwargs={'pk': folder_pk})
 
-    #         ticket = self.object
+    def form_valid(self, form):
+        context = self.get_context_data()
+        file_upload = context["file_upload"]
+        folder_pk = self.request.session.get('last_folder_pk')
 
-    #         # mail notification to owner of ticket
-    #         # notification_subject = "[#"  + "] New followup"
-    #         # notification_body = "Hi,\n\n new followup created for ticket #" \
-    #         #                     + str('ticket.id') \
-    #         #                     + " (http://localhost:8000/ticket/" \
-    #         #                     + str('jdks') \
-    #         #                     + "/)\n\nTitle: " + form.data['title'] \
-    #         #                     + "\n\n" + form.data['description']
+        folder = get_object_or_404(Folder, id=folder_pk)
+        form.instance.folder = folder
+        self.object = form.save()
+        if file_upload.is_valid():
+            file_upload.instance = self.object
+            file_upload.save()
+        # sender = User.objects.get(id=1)
+        # recipient = User.objects.get(id=1)
+    
+        # from webpush import send_user_notification
 
-    #         subject = 'welcome to GFG world'
-    #         # message = f'Hi {''}, thank you for registering in geeksforgeeks.'
-    #         message = 'Hi, thank you for registering in geeksforgeeks.'
-    #         email_from = settings.EMAIL_HOST_USER
-    #         recipient_list = ['richmondnyamekye14@gmail.com', ]
-    #         send_mail(subject, message, email_from, recipient_list)
+        # user = self.request.user
+        # ticket = get_object_or_404(Ticket, id=self.object.id)
 
-    #     return super(TicketDetail, self).post(request, *args, **kwargs)
+        # payload = {"head": "New Ticket", "body": ticket.title}
+        # send_user_notification(user=user, payload=payload, ttl=1000)
+        # notify.send(sender, recipient=recipient, verb=ticket.title,description=ticket.description)
+
+        return super().form_valid(form)
 
 
 class TicketUpdate(LoginRequiredMixin, AjaxUpdateView):
@@ -287,37 +314,23 @@ class TicketUpdate(LoginRequiredMixin, AjaxUpdateView):
 
     def form_valid(self, form):
 
-            form.instance.user = self.request.user
+        form.instance.user = self.request.user
 
-            my_object = form.save()
+        my_object = form.save()
 
-            ticket = get_object_or_404(Ticket, id=my_object.id)
+        ticket = get_object_or_404(Ticket, id=my_object.id)
+        sender = User.objects.get(id=1)
+        recipient = User.objects.get(id=1)
 
-            # notification_subject = "[#" +  "] New followup"
-            # notification_body = "Hi,\n\n a new comment has been to ticket #" \
-            #     + str(ticket.id) \
-            #     + " (http://localhost:8000/ticket/" \
-            #     + str(ticket.id) \
-            #     + "/)\n\nTitle: " + str(ticket.user) \
-            #     + "\n\n" + form.data['comment']
-            # # message = f'Hi {''}, thank you for registering in geeksforgeeks.'
-            # # message = 'Hi, thank you for registering in geeksforgeeks.'
-            # email_from = settings.EMAIL_HOST_USER
-            # recipient_list = ['richmondnyamekye14@gmail.com', ]
-            # send_mail(notification_subject, notification_body,
-            #           email_from, recipient_list)
-            sender = User.objects.get(id=1)
-            recipient = User.objects.get(id=1)
+        
+        from webpush import send_user_notification
 
-            
-            from webpush import send_user_notification
+        user = self.request.user
+        payload = {"head": 'Status update', "body": 'Status update for: '+ ticket.title}
+        send_user_notification(user=user, payload=payload, ttl=1000)
+        notify.send(sender, recipient=recipient, verb='Status Update', description='Status update for '+ ticket.title)
 
-            user = self.request.user
-            payload = {"head": 'Status update', "body": 'Status update for: '+ ticket.title}
-            send_user_notification(user=user, payload=payload, ttl=1000)
-            notify.send(sender, recipient=recipient, verb='Status Update', description='Status update for '+ ticket.title)
-
-            return super().form_valid(form)
+        return super().form_valid(form)
 
 
 class TicketStatusUpdate(LoginRequiredMixin, AjaxUpdateView):
@@ -332,20 +345,6 @@ class TicketStatusUpdate(LoginRequiredMixin, AjaxUpdateView):
         my_object = form.save()
 
         ticket = get_object_or_404(Ticket, id=my_object.id)
-
-        # notification_subject = "[#" +  "] New followup"
-        # notification_body = "Hi,\n\n a new comment has been to ticket #" \
-        #     + str(ticket.id) \
-        #     + " (http://localhost:8000/ticket/" \
-        #     + str(ticket.id) \
-        #     + "/)\n\nTitle: " + str(ticket.user) \
-        #     + "\n\n" + form.data['comment']
-        # # message = f'Hi {''}, thank you for registering in geeksforgeeks.'
-        # # message = 'Hi, thank you for registering in geeksforgeeks.'
-        # email_from = settings.EMAIL_HOST_USER
-        # recipient_list = ['richmondnyamekye14@gmail.com', ]
-        # send_mail(notification_subject, notification_body,
-        #           email_from, recipient_list)
         sender = User.objects.get(id=1)
         recipient = User.objects.get(id=1)
 
@@ -373,8 +372,6 @@ class TicketDetail(LoginRequiredMixin, AjaxDetailView):
         context = super(TicketDetail, self).get_context_data(
             *args, **kwargs)
         b = Ticket.objects.get(pk=self.object.id)
-        # b = Ticket.objects.all()
-        # new_context_entry = "Open Tickets"
         context["comment_overlap"] = 'none of your business'
         context["comment_count"] = b.comment_set.all()
         context["file_count"] = b.file_set.all()
@@ -415,20 +412,6 @@ class CommentCreate(LoginRequiredMixin, AjaxCreateView):
         my_object = form.save()
 
         comment = get_object_or_404(Comment, id=my_object.id)
-
-        # notification_subject = "[#" +  "] New followup"
-        # notification_body = "Hi,\n\n a new comment has been to ticket #" \
-        #     + str(ticket.id) \
-        #     + " (http://localhost:8000/ticket/" \
-        #     + str(ticket.id) \
-        #     + "/)\n\nTitle: " + str(ticket.user) \
-        #     + "\n\n" + form.data['comment']
-        # # message = f'Hi {''}, thank you for registering in geeksforgeeks.'
-        # # message = 'Hi, thank you for registering in geeksforgeeks.'
-        # email_from = settings.EMAIL_HOST_USER
-        # recipient_list = ['richmondnyamekye14@gmail.com', ]
-        # send_mail(notification_subject, notification_body,
-        #           email_from, recipient_list)
         sender = User.objects.get(id=1)
         recipient = User.objects.get(id=1)
 
@@ -441,14 +424,6 @@ class CommentCreate(LoginRequiredMixin, AjaxCreateView):
         notify.send(sender, recipient=recipient, verb='COMMENT', description=comment.comment)
 
         return super().form_valid(form)
-
-    # def form_valid(self, form):
-    #     """Force the user to request.user"""
-    #     self.object = form.save(commit=False)
-    #     self.object.user_id = self.request.user.id
-    #     self.object.save()
-
-    #     return super(CommentCreate, self).form_valid(form)
 
 
 class CommentUpdate(LoginRequiredMixin, AjaxUpdateView):
@@ -505,5 +480,3 @@ class FileDelete(LoginRequiredMixin, AjaxDeleteView):
 
 class UserDetail(LoginRequiredMixin, AjaxDetailView):
     model = User
-
-
