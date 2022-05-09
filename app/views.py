@@ -377,9 +377,7 @@ class CommentCreate(LoginRequiredMixin, AjaxCreateView):
         return super().dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
-
         form.instance.user = self.request.user
-
         my_object = form.save()
 
         comment = get_object_or_404(Comment, id=my_object.id)
