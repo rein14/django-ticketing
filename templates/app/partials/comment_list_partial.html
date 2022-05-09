@@ -1,6 +1,9 @@
 {% load cms_tags %}
 {% for comment in object_list %}
-<tr id="{{ comment.pk }}">
+{% comment %} 
+comments has some temporal fixes which needs to be addressed
+{% endcomment %}
+<tr {% if comment.user == request.user %}class="selected"{% endif %} id="{{ comment.pk }}">
    
   
     <td class="fw-bold"><a href="" class="border-0 ajax-load-form" title="View user details">{{ comment.user }}</a></td>
@@ -8,7 +11,9 @@
     <td><a href="{% get_object_url 'detail' comment %}" class="border-0 ajax-load-form" title="View">
         {{ comment.comment|truncatewords:12}}</a></td>
         <td>{{ comment.last_modified }}</td>
+
         <td style="text-align:center"> 
+            {% if comment.user == request.user %}
        <div class="dropdown"><button class="btn btn-link text-dark dropdown-toggle dropdown-toggle-split m-0 p-0"
         data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><svg class="icon icon-xs"
             fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -43,7 +48,8 @@
 
     
     
-    
+{% endif %}
+
     </td>
 </tr>
 

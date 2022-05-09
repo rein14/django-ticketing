@@ -28,6 +28,8 @@ from webpush import send_user_notification
 from django.shortcuts import redirect, render
 from notifications.signals import notify
 from django.db import transaction
+        # from webpush import send_user_notification
+
 
 def handler404(request, exception):
     return render(request, 'blank.html')
@@ -65,7 +67,6 @@ class FolderCreate(LoginRequiredMixin, AjaxCreateView):
         return super().dispatch(request, *args, **kwargs)
     # def get_redirect_url(self):
     #     return reverse_lazy('app:home')
-
 
 
 class FolderUpdate(LoginRequiredMixin, AjaxUpdateView):
@@ -213,23 +214,9 @@ class TicketCreate(LoginRequiredMixin, AjaxCreateView):
     model = Ticket
     form_class = TicketForm
 
-    # @permit_if_role_in(['is_cleared', ])
-    # def dispatch(self, request, *args, **kwargs):
-    #     return super().dispatch(request, *args, **kwargs)
-    # def get_redirect_url(self):
-    #     return reverse_lazy('app:home')
-
-    # def get_context_data(self, **kwargs):                
-    #     context = super(TicketCreate, self).get_context_data(**kwargs)
-    #     #self.object = self.get_object() #removed
-
-    #     if self.request.POST:
-    #         context["file_upload"] = TicketFileFormSet(self.request.POST, self.request.FILES, instance=self.object)
-    #     else:
-    #         context["file_upload"] = Tick(instance=self.object)
-    #     return context
-
-
+    @permit_if_role_in(['is_cleared', ])
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):                
         context = super(TicketCreate, self).get_context_data(**kwargs)
@@ -249,20 +236,16 @@ class TicketCreate(LoginRequiredMixin, AjaxCreateView):
         if file_upload.is_valid():
             file_upload.instance = self.object
             file_upload.save()
-        # sender = User.objects.get(id=1)
-        # recipient = User.objects.get(id=1)
-    
-        # from webpush import send_user_notification
+        ticket = get_object_or_404(Ticket, id=self.object.id)
 
-        # user = self.request.user
-        # ticket = get_object_or_404(Ticket, id=self.object.id)
-
-        # payload = {"head": "New Ticket", "body": ticket.title}
-        # send_user_notification(user=user, payload=payload, ttl=1000)
-        # notify.send(sender, recipient=recipient, verb=ticket.title,description=ticket.description)
+        sender = self.request.user
+        payload = {"head": 'Status update', "body": 'Status update for: '+ ticket.title}
+        for x in ticket.assigned_to.all():
+            send_user_notification(user=x, payload=payload, ttl=1000)
+            notify.send(sender, recipient=x, verb='Status Update', description='Ticket update for '+ ticket.title)
 
         return super().form_valid(form)
-
+ 
 
 class TicketFolderCreate(LoginRequiredMixin, AjaxCreateView):
     model = Ticket
@@ -319,16 +302,14 @@ class TicketUpdate(LoginRequiredMixin, AjaxUpdateView):
         my_object = form.save()
 
         ticket = get_object_or_404(Ticket, id=my_object.id)
-        sender = User.objects.get(id=1)
-        recipient = User.objects.get(id=1)
-
         
-        from webpush import send_user_notification
 
-        user = self.request.user
+              
+        sender = self.request.user
         payload = {"head": 'Status update', "body": 'Status update for: '+ ticket.title}
-        send_user_notification(user=user, payload=payload, ttl=1000)
-        notify.send(sender, recipient=recipient, verb='Status Update', description='Status update for '+ ticket.title)
+        for x in ticket.assigned_to.all():
+            send_user_notification(user=x, payload=payload, ttl=1000)
+            notify.send(sender, recipient=x, verb='Status Update', description='Ticket update for '+ ticket.title)
 
         return super().form_valid(form)
 
@@ -337,25 +318,18 @@ class TicketStatusUpdate(LoginRequiredMixin, AjaxUpdateView):
     model = Ticket
     form_class = TicketStatusUpdateForm
 
-
     def form_valid(self, form):
-
         form.instance.user = self.request.user
-
         my_object = form.save()
 
         ticket = get_object_or_404(Ticket, id=my_object.id)
-        sender = User.objects.get(id=1)
-        recipient = User.objects.get(id=1)
-
-        
-        from webpush import send_user_notification
-
-        user = self.request.user
+        sender = self.request.user
         payload = {"head": 'Status update', "body": 'Status update for: '+ ticket.title}
-        send_user_notification(user=user, payload=payload, ttl=1000)
-        notify.send(sender, recipient=recipient, verb='Status Update', description='Status update for '+ ticket.title)
+        for x in ticket.assigned_to.all():
+            send_user_notification(user=x, payload=payload, ttl=1000)
+            notify.send(sender, recipient=x, verb='Status Update', description='Ticket update for '+ ticket.title)
 
+        return super().form_valid(form)
         return super().form_valid(form)
 
 
@@ -367,7 +341,6 @@ class TicketDetail(LoginRequiredMixin, AjaxDetailView):
     model = Ticket
     form_class = TicketDetailForm
 
-    # form_class = TicketForm
     def get_context_data(self, *args, **kwargs):
         context = super(TicketDetail, self).get_context_data(
             *args, **kwargs)
@@ -403,8 +376,6 @@ class CommentCreate(LoginRequiredMixin, AjaxCreateView):
         self.template = 'conment_form'
         return super().dispatch(request, *args, **kwargs)
 
-   
-
     def form_valid(self, form):
 
         form.instance.user = self.request.user
@@ -412,12 +383,9 @@ class CommentCreate(LoginRequiredMixin, AjaxCreateView):
         my_object = form.save()
 
         comment = get_object_or_404(Comment, id=my_object.id)
+        
         sender = User.objects.get(id=1)
         recipient = User.objects.get(id=1)
-
-        
-        from webpush import send_user_notification
-
         user = self.request.user
         payload = {"head": 'New comment for '+ str(comment.ticket), "body": comment.comment}
         send_user_notification(user=user, payload=payload, ttl=1000)

@@ -146,7 +146,6 @@ class Comment(TimeStamped):
 
     # def save_model(self, request, obj, form, change):
     #     obj.user = request.user
-
     #     super().save_model(request, obj, form, change)
 
     def get_absolute_url(self):
@@ -177,13 +176,13 @@ class File(TimeStamped):
     def __str__(self):
         return self.filename
 
-    # def save(self, *args, **kwargs):
-    #     if self.pk:
-    #         old_file = File.objects.get(pk=self.pk).file
-    #         if not old_file == self.file:
-    #             storage = old_file.storage
-    #             if storage.exists(old_file.name):
-    #                 storage.delete(old_file.name)
+    def save(self, *args, **kwargs):
+        if self.pk:
+            old_file = File.objects.get(pk=self.pk).file
+            if not old_file == self.file:
+                storage = old_file.storage
+                if storage.exists(old_file.name):
+                    storage.delete(old_file.name)
 
         super().save(*args, **kwargs)
 
