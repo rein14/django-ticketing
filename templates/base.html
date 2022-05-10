@@ -112,12 +112,14 @@
     display: inline-block;
 } 
 .sidebar-footer{
-  height: 50px;
+  height: 83px;
   position: absolute;
-   bottom: 0;
+  bottom: -48px;
   list-style-type: none;
-  padding-bottom:5.5em;
-  }
+  padding-bottom: 5.5em;
+}
+
+  
  </style>
  
 </head>
@@ -149,11 +151,13 @@
               {% endblock %}
               
             </div>
-      
+            <button class="navbar-toggler d-lg-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
             
             <!-- Navbar links -->
             <ul class="navbar-nav align-items-center">
-      
+          
            
       
               <li class="nav-item dropdown">
