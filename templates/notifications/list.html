@@ -24,8 +24,7 @@
    <h5 class="h5"><i class="fa fa-bell"></i> Notifications<h5>{{notifications_unread}}
 
 
-  {% if request.user.is_superuser and request.user.is_staff %}
-  <div class="btn-toolbar mb-2 mb-md-0">
+   <div class="btn-toolbar mb-2 mb-md-0">
 
   <div class="btn-toolbar mb-2 mb-md-0 me-2"> <a href="{% url 'notifications:mark_all_as_read'%}"
       class="btn btn-sm btn-success d-inline-flex align-items-center" style="color:white">
@@ -36,8 +35,7 @@
   
 
 </div>
-  {% endif %}  
-
+ 
 
 </div>
 {% comment %} <ul class="notifications">
