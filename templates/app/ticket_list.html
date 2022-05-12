@@ -65,9 +65,8 @@
           <th class="one">{{ object_list|verbose_name:'field:sent_by' }}</th>
 
           <th class="one">{{ object_list|verbose_name:'field:last_modified' }}</th>
-
-          <th style="text-align:center">Actions</th>
-        </tr>
+           <th style="text-align:center">Actions</th>
+         </tr>
       </thead>
 
       <tbody>
@@ -116,6 +115,7 @@ span.select2-container {
     ordering: true,
      "processing": true,
      //any other configuration options
+    // "serverSide":true,
    // "ajax": "/tickets",
     order: [
       [1, 'asc']
@@ -142,26 +142,31 @@ span.select2-container {
   });
 
 
+
 } );
 
 
-</script>
-<script>
+ </script>
+{% comment %} <script>
   $(document).ready( function () {
 
-  setInterval(function(){
-    $.ajax({    
-       url: '{% url 'app:open-tickets' %}',
-          success: function(data) {
-            $('#table-ajax').DataTable();
-          }
-    });
-}, 10000)
+
+    setInterval(function(){
+      $.ajax({    
+         url: '/opentickets/',
+         datatype:json,
+            success: function(data) {
+              $("#table-ajax tbody").html(data.html_list);
+              $('#table-ajax').DataTable();
+            }
+      });
+  }, 800);
 
 } );
 
 
-</script>
+</script> {% endcomment %}
+
 {% endblock  %}
 
 {% endblock %}

@@ -1,8 +1,8 @@
 
 {% extends 'base.html' %}
-{% load cms_tags %}
-{% load static %}
+  {% load static %}
 {% block title %} {{ title }} · {{ block.super }} {% endblock title %}
+ 
 
 {% block nav %}
         <nav aria-label="breadcrumb">
@@ -12,83 +12,112 @@
          
               Back</a></li>
             <li class="breadcrumb-item active" aria-current="page"> <a href="{{request.get_full_path|slice:-8}}" class="ajax-load-form" title="Edit">
-              {{ title }}s</a></li>
+              Notications</a></li>
           </ol>
         </nav> 
         {% endblock %}
-
-{% block content %}
-
+{% block content%}
 {% block table %}
-<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
-  <h5 class="h5"><span class="text-primary me-2"> <a href="{{request.get_full_path|slice:-8}}" class="ajax-load-form" title="Edit">
-    <i class="far fa-comment me-2"></i></a> {{ detail_title }}</a></span>    
-       {% comment %} {% if request.user.is_cleared %}<a class="small ajax-load-form" href="{{request.path|comment_status_update}}">
-        <i class="far fa-edit me-2"></i></a>  {% endif %} {% endcomment %}
-      </h5>
-        
-     <div class="btn-toolbar mb-2 mb-md-0">
-      
-      
-    <div class="btn-toolbar mb-2 mb-md-0"> 
-      {% comment %} <a href="{% get_object_url 'create' %}"
-      class="btn btn-info animate-up-2 mr-3 text-dark mb-3 mb-md-0 ajax-load-form me-2"><i class="far fa-comment me-2"></i>
-      Add {{ model_verbose_name }}</a> {% endcomment %}
 
-      <button type="button" class="btn btn-info animate-up-2 mr-3 me-2" ><a href="{% get_object_url 'create' %}" class="ajax-load-form" style="color:white;">
-        <i class="fas fa-comments me-2"></i> Add {{ model_verbose_name_plural|lower }}</a>
-      </button>
+ 
+<div id="myDIV" class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
+   <h5 class="h5"><i class="fa fa-bell"></i> Notifications<h5>{{notifications_unread}}
 
-      
-      <a class="btn btn-outline-success animate-up-2 mr-3 me-2" href="{{request.get_full_path|slice:-8}}files">
-      <i class="far fa-file-alt me-2"></i> Files </a>
-   </div>
-        
-   {% if request.user.is_cleared %}  <div class="dropdown"><button class="btn btn-link text-dark dropdown-toggle dropdown-toggle-split m-0 p-0"
-          data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><svg class="icon icon-xs"
-              fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-              <path
-                  d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z">
-              </path>
-          </svg> <span class="visually-hidden">Toggle Dropdown</span></button>
-      <div class="dropdown-menu dashboard-dropdown dropdown-menu-start mt-2 py-1">  
-              
-              <a class="dropdown-item d-flex align-items-center ajax-load-form" href="{{request.path|comment_status_update}}">
-                <i class="far fa-edit me-2"></i> Edit Ticket Status</a>
-                <a class="dropdown-item d-flex align-items-center ajax-load-form" href="{{request.path|comment_status_update}}">
-                  <i class="fas fa-print me-2"></i> PDF</a>
-           </div>
+
+  {% if request.user.is_superuser and request.user.is_staff %}
+  <div class="btn-toolbar mb-2 mb-md-0">
+
+  <div class="btn-toolbar mb-2 mb-md-0 me-2"> <a href="{% url 'notifications:mark_all_as_read'%}"
+      class="btn btn-sm btn-success d-inline-flex align-items-center" style="color:white">
+      <i class="fa fa-check me-2"></i> Mark all notications as read</a>
+
   </div>
-        
-        {% endif %}
-        
+
+  
+
+</div>
+  {% endif %}  
+
+
+</div>
+{% comment %} <ul class="notifications">
+
+   {% for notice in notifications %}
+   <div class="alert alert-block alert-{{ notice.level }}">
+      <a class="close pull-right" href="{% url 'notifications:mark_as_read' notice.slug %}">
+        <i class="icon-close"></i>
+      </a>
       
- </div>
-</div>
+      <h4>
+        <i class="icon-mail{% if notice.unread %}-alt{% endif %}"></i>
+        {{ notice.actor }} 
+        {{ notice.verb }}
+        {% if notice.target %}
+          of {{ notice.target }}
+        {% endif %}
+      </h4>
+      
+      <p>{{ notice.timesince }} ago</p>
+      
+      <p>{{ notice.description|linebreaksbr }}</p>
+      {{notice.data.actions}}
+      <div class="notice-actions">
+        {% for action in notice.data.actions %}
+        
+          <a class="btn btn-primary" href="{{ action.href }}">{{ action.title }}</a>
+        {% endfor %}
+      </div>   
+    </div>  
+     {% endfor %}
+ </ul> {% endcomment %}
+
+
  <div class="card">
-  <div class="table-responsive py-4">
-    <table class="table table-flush table-hover" id="table-ajax" data-page-length='10'>
+   <div class="table-responsive py-4">
+     <table class="table table-flush table-hover" id="table-ajax" data-page-length='10'>
+ 
+       <thead class="thead-light">
+         <tr>
+           <th>actor</th>
 
-      <thead class="thead-light d-none">
-    <tr>
-      <th>{{ object_list|verbose_name:'field:user' }}</th>
+           <th>Date/Time</th>
+ 
+          
+           <th style="text-align: center;">Action</th>
+          </tr>
+       </thead>
 
-      <th>{{ object_list|verbose_name:'field:comment' }}</th>
-      <th>{{ object_list|verbose_name:'field:last_modified' }}</th>
-      <th style="text-align:center">Actions</th>
-     </tr>
-  </thead>
-  <tbody>
-    {% include 'app/partials/comment_list_partial.html' %}
-  </tbody>
-</table>
+       <tbody>
+      {% for notice in notifications %}
+      <tr>
+                  <td>{{ notice.actor }} {{ notice.verb }}</td>
+               
 
-</div>
-</div>
-{% endblock table %}
-{% endblock content %}
+                  <td>{{ notice.timesince }} ago</td>
+               
 
-{% block extracss %}
+                  <td style="text-align: center;">
+
+                     <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                     <a href="{% url 'notifications:mark_as_read' notice.slug %}" class="btn btn-outline-primary {%if not notice.unread%}active{% endif %}" ><i class="fa fa-check me-2"></i></a>
+                     <a href="{% url 'notifications:mark_as_unread' notice.slug %}?next{{next_url}}"  class="btn btn-outline-primary {%if notice.unread%}active{%endif%}"><i class="fa fa-times me-2"></i></a>
+                     </div> 
+                  </td>
+               </tr>
+               {% endfor %}
+       </tbody>
+ 
+     </table>
+   </div>
+ </div>
+
+
+
+ {% endblock table %}
+ {% endblock  %}
+
+
+ {% block extracss %}
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" />
 
 <style>
@@ -122,18 +151,10 @@
   var table = $('#table-ajax').DataTable({
  
     ordering: false,
-    "processing": true,
-     "searching":false,
-     "lengthChange": true,
-     order: [
-      [1, 'asc']
-    ],
-    columnDefs: [{
-      orderable: true,
-      // className: 'select-checkbox',
-      targets: 0
+      "searching":false,
+     "lengthChange": false,
 
-    }],
+
     // select: {
     //   info: true,
     //   style: 'multi',

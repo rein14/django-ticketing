@@ -158,10 +158,11 @@
             <!-- Navbar links -->
             <ul class="navbar-nav align-items-center">
           
-           
-      
+
+
+              
+        
               <li class="nav-item dropdown">
-      
       
                 <a class="nav-link text-primary notification dropdown-toggle"
                 data-unread-notifications="true" href="#" role="button" data-bs-toggle="dropdown" data-bs-display="static"
@@ -170,12 +171,14 @@
                 </a>
       
                 <div class="dropdown-menu dropdown-menu-lg dropdown-menu-center mt-2 py-0">
-      
-                  {% for notification in  user.notifications.unread|slice:"0:5" %}
-                  {% comment %} {% live_notify_list list_class="dropdown-menu" %} {% endcomment %}
-      
                   <div class="list-group list-group-flush">
-                     <a href="#" class="list-group-item list-group-item-action border-bottom">
+
+                  {% for notification in  user.notifications.unread|slice:"0:5" %}
+                  {% if notification.notificationcta.cta_link %}
+                  <a href="{{notification.notificationcta}}">Click here</a>   
+                  {% endif %}
+   
+                     <a href="" class="list-group-item list-group-item-action border-bottom">
                       <div class="row align-items-center">
                         <div class="col-auto">
                           <!-- Avatar -->
@@ -193,13 +196,14 @@
                         </div>
                       </div>
                     </a>
-                  </div>
                   {% endfor %}
-      
+                  <a href="{% url 'notifications:all' %}" class="dropdown-item text-center text-primary font-weight-bold py-3">View all</a>
+                </div>
+
                 </div>
                 
               </li>
-              
+ 
               <li class="nav-item dropdown ms-lg-3">
                 <a class="nav-link dropdown-toggle pt-1 px-0" href="/" role="button" data-bs-toggle="dropdown"
                   aria-expanded="false">

@@ -18,6 +18,8 @@
             
         </div>
         {% endfor %}
+{% if 'CLOSED' in form.visible.fields %}CLosed{% endif %}
+
     
      {% if comment_overlap %}
 

@@ -3,16 +3,17 @@
 {% for folder in folder_list  %}
          <tr id="{{folder.pk}}">
          
-        <a href="{{ folder.get_absolute_url }}"> <td class="fw-bold">  <a href="{{ folder.get_absolute_url }}"><i class="far fa-folder me-2"></i>
+         <td class="fw-bold"><a href="{{ folder.get_absolute_url }}"><i class="far fa-folder me-2"></i> </a>
          
-            {{folder.title}}</a>
+            {{folder.title}}
          </td>
          
          <td style="text-align:center">
-         
+            <a href="{{ folder.get_absolute_url }}">
             {{folder.last_modified}}
+        </a>
          </td>
-         
+        
        
          <td style="text-align:center"> 
             
@@ -28,7 +29,7 @@
      
          
                  
-                 <a class="dropdown-item d-flex align-items-center ajax-load-form" href=""><svg
+                 <a class="dropdown-item d-flex align-items-center ajax-load-form" href="{% get_object_url 'update' folder%}"><svg
                      class="dropdown-icon text-gray-400 me-2" fill="currentColor" viewBox="0 0 20 20"
                      xmlns="http://www.w3.org/2000/svg">
                      <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z">

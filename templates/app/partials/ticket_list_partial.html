@@ -1,12 +1,12 @@
 {% load cms_tags cache %}
 {% for ticket in object_list %}
-<tr id="{{ ticket.pk }}">
+<tr>
     <td><a href="{% get_object_url 'detail' ticket %}" class="border-0 ajax-load-form" title="View details">
-        {{ ticket.pk }}</a></td>
+        F{{ ticket.pk }}</a></td>
     <td><a href="{% get_object_url 'detail' ticket %}" class="border-0 ajax-load-form" title="View details">
         {{ ticket.title }}</a></td>
     <td>
-     {{ ticket.get_ticket_choices_display}}
+       <a href="{% get_object_url 'detail' ticket %}" class="border-0 ajax-load-form" title="View details">{{ ticket.get_ticket_choices_display}}</a>
     </td>
 
         {% comment %} <td >
@@ -18,14 +18,13 @@
             </ol> 
 
         </td> {% endcomment %}
-            <td>{{ ticket.date_sent}}</td>
+            <td><a href="{% get_object_url 'detail' ticket %}" class="border-0 ajax-load-form" title="View details">{{ ticket.date_sent}}</a></td>
 
-        <td class="one">{{ ticket.sent_by }}</td>
-        <td>{{ ticket.last_modified}}</td>
+        <td class="one"><a href="{% get_object_url 'detail' ticket %}" class="border-0 ajax-load-form" title="View details">{{ ticket.sent_by }}</a></td>
+        <td><a href="{% get_object_url 'detail' ticket %}" class="border-0 ajax-load-form" title="View details">{{ ticket.last_modified}}</a></td>
 
-
-    <td style="text-align: center;">
-
+{% if ticket.ticket_choices == 1 %}
+    <td style="text-align: center;">    
             <div class="dropdown"><button class="btn btn-link text-dark dropdown-toggle dropdown-toggle-split m-0 p-0"
                     data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <svg class="icon icon-xs"
@@ -65,8 +64,9 @@
           
     </td>
     
-   
-       
+{% else %} 
+<td style="text-align: center;">Closed</t>
+{% endif %}
 
            
 </tr>

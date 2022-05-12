@@ -3,7 +3,7 @@
 {% block extracss %}
 {{form.media.css}}
 {% endblock extracss %}
-<form  enctype="multipart/form-data" method="post" action="{{ request.path }}" {% if not 'folder' in request.path %}class="ajax-save-form"{% else %}class="ajax-sazve-update-form"{% endif %}  id="ajax-save">
+<form  enctype="multipart/form-data" method="post" action="{{ request.path }}" class="ajax-save-update-form" id="ajax-save">
     {% csrf_token %}
     {{ request.path }}
      <div class="modal-header">

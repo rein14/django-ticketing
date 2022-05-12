@@ -44,7 +44,7 @@
   <ol class="nav">
     <li class="nav-item item2 selected"><a href="#" class="all nav-link ">All Tickets</a></li>
     <li class="nav-item item2 "><a class="nav-link" href="##">Pending</a></li>
-    <li class="nav-item item2"><a class="nav-link" href="#">Done</a></li>
+    <li class="nav-item item2"><a class="nav-link" href="#">Closed</a></li>
   </ol>
 
   {% if request.user.is_superuser and request.user.is_staff %}
@@ -84,7 +84,6 @@
 
       <thead class="thead-light">
         <tr>
- 
           <th>#</th>
           <th>title</th>
           <th>Status</th>
@@ -94,9 +93,9 @@
           <th>Date Sent</th>
 
           <th class="one">Sent By</th>
-          <th>Last Name</th>
+          <th>Last Modified</th>
 
-          <th style=""></th>
+          <th style="text-align: center;">Action</th>
         </tr>
       </thead>
       <tbody>
@@ -108,7 +107,7 @@
     </table>
   </div>
 </div>
-{% endblock table %}
+ {% endblock table %}
 
 
 {% block extracss %}
@@ -196,15 +195,10 @@
 
   setInterval(function(){
     $.ajax({    
-       url: '{% url 'app:folder-detail' last_folder_pk %}',
+       url: '{% url 'app:open-tickets' %}',
           success: function(data) {
-
-            $("#table-ajax").DataTable().destroy(); //this will flush DT's cache
-
-            $("#table-ajax tbody").html(data.html_list);
-            // $("#table-ajax tbody").clear().rows.add(data.html_list).draw();
-            $("#table-ajax").DataTabhle();       
-             }
+            $('#table-ajax').DataTable();
+          }
     });
 }, 10000)
 

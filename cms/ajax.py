@@ -40,7 +40,7 @@ class AjaxDeleteView(AjaxContextMixin, AjaxObjectMixin, DeleteView):
             self.object.delete()
             data = dict()
             data['form_is_valid'] = True
-            data['message'] = 'Successful deleted.'
+            data['message'] = 'Content deleted.'
             context = self.get_context_data()
             data['html_list'] = render_to_string(self.ajax_list, context, self.request)
             return JsonResponse(data)

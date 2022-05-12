@@ -1,6 +1,7 @@
 from multiprocessing import context
 from pyexpat import model
 from re import template
+from this import d
 from unicodedata import category
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy, reverse
@@ -29,6 +30,7 @@ from django.shortcuts import redirect, render
 from notifications.signals import notify
 from django.db import transaction
         # from webpush import send_user_notification
+from django_datatables_view.base_datatable_view import BaseDatatableView
 
 
 def handler404(request, exception):
@@ -45,6 +47,15 @@ def home(request):
     elif not request.user.is_cleared:
         return redirect('app:inbox')
     # return redirect('app:inbox')
+
+
+class NotificationList(LoginRequiredMixin, CoreListView):
+    model = User
+    
+    def get_queryset(self):
+        users = self.request.user
+        return users.notification.unread()
+    
 
 
 class FolderList(LoginRequiredMixin, CoreListView):
@@ -282,13 +293,13 @@ class TicketFolderCreate(LoginRequiredMixin, AjaxCreateView):
     
         # from webpush import send_user_notification
 
-        # user = self.request.user
+        user = self.request.user
         # ticket = get_object_or_404(Ticket, id=self.object.id)
 
         # payload = {"head": "New Ticket", "body": ticket.title}
         # send_user_notification(user=user, payload=payload, ttl=1000)
         # notify.send(sender, recipient=recipient, verb=ticket.title,description=ticket.description)
-
+        notify.send(user, recipient=user, verb='you reached level 10', cta_link='/')
         return super().form_valid(form)
 
 
@@ -345,10 +356,12 @@ class TicketDetail(LoginRequiredMixin, AjaxDetailView):
     def get_context_data(self, *args, **kwargs):
         context = super(TicketDetail, self).get_context_data(
             *args, **kwargs)
-        b = Ticket.objects.get(pk=self.object.id)
+        tickets= Ticket.objects.get(pk=self.object.id)
+        
+
         context["comment_overlap"] = 'none of your business'
-        context["comment_count"] = b.comment_set.all()
-        context["file_count"] = b.file_set.all()
+        context["comment_count"] = tickets.comment_set.all()
+        context["file_count"] = tickets.file_set.all()
         return context
 
 
@@ -388,7 +401,7 @@ class CommentCreate(LoginRequiredMixin, AjaxCreateView):
         user = self.request.user
         payload = {"head": 'New comment for '+ str(comment.ticket), "body": comment.comment}
         send_user_notification(user=user, payload=payload, ttl=1000)
-        notify.send(sender, recipient=recipient, verb='COMMENT', description=comment.comment)
+        notify.send(sender, recipient=recipient, verb='Commented', action_object=my_object.ticket, description=comment.comment)
 
         return super().form_valid(form)
 

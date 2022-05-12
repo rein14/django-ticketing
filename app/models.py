@@ -12,6 +12,33 @@ from django.contrib.auth.models import Group
 
 
 from django.utils import timezone
+from django.db import models
+from notifications.models import notify_handler
+from notifications.signals import notify
+from notifications.models import Notification
+
+# Create your models here.
+
+
+class NotificationCTA(models.Model):
+    notification = models.OneToOneField(Notification, on_delete=models.CASCADE)
+    cta_link = models.CharField(max_length=200, blank=True)
+
+    def __str__(self):
+        return str(self.cta_link)
+
+
+def custom_notify_handler(*args, **kwargs):
+    notifications = notify_handler(*args, **kwargs)
+    cta_link = kwargs.get("cta_link", "")
+    for notification in notifications:
+        NotificationCTA.objects.create(notification=notification, cta_link=cta_link)
+    return notifications
+
+
+notify.disconnect(notify_handler, dispatch_uid='notifications.models.notification')
+notify.connect(custom_notify_handler)  # , dispatch_uid='notifications.models.notification')
+
 
 
 class TimeStamped(models.Model):
@@ -59,7 +86,7 @@ class Ticket(TimeStamped):
     CLOSED = 2
     CHOICES = (
         (PENDING, 'Pending'),
-        (CLOSED, 'Closing'),
+        (CLOSED, 'Closed'),
     )
     folder = models.ForeignKey(Folder, verbose_name='Folder', on_delete=models.CASCADE,null=False,blank=False)
     # user = models.ForeignKey(User,
@@ -135,7 +162,6 @@ class Comment(TimeStamped):
     order = OrderField(blank=True, for_fields=[
                        'ticket'], verbose_name='Order #')
 
-
     def __str__(self):
         return str(self.slug)
 
@@ -148,8 +174,8 @@ class Comment(TimeStamped):
     #     obj.user = request.user
     #     super().save_model(request, obj, form, change)
 
-    def get_absolute_url(self):
-        return reverse("comment_detail", kwargs={"pk": self.pk})
+    # def get_absolute_url(self):
+    #     return reverse("comment_detail", kwargs={"pk": self.pk})
 
     class Meta:
         db_table = 'comment'

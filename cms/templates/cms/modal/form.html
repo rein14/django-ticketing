@@ -72,9 +72,9 @@
     <div class="modal-footer">
         <button type="button" class="btn btn-link text-gray-600 ms-auto" data-bs-dismiss="modal">Close</button>
         {% if not form.instance.pk %}
-        <button id='loadOnClick' type="submit" class="btn btn-outline-primary">{{ title }}</button>
+        <button  type="submit" class="btn btn-outline-primary btn-loading" id='loadOnClick' data-loading-text="Loading" >{{ title }}</button>
         {% else %}
-        <button id='loadOnClick' type="submito" class="btn btn-outline-info">{{ title }}</button>
+        <button  type="submit" class="btn btn-outline-info" id='loadOnClick' data-loading-text="Loading" >{{ title }}</button>
         {% endif %}
     </div>
 </form>

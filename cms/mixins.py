@@ -68,16 +68,18 @@ class AjaxFormMixin:
                     self.data['redirect'] = self.get_redirect_url()
                 else:
                     self.data['html_list'] = render_to_string(self.ajax_list, context=self.get_context_data(), request=self.request)
-                self.data['message'] = 'Successful saved.'
+                self.data['message'] = 'Successfully saved.'
             else:
                 super().form_invalid(form)
             if self.request.is_ajax():
                 return JsonResponse(self.data)
+               
             else:
                 return super().form_valid(form)
         else:
             return super().form_invalid(form)
-
+        print(JsonResponse(self.data))
+        
     def form_invalid(self, form):
         self.data['form_is_valid'] = False
         self.data['html_form'] = render_to_string(self.ajax_form, context=self.get_context_data(), request=self.request)

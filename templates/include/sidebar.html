@@ -27,8 +27,7 @@ Document Ticketing  </a>
   <ul class="nav flex-column pt-3 pt-md-0" style='margin-bottom: 100%; justify-content: space-between;'>
   <div style="height:65vh">
    
- 
-     
+
     {% if not request.user.is_cleared %}
     <li role="separator" class="dropdown- divider mt-4 mb-3 border-gray-700"></li>
 
@@ -56,23 +55,12 @@ Document Ticketing  </a>
         <span class="sidebar-text">Completed Memos</span>
       </a>
     </li>
-    <li role="separator" class="dropdown-divider mt-4 mb-3 border-gray-700"></li>
 
-    <li class="nav-item {% if request.path == '/completed/' %} active {% endif %}">
-      <a href="{% url 'app:completed-tickets' %}" class="nav-link">
-        <span class="sidebar-icon">
-          <i class="fa fa-bell me-2"></i>
-        </span>
-        <span class="sidebar-text">Notifications</span>
-      </a>
-    </li>
+
  {% endif %}
  
 
     {% if request.user.is_cleared %}
-
-    <li role="separator" class="dropdown- divider mt-4 mb-3 border-gray-700"></li>
-   
     <li class="nav-item {% if request.path == '/tickets/' %} active {% endif %} ">
       <a href="{% url 'app:ticket-list' %}" class="nav-link">
         <span class="sidebar-icon">
@@ -159,14 +147,24 @@ Document Ticketing  </a>
       </div>
     </li>
     
-    <li role="separator" class="dropdown-divider mt-4 mb-3 border-gray-700"></li>
+    {% comment %} <li role="separator" class="dropdown-divider mt-4 mb-3 border-gray-700"></li>
     <li class="nav-item">
       <a href="/admin/account/user" class="nav-link">
           <span class="sidebar-icon"><span class="fas fa-users me-2"></span></span>
           <span>Users</span>
       </a>
-  </li>
+  </li> {% endcomment %}
     {% endif %}
+    <li role="separator" class="dropdown-divider mt-4 mb-3 border-gray-700"></li>
+
+    <li class="nav-item {% if 'notifications' in request.path %} active {% endif %}">
+      <a href="{% url 'notifications:all' %}" class="nav-link">
+        <span class="sidebar-icon">
+          <i class="fa fa-bell me-2"></i>
+        </span>
+        <span class="sidebar-text">Notifications</span>
+      </a>
+    </li>
     <li role="separator" class="dropdown-divider mt-4 mb-3 border-gray-700"></li>
 
    </div>

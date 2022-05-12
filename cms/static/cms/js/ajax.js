@@ -76,9 +76,31 @@ $(document).ready(function () {
 
             $("#table-ajax tbody").html(data.html_list);
             $("#table-ajax").DataTable();
+            $("#table-ajax").DataTable().ajax.reload();
           }
           
-            toastr["success"](data.message);
+             const notyf = new Notyf({
+              position: {
+                  x: 'right',
+                  y: 'bottom',
+              },
+              types: [
+                  {
+                      type: 'info',
+                      background: '#262B40',
+                      icopn: {
+                          className: 'fas fa-info-circle',
+                          tagName: 'span',
+                          color: '#fff'
+                      },
+                      dismissible: false
+                  }
+              ]
+          });
+          notyf.open({
+              type: 'info',
+              message: data.message
+          });
         } else {
           $("#modal-ajax .modal-content").html(data.html_form);
             // toastr["error"](data.message);
@@ -95,44 +117,8 @@ $(document).ready(function () {
   };
 
 
-  var saveUpdateForm = function () {
-    var form = $('form');
-    $.ajax({
-      url: form.attr("action"),
-      data: form.serialize(),
-      type: form.attr("method"),
-      dataType: 'json',
-      success: function (data) {
-        if (data.form_is_valid) {
-          $("#modal-ajax").modal("hide");
- 
-          if (data.redirect) {
-            top.location = data.redirect;
-          } else {
-            $("#table-ajax").DataTable().destroy(); //this will flush DT's cache
-
-            $("#table-ajax tbody").html(data.html_list);
-            // $("#table-ajax tbody").clear().rows.add(data.html_list).draw();
-            $("#table-ajax").DataTable();
-          }
-          
-            toastr["success"](data.message);
-        } else {
-          $("#modal-ajax .modal-content").html(data.html_form);
-            // toastr["error"](data.message);
-            // Display an error notificatiod
-            // Display a success notification
-         }
-      },
-      error: function (xhr, status, error) {M
-        var err = JSON.parse(xhr.responseText);
-        toastr["error"](err.message);
-      },
-    });
-    return false;
-  };
-  // var saveForm = function () {
-  //   var form = $(this);
+  // var saveUpdateForm = function () {
+  //   var form = $('form');
   //   $.ajax({
   //     url: form.attr("action"),
   //     data: form.serialize(),
@@ -140,18 +126,76 @@ $(document).ready(function () {
   //     dataType: 'json',
   //     success: function (data) {
   //       if (data.form_is_valid) {
-  //         $("#modal-ajax").modal("hide"); //hide it first if you want
-  //         $("#table-ajax").DataTable().destroy(); //this will flush DT's cache
-  //         $("#table-ajax  tbody").html(data.html_list); // replace the html
-  //         $("#table-ajax ").DataTable(); // re-initialize the DataTable
-  //       }
-  //       else {
+  //         $("#modal-ajax").modal("hide");
+ 
+  //         if (data.redirect) {
+  //           top.location = data.redirect;
+  //         } else {
+  //           $("#table-ajax").DataTable().destroy(); //this will flush DT's cache
+
+  //           $("#table-ajax tbody").html(data.html_list);
+  //           // $("#table-ajax tbody").clear().rows.add(data.html_list).draw();
+  //           $("#table-ajax").DataTable().ajax.reload();
+  //         }
+  //           const notyf = new Notyf({
+  //             position: {
+  //                 x: 'right',
+  //                 y: 'bottom',
+  //             },
+  //             types: [
+  //                 {
+  //                     type: 'info',
+  //                     background: '#262B40',
+  //                     icon: {
+  //                         className: 'fas fa-info-circle',
+  //                         tagName: 'span',
+  //                         color: '#fff'
+  //                     },
+  //                     dismissible: false
+  //                 }
+  //             ]
+  //         });
+  //         notyf.open({
+  //             type: 'info',
+  //             message: data.message
+  //         });
+          
+  //       } else {
   //         $("#modal-ajax .modal-content").html(data.html_form);
-  //       }
-  //     }
+  //           // toastr["error"](data.message);
+  //           // Display an error notificatiod
+  //           // Display a success notification
+  //        }
+  //     },
+  //     error: function (xhr, status, error) {M
+  //       var err = JSON.parse(xhr.responseText);
+  //       toastr["error"](err.message);
+  //     },
   //   });
   //   return false;
   // };
+
+  var saveUpdateForm = function () {
+    var form = $(this);
+    $.ajax({
+      url: form.attr("action"),
+      data: form.serialize(),
+      type: form.attr("method"),
+      dataType: 'json',
+      success: function (data) {
+        if (data.form_is_valid) {
+          $("#modal-ajax").modal("hide"); //hide it first if you want
+          $("#table-ajax").DataTable().destroy(); //this will flush DT's cache
+          $("#table-ajax  tbody").html(data.html_list); // replace the html
+          $("#table-ajax ").DataTable().ajax.reload(); // re-initialize the DataTable
+        }
+        else {
+          $("#modal-ajax .modal-content").html(data.html_form);
+        }
+      }
+    });
+    return false;
+  };
 
   $("#modal-ajax").on("hidden.bs.modal", function (e) {
     $("#modal-ajax .modal-content").empty();

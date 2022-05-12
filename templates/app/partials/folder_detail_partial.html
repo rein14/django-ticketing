@@ -6,7 +6,7 @@
     <td><a href="{% url 'app:ticket-detail' ticket.pk%}"class="border-0 ajax-load-form" title="View details">
         {{ ticket.title }}</a></td>
     <td>
-        {{ ticket.get_ticket_choices_display}}
+        <a href="{% url 'app:ticket-detail' ticket.pk%}"class="border-0 ajax-load-form" title="View details">{{ ticket.get_ticket_choices_display}}</a>
  
     </td>
     {% comment %} <td class="one">{{ ticket.folder }}</td> {% endcomment %}
@@ -18,10 +18,10 @@
                  {% endfor %}
             </ul> 
         </td> {% endcomment %}
-        <td>{{ ticket.date_sent}}</td>
+        <td><a href="{% url 'app:ticket-detail' ticket.pk%}"class="border-0 ajax-load-form" title="View details">{{ ticket.date_sent}}</a></td>
 
-        <td class="one">{{ ticket.sent_by }}</td>
-        <td>{{ ticket.last_modified}}</td>
+        <td class="one"><a href="{% url 'app:ticket-detail' ticket.pk%}"class="border-0 ajax-load-form" title="View details">{{ ticket.sent_by }}</a></td>
+        <td><a href="{% url 'app:ticket-detail' ticket.pk%}"class="border-0 ajax-load-form" title="View details">{{ ticket.last_modified}}</a></td>
 
 
         <td style="text-align: center;">

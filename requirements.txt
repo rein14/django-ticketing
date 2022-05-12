@@ -1,5 +1,6 @@
 asgiref==3.4.1
 async-timeout==4.0.2
+Brotli==1.0.9
 certifi==2021.10.8
 cffi==1.15.0
 charset-normalizer==2.0.12
@@ -9,9 +10,10 @@ Django==3.2.6
 django-appconf==1.0.5
 django-bootstrap-datepicker-plus==3.0.5
 django-cleanup==5.2.0
+django-datatables-view==1.20.0
 django-debug-toolbar==3.2.4
 django-model-utils==4.2.0
-django-notifications-hq==1.7.0
+django-notifications-hq @ git+https://github.com/rein14/django-notifications.git@19a53d3432b51de314931b37c4fab9008328e284
 django-pwa==1.0.10
 django-redis==5.2.0
 django-select2==7.10.0

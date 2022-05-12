@@ -6,6 +6,9 @@ app_name = 'app'
 urlpatterns = [
 
     path('', home, name='home'),
+
+    path('notifications/', NotificationList.as_view(), name='notication-list'),
+
     
     path('folder/', FolderList.as_view(), name='folder-list'),
     path('folder/<int:pk>/folder', FolderDetailView.as_view(), name='folder-detail'),
@@ -30,7 +33,6 @@ urlpatterns = [
          TicketStatusUpdate.as_view(), name='ticket-status-update'),
     path('ticket/delete/<int:pk>/', TicketDelete.as_view(), name='ticket-delete'),
     path('ticket/<int:pk>/', TicketDetail.as_view(), name='ticket-detail'),
-
     path('ticket/<int:ticket>/files', FileList.as_view(), name='file-list'),
     path('ticket/<int:ticket>/files/upload',
          FileUpload.as_view(), name='file-upload'),
