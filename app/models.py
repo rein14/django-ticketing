@@ -77,6 +77,7 @@ class Folder(TimeStamped):
 
     # def get_absolute_url(self):
     #     return reverse("app:ticket-list", kwargs={"folder": self.id})
+
     def get_absolute_url(self):
         return reverse('app:folder-detail', kwargs={'pk': self.id})
 
@@ -169,6 +170,9 @@ class Comment(TimeStamped):
         self.slug = slugify('{}-{}'.format('F', random.random(),
                                            self.ticket.pk))
         super().save(*args, **kwargs)
+    
+    def get_absolute_url(self):
+        return reverse("app:comment-list", kwargs={"ticket": self.ticket})
 
     # def save_model(self, request, obj, form, change):
     #     obj.user = request.user

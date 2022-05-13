@@ -174,11 +174,10 @@
                   <div class="list-group list-group-flush">
 
                   {% for notification in  user.notifications.unread|slice:"0:5" %}
-                  {% if notification.notificationcta.cta_link %}
-                  <a href="{{notification.notificationcta}}">Click here</a>   
-                  {% endif %}
+                 
+                  
    
-                     <a href="" class="list-group-item list-group-item-action border-bottom">
+                     <a href="{{notification.notificationcta}}" class="list-group-item list-group-item-action border-bottom">
                       <div class="row align-items-center">
                         <div class="col-auto">
                           <!-- Avatar -->

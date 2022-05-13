@@ -387,8 +387,12 @@ class CommentCreate(LoginRequiredMixin, AjaxCreateView):
     # @method_decorator(user_is_registrar)
     def dispatch(self, request, *args, **kwargs):
         self.event = 'create'
-        self.template = 'conment_form'
+        self.template = 'comment_form'
         return super().dispatch(request, *args, **kwargs)
+
+    def get_success_url(self):
+        folder_pk = self.request.session.get('last_folder_pk')
+        return reverse('app:comment-list', kwargs={'pk': folder_pk})
 
     def form_valid(self, form):
         form.instance.user = self.request.user
@@ -398,10 +402,12 @@ class CommentCreate(LoginRequiredMixin, AjaxCreateView):
         
         sender = User.objects.get(id=1)
         recipient = User.objects.get(id=1)
+
+
         user = self.request.user
         payload = {"head": 'New comment for '+ str(comment.ticket), "body": comment.comment}
         send_user_notification(user=user, payload=payload, ttl=1000)
-        notify.send(sender, recipient=recipient, verb='Commented', action_object=my_object.ticket, description=comment.comment)
+        notify.send(sender, recipient=recipient, verb='Commented', action_object=my_object.ticket, description=comment.comment, cta_link=reverse(self.get_success_url))
 
         return super().form_valid(form)
 
