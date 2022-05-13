@@ -22,7 +22,7 @@
 {% block table %}
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
   <h5 class="h5"><span class="text-primary me-2"> <a href="{{request.get_full_path|slice:-8}}" class="ajax-load-form" title="Edit">
-    <i class="far fa-comment me-2"></i></a> {{ detail_title }}</a></span>    
+    <i class="far fa-comment me-2"></i></a>  {{ detail_title }}</a></span>    
        {% comment %} {% if request.user.is_cleared %}<a class="small ajax-load-form" href="{{request.path|comment_status_update}}">
         <i class="far fa-edit me-2"></i></a>  {% endif %} {% endcomment %}
       </h5>
