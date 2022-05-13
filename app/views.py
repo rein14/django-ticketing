@@ -254,7 +254,7 @@ class TicketCreate(LoginRequiredMixin, AjaxCreateView):
         payload = {"head": 'Status update', "body": 'Status update for: '+ ticket.title}
         for x in ticket.assigned_to.all():
             send_user_notification(user=x, payload=payload, ttl=1000)
-            notify.send(sender, recipient=x, verb='Status Update', description='Ticket update for '+ ticket.title)
+            notify.send(sender, recipient=x, verb='Status Update', description='Ticket update for '+ ticket.title,cta_link='/')
 
         return super().form_valid(form)
  
@@ -293,13 +293,13 @@ class TicketFolderCreate(LoginRequiredMixin, AjaxCreateView):
     
         # from webpush import send_user_notification
 
-        user = self.request.user
-        # ticket = get_object_or_404(Ticket, id=self.object.id)
 
-        # payload = {"head": "New Ticket", "body": ticket.title}
-        # send_user_notification(user=user, payload=payload, ttl=1000)
-        # notify.send(sender, recipient=recipient, verb=ticket.title,description=ticket.description)
-        notify.send(user, recipient=user, verb='you reached level 10', cta_link='/')
+        sender = self.request.user
+        payload = {"head": 'New memo', "body": 'New memo created: '+ ticket.title}
+        for x in ticket.assigned_to.all():
+            send_user_notification(user=x, payload=payload, ttl=1000)
+            notify.send(sender, recipient=x, verb='Status Update', description='Memo created '+ ticket.title,cta_link='/')
+
         return super().form_valid(form)
 
 
@@ -314,14 +314,13 @@ class TicketUpdate(LoginRequiredMixin, AjaxUpdateView):
         my_object = form.save()
 
         ticket = get_object_or_404(Ticket, id=my_object.id)
-        
 
               
         sender = self.request.user
-        payload = {"head": 'Status update', "body": 'Status update for: '+ ticket.title}
+        payload = {"head": 'Status update', "body": 'Memo update for: '+ ticket.title}
         for x in ticket.assigned_to.all():
             send_user_notification(user=x, payload=payload, ttl=1000)
-            notify.send(sender, recipient=x, verb='Status Update', description='Ticket update for '+ ticket.title)
+            notify.send(sender, recipient=x, verb='Status Update', description='Memo update for '+ ticket.title,cta_link='/')
 
         return super().form_valid(form)
 
@@ -339,11 +338,10 @@ class TicketStatusUpdate(LoginRequiredMixin, AjaxUpdateView):
         payload = {"head": 'Status update', "body": 'Status update for: '+ ticket.title}
         for x in ticket.assigned_to.all():
             send_user_notification(user=x, payload=payload, ttl=1000)
-            notify.send(sender, recipient=x, verb='Status Update', description='Ticket update for '+ ticket.title)
+            notify.send(sender, recipient=x, verb='Status Update', description='Memo update for '+ ticket.title, cta_link='/')
 
         return super().form_valid(form)
-        return super().form_valid(form)
-
+ 
 
 class TicketDelete(LoginRequiredMixin, AjaxDeleteView):
     model = Ticket
@@ -407,7 +405,7 @@ class CommentCreate(LoginRequiredMixin, AjaxCreateView):
         user = self.request.user
         payload = {"head": 'New comment for '+ str(comment.ticket), "body": comment.comment}
         send_user_notification(user=user, payload=payload, ttl=1000)
-        notify.send(sender, recipient=recipient, verb='Commented', action_object=my_object.ticket, description=comment.comment, cta_link=reverse(self.get_success_url))
+        notify.send(sender, recipient=recipient, verb='Commented', action_object=my_object.ticket, description=comment.comment, cta_link='/ticket/'+str(comment.ticket.id)+'/comments')
 
         return super().form_valid(form)
 
