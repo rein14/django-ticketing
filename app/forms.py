@@ -1,12 +1,12 @@
 from django import forms
-from .models import Folder, Ticket, Comment, File
+from .models import Folder, Memo, Comment, File
 from bootstrap_datepicker_plus import DatePickerInput
 from cms.forms import BootstrapHelperForm
 from django.forms import inlineformset_factory
 from django_select2 import forms as s2forms
 
 
-class TicketWidget(s2forms.ModelSelect2MultipleWidget):
+class MemoWidget(s2forms.ModelSelect2MultipleWidget):
     search_fields = [
         "last_name__icontains",
         "first_name__icontains",
@@ -28,54 +28,54 @@ class FolderForm(BootstrapHelperForm, forms.ModelForm):
        
 
 
-class TicketForm(BootstrapHelperForm, forms.ModelForm):
+class MemoForm(BootstrapHelperForm, forms.ModelForm):
 
     class Meta:
-        model = Ticket
+        model = Memo
         fields = ('title', 'date_sent', 'description',
                   'assigned_to', 'sent_by', 'folder',)
         widgets = {
-             #'assigned_to': TicketWidget,
+             #'assigned_to': MemoWidget,
             'folder': FolderWidget,
         }
 
-class TicketFolderForm(BootstrapHelperForm, forms.ModelForm):
+class MemoFolderForm(BootstrapHelperForm, forms.ModelForm):
 
     class Meta:
-        model = Ticket
+        model = Memo
         fields = ('title', 'date_sent', 'description',
                   'assigned_to', 'sent_by',)
         widgets = {
-           # 'assigned_to': TicketWidget,
+           # 'assigned_to': MemoWidget,
          }
 
 
 
-class TicketDetailForm(BootstrapHelperForm, forms.ModelForm):
+class MemoDetailForm(BootstrapHelperForm, forms.ModelForm):
     class Meta:
-        model = Ticket
+        model = Memo
         fields = ('title', 'date_sent','assigned_to',  'description',  'sent_by',)
 
  
 
 
-class TicketUpdateForm(BootstrapHelperForm, forms.ModelForm):
+class MemoUpdateForm(BootstrapHelperForm, forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
  
     class Meta:
-        model = Ticket
+        model = Memo
         fields = ('title', 'date_sent', 'description', 'sent_by')
         widgets = {
             'date_sent': DatePickerInput(format='%Y-%m-%d'),
-            #'assigned_to': TicketWidget,
+            #'assigned_to': MemoWidget,
         }
 
 
-class TicketStatusUpdateForm(BootstrapHelperForm, forms.ModelForm):
+class MemoStatusUpdateForm(BootstrapHelperForm, forms.ModelForm):
     # def __init__(self, *args, **kwargs):
-    #     super(TicketStatusUpdateForm, self).__init__(*args, **kwargs)
-    #    self.fields['ticket'].required = False
+    #     super(MemoStatusUpdateForm, self).__init__(*args, **kwargs)
+    #    self.fields['memo'].required = False
         # self.fields['title'].widget.attrs['disabled'] = "disabled"
     title = forms.CharField(disabled=True)
     # def clean_buyer(self):
@@ -86,20 +86,20 @@ class TicketStatusUpdateForm(BootstrapHelperForm, forms.ModelForm):
     #         return self.cleaned_data.get('buyer', None)
 
     class Meta:
-        model = Ticket
-        fields = ('title', 'ticket_choices', 'assigned_to', 'waiting_for',)
+        model = Memo
+        fields = ('title', 'memo_choices', 'assigned_to', 'waiting_for',)
         widgets = {
         
-            #'assigned_to': TicketWidget,
+            #'assigned_to': MemoWidget,
         }
 
 
 class CommentForm(BootstrapHelperForm, forms.ModelForm):
     class Meta:
         model = Comment
-        fields = ('ticket', 'comment')
+        fields = ('memo', 'comment')
         widgets = {
-            'ticket': forms.HiddenInput(),
+            'memo': forms.HiddenInput(),
             # 'user': forms.HiddenInput(),
         }
 
@@ -110,8 +110,8 @@ class FileForm(BootstrapHelperForm, forms.ModelForm):
         fields = ('file', )
 
 
-# TicketMetaInlineFormset = inlineformset_factory(
-#     Ticket,
+# MemoMetaInlineFormset = inlineformset_factory(
+#     Memo,
 #     File,
 #     form=FileForm,
 #     extra=1,
@@ -124,4 +124,4 @@ class FileForm(BootstrapHelperForm, forms.ModelForm):
 #     # min_num=None, validate_min=False, field_classes=None
 # )
 
-TicketFileFormSet = inlineformset_factory(Ticket, File, form=FileForm, extra=1, can_delete=False)
+MemoFileFormSet = inlineformset_factory(Memo, File, form=FileForm, extra=1, can_delete=False)

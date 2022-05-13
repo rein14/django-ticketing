@@ -40,7 +40,7 @@ Document Ticketing  </a>
       </a>
     </li>
     <li class="nav-item {% if request.path == '/user-list/' %} active {% endif %}">
-      <a href="{% url 'app:user-ticket-list' %}" class="nav-link">
+      <a href="{% url 'app:user-memo-list' %}" class="nav-link">
         <span class="sidebar-icon">
           <i class="fa fa-box-open me-2"></i>
         </span>
@@ -48,7 +48,7 @@ Document Ticketing  </a>
       </a>
     </li>
     <li class="nav-item {% if request.path == '/completed/' %} active {% endif %}">
-      <a href="{% url 'app:completed-tickets' %}" class="nav-link">
+      <a href="{% url 'app:completed-memos' %}" class="nav-link">
         <span class="sidebar-icon">
           <i class="fa fa-archive me-2"></i>
         </span>
@@ -61,15 +61,15 @@ Document Ticketing  </a>
  
 
     {% if request.user.is_cleared %}
-    <li class="nav-item {% if request.path == '/tickets/' %} active {% endif %} ">
-      <a href="{% url 'app:ticket-list' %}" class="nav-link">
+    <li class="nav-item {% if request.path == '/memos/' %} active {% endif %} ">
+      <a href="{% url 'app:memo-list' %}" class="nav-link">
         <span class="sidebar-icon">
           <i class="fa fa-mail-bulk me-2"></i>
         </span> 
         <span class="sidebar-text">All Memos</span>
       </a>
     </li>
-    <li class="nav-item {% if request.path == '/opentickets/' %} active {% endif %}">
+    <li class="nav-item {% if request.path == '/openmemos/' %} active {% endif %}">
       <a href="{% url 'app:home' %}" class="nav-link">
         <span class="sidebar-icon">
           <i class="far fa-envelope-open me-2"></i>
@@ -87,7 +87,7 @@ Document Ticketing  </a>
     </li>
 
     <li class="nav-item {% if request.path == '/archive/' %} active {% endif %}">
-      <a href="{% url 'app:ticket-archive' %}" class="nav-link">
+      <a href="{% url 'app:memo-archive' %}" class="nav-link">
         <span class="sidebar-icon">
           <i class="fa fa-archive me-2"></i>
         </span>

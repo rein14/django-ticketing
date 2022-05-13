@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Folder, Ticket, Comment, File
+from .models import Folder, Memo, Comment, File
 
 
 class FileInline(admin.StackedInline):
@@ -7,7 +7,7 @@ class FileInline(admin.StackedInline):
     can_delete = True
     verbose_name = 'Files'
     verbose_name_plural = verbose_name
-    fk_name = 'ticket'
+    fk_name = 'memo'
     extra = 0
     readonly_fields = ('creation_date',)
     fields = (('file', 'creation_date'),)
@@ -19,19 +19,19 @@ class CommentInline(admin.StackedInline):
     can_delete = True
     verbose_name = 'Comments'
     verbose_name_plural = verbose_name
-    fk_name = 'ticket'
+    fk_name = 'memo'
     extra = 0
-    fields = (('user', 'slug'), ('ticket'), )
+    fields = (('user', 'slug'), ('memo'), )
 
 
-class TicketAdmin(admin.ModelAdmin):
+class MemoAdmin(admin.ModelAdmin):
     inlines = (CommentInline, FileInline, )
     save_as = True
     save_on_top = True
-    list_display = ('title', 'ticket_choices', 'date_sent','folder', 'get_files_count')
+    list_display = ('title', 'memo_choices', 'date_sent','folder', 'get_files_count')
     list_display_links = ('title', )
     search_fields = ('title', )
-    fields = (('title','folder' ), ('ticket_choices', 'date_sent'),
+    fields = (('title','folder' ), ('memo_choices', 'date_sent'),
               )
 
     def get_files_count(self, instance):
@@ -53,7 +53,7 @@ class FolderAdmin(admin.ModelAdmin):
               )
 
     # def get_files_count(self, instance):
-    #     return instance.ticket_set.count()
+    #     return instance.memo_set.count()
     # get_files_count.short_description = 'Files'
 
     # def get_inline_instances(self, request, obj=None):
@@ -62,5 +62,5 @@ class FolderAdmin(admin.ModelAdmin):
     #     return super().get_inline_instances(request, obj)
 
 
-admin.site.register(Ticket, TicketAdmin)
+admin.site.register(Memo, MemoAdmin)
 admin.site.register(Folder, FolderAdmin)

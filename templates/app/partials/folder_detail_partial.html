@@ -1,27 +1,27 @@
- {% for ticket in tickets %}
-<tr id="{{ ticket.pk }}">
+ {% for memo in memos %}
+<tr id="{{ memo.pk }}">
    
-    <td><a href="{% url 'app:ticket-detail' ticket.pk%}" class="border-0 ajax-load-form" title="View details">
-        F0{{ ticket.pk }}</a></td>
-    <td><a href="{% url 'app:ticket-detail' ticket.pk%}"class="border-0 ajax-load-form" title="View details">
-        {{ ticket.title }}</a></td>
+    <td><a href="{% url 'app:memo-detail' memo.pk%}" class="border-0 ajax-load-form" title="View details">
+        F0{{ memo.pk }}</a></td>
+    <td><a href="{% url 'app:memo-detail' memo.pk%}"class="border-0 ajax-load-form" title="View details">
+        {{ memo.title }}</a></td>
     <td>
-        <a href="{% url 'app:ticket-detail' ticket.pk%}"class="border-0 ajax-load-form" title="View details">{{ ticket.get_ticket_choices_display}}</a>
+        <a href="{% url 'app:memo-detail' memo.pk%}"class="border-0 ajax-load-form" title="View details">{{ memo.get_memo_choices_display}}</a>
  
     </td>
-    {% comment %} <td class="one">{{ ticket.folder }}</td> {% endcomment %}
+    {% comment %} <td class="one">{{ memo.folder }}</td> {% endcomment %}
 
         {% comment %} <td >
             <ul style="list-style-type: none;padding: 0;margin: 0;">
-                {% for user in ticket.assigned_to.all %}
+                {% for user in memo.assigned_to.all %}
                  <li><a style="background-color:white" href="" class="border-0 ajax-load-form" title="View user details">{{user}}</a></li>
                  {% endfor %}
             </ul> 
         </td> {% endcomment %}
-        <td><a href="{% url 'app:ticket-detail' ticket.pk%}"class="border-0 ajax-load-form" title="View details">{{ ticket.date_sent}}</a></td>
+        <td><a href="{% url 'app:memo-detail' memo.pk%}"class="border-0 ajax-load-form" title="View details">{{ memo.date_sent}}</a></td>
 
-        <td class="one"><a href="{% url 'app:ticket-detail' ticket.pk%}"class="border-0 ajax-load-form" title="View details">{{ ticket.sent_by }}</a></td>
-        <td><a href="{% url 'app:ticket-detail' ticket.pk%}"class="border-0 ajax-load-form" title="View details">{{ ticket.last_modified}}</a></td>
+        <td class="one"><a href="{% url 'app:memo-detail' memo.pk%}"class="border-0 ajax-load-form" title="View details">{{ memo.sent_by }}</a></td>
+        <td><a href="{% url 'app:memo-detail' memo.pk%}"class="border-0 ajax-load-form" title="View details">{{ memo.last_modified}}</a></td>
 
 
         <td style="text-align: center;">
@@ -35,16 +35,16 @@
                         </path>
                     </svg> <span class="visually-hidden">Toggle Dropdown</span></button>
                 <div class="dropdown-menu dashboard-dropdown dropdown-menu-start mt-2 py-1">
-                    <a class="dropdown-item d-flex align-items-center" href="{% url 'app:comment-list' ticket.pk %}">
+                    <a class="dropdown-item d-flex align-items-center" href="{% url 'app:comment-list' memo.pk %}">
                         <i class="far fa-comments me-2"></i>  
                      Comments </a>
                         
-                        <a class="dropdown-item d-flex align-items-center" href="{% url 'app:file-list' ticket.pk %}">
+                        <a class="dropdown-item d-flex align-items-center" href="{% url 'app:file-list' memo.pk %}">
                             <i class="far fa-file-alt me-2"></i>
                             Files </a>
 
                         <hr class="dropdown-divider">
-                        <a class="dropdown-item d-flex align-items-center  ajax-load-form" href="{% url 'app:ticket-update' ticket.pk%} "><svg
+                        <a class="dropdown-item d-flex align-items-center  ajax-load-form" href="{% url 'app:memo-update' memo.pk%} "><svg
                             class="dropdown-icon text-gray-400 me-2" fill="currentColor" viewBox="0 0 20 20"
                             xmlns="http://www.w3.org/2000/svg">
                             <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z">
@@ -52,9 +52,9 @@
                             <path fill-rule="evenodd"
                                 d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"
                                 clip-rule="evenodd"></path>
-                        </svg> Edit Ticket </a>
+                        </svg> Edit Memo </a>
                         
-                        <a class="dropdown-item d-flex align-items-center ajax-load-form" href="{% url 'app:ticket-status-update' ticket.pk%}"><svg
+                        <a class="dropdown-item d-flex align-items-center ajax-load-form" href="{% url 'app:memo-status-update' memo.pk%}"><svg
                             class="dropdown-icon text-gray-400 me-2" fill="currentColor" viewBox="0 0 20 20"
                             xmlns="http://www.w3.org/2000/svg">
                             <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z">
@@ -62,8 +62,8 @@
                             <path fill-rule="evenodd"
                                 d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"
                                 clip-rule="evenodd"></path>
-                        </svg> Edit Ticket Status</a>
-                        <a class="dropdown-item d-flex align-items-center ajax-load-form" href="{% url 'app:ticket-delete' ticket.pk %}">
+                        </svg> Edit Memo Status</a>
+                        <a class="dropdown-item d-flex align-items-center ajax-load-form" href="{% url 'app:memo-delete' memo.pk %}">
                             
                             <svg
                             class="dropdown-icon text-danger me-2 " fill="currentColor" viewBox="0 0 20 20"
@@ -78,25 +78,25 @@
                 {% comment %} <div class="dropdown-menu dropdown-primary">
                             <hr class="dropdown-divider">
 
-                  <a href="{% url 'app:comment-list' ticket.pk %}" class="dropdown-item btn btn-outline-primary btn-sm border-0" title="Comments">
+                  <a href="{% url 'app:comment-list' memo.pk %}" class="dropdown-item btn btn-outline-primary btn-sm border-0" title="Comments">
                     <i class="fa fa-comments text-primary" aria-hidden="true"></i> Comments</a>
                 
-                    <a href="{% url 'app:file-list' ticket.pk %}" class="dropdown-item btn btn-outline-success btn-sm border-0" title="Files">
+                    <a href="{% url 'app:file-list' memo.pk %}" class="dropdown-item btn btn-outline-success btn-sm border-0" title="Files">
                         <i class="fa fa-copy text-success"></i> Files</a>
     
                 {% if request.user.is_superuser %}
                 <hr style="margin-top:5px;margin-bottom:5px;">
-                <a href=""{% url 'app:ticket-update' ticket.pk %}"" id="myinput" class="dropdown-item btn btn-outline-info btn-sm border-0 ajax-load-form" title="Edit">
-                <i class="fa fa-edit text-info"></i> Edit Ticket</a>
-                <a href="{% url 'app:ticket-status-update' ticket.pk%}" class="dropdown-item btn-sm border-0 ajax-load-form" title="Edit">
+                <a href=""{% url 'app:memo-update' memo.pk %}"" id="myinput" class="dropdown-item btn btn-outline-info btn-sm border-0 ajax-load-form" title="Edit">
+                <i class="fa fa-edit text-info"></i> Edit Memo</a>
+                <a href="{% url 'app:memo-status-update' memo.pk%}" class="dropdown-item btn-sm border-0 ajax-load-form" title="Edit">
                     <i class="fa fa-pen text-info"></i> Update Status</a>
-                <a href="{% url 'app:ticket-delete' ticket.pk %}" class="dropdown-item btn btn-outline-danger btn-sm border-0 ajax-load-form" title="Delete">
+                <a href="{% url 'app:memo-delete' memo.pk %}" class="dropdown-item btn btn-outline-danger btn-sm border-0 ajax-load-form" title="Delete">
                 <i class="fa fa-trash-alt text-danger"></i> Delete</a>
                 
                 {% endif %}
                 {% if request.user.is_staff and not request.user.is_superuser %}
                     <hr style="margin-top:5px;margin-bottom:5px;">
-                <a href="{% url 'app:ticket-delete' ticket.pk %}" class="dropdown-item btn-sm border-0 ajax-load-form" title="Delete">
+                <a href="{% url 'app:memo-delete' memo.pk %}" class="dropdown-item btn-sm border-0 ajax-load-form" title="Delete">
                     <i class="fa fa-trash-alt text-danger"></i> Delete</a>
                     {% endif %}
                 </div>

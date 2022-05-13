@@ -76,13 +76,13 @@ class Folder(TimeStamped):
         ordering = ('order', )
 
     # def get_absolute_url(self):
-    #     return reverse("app:ticket-list", kwargs={"folder": self.id})
+    #     return reverse("app:memo-list", kwargs={"folder": self.id})
 
     def get_absolute_url(self):
         return reverse('app:folder-detail', kwargs={'pk': self.id})
 
 
-class Ticket(TimeStamped):
+class Memo(TimeStamped):
     PENDING = 1
     CLOSED = 2
     CHOICES = (
@@ -95,7 +95,7 @@ class Ticket(TimeStamped):
     title = models.CharField(max_length=50, verbose_name='Title')
     date_sent = models.DateField(
         null=True, verbose_name='Date', help_text='YYYY-mm-dd')
-    ticket_choices = models.PositiveSmallIntegerField(
+    memo_choices = models.PositiveSmallIntegerField(
         choices=CHOICES, default=PENDING, verbose_name='status')
     description = models.TextField(verbose_name="Content")
     order = OrderField(blank=True, verbose_name='Order #')
@@ -127,52 +127,52 @@ class Ticket(TimeStamped):
 
     # @staticmethod
     # def get_products_by_id(ids):
-    #     return Ticket.objects.filter(id__in=ids)
+    #     return Memo.objects.filter(id__in=ids)
 
     # @staticmethod
     # def get_all_products():
-    #     return Ticket.objects.all()
+    #     return Memo.objects.all()
 
     # @staticmethod
     # def get_all_products_by_categoryid(folder_id):
     #     if folder_id:
-    #         return Ticket.objects.filter(folder=folder_id)
+    #         return Memo.objects.filter(folder=folder_id)
     #     else:
-    #         return Ticket.get_all_products()
+    #         return Memo.get_all_products()
 
     # def get_absolute_url(self):
-    #    return reverse('app:ticket-update', kwargs={'pk': self.pk})
+    #    return reverse('app:memo-update', kwargs={'pk': self.pk})
 
     class Meta:
-        db_table = 'ticket'
+        db_table = 'memo'
         ordering = ['order']
-        verbose_name = 'Ticket'
-        verbose_name_plural = 'Tickets'
+        verbose_name = 'Memo'
+        verbose_name_plural = 'Memos'
 
     def get_absolute_url(self):
-        return reverse('app:ticket-list')
+        return reverse('app:memo-list')
 
 
 class Comment(TimeStamped):
-    ticket = models.ForeignKey(
-        Ticket, on_delete=models.CASCADE, verbose_name='Ticket')
+    memo = models.ForeignKey(
+        Memo, on_delete=models.CASCADE, verbose_name='Memo')
     slug = models.SlugField(max_length=255, verbose_name='Slug', unique=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
                              verbose_name='User', on_delete=models.CASCADE)
     comment = models.TextField(blank=False, null=False, verbose_name='Comment')
     order = OrderField(blank=True, for_fields=[
-                       'ticket'], verbose_name='Order #')
+                       'memo'], verbose_name='Order #')
 
     def __str__(self):
         return str(self.slug)
 
     def save(self, *args, **kwargs):
         self.slug = slugify('{}-{}'.format('F', random.random(),
-                                           self.ticket.pk))
+                                           self.memo.pk))
         super().save(*args, **kwargs)
     
     def get_absolute_url(self):
-        return reverse("app:comment-list", kwargs={"ticket": self.ticket})
+        return reverse("app:comment-list", kwargs={"memo": self.memo})
 
     # def save_model(self, request, obj, form, change):
     #     obj.user = request.user
@@ -189,15 +189,15 @@ class Comment(TimeStamped):
 
 
 class File(TimeStamped):
-    ticket = models.ForeignKey(
-        Ticket, on_delete=models.CASCADE, verbose_name='Ticket')
+    memo = models.ForeignKey(
+        Memo, on_delete=models.CASCADE, verbose_name='Memo')
     # user = models.ForeignKey(settings.AUTH_USER_MODEL,
     #                          verbose_name='User', on_delete=models.CASCADE)
     file = models.FileField(upload_to='files/', null=True,
                             blank=True, max_length=255, verbose_name='Filename')
     
     order = OrderField(blank=True, for_fields=[
-                       'ticket'], verbose_name='Order #')
+                       'memo'], verbose_name='Order #')
 
     @property
     def filename(self):

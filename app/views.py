@@ -5,8 +5,8 @@ from this import d
 from unicodedata import category
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy, reverse
-from .models import Folder, Ticket, Comment, File
-from .forms import FolderForm, TicketForm, CommentForm, FileForm, TicketUpdateForm, TicketStatusUpdateForm, TicketDetailForm, TicketFileFormSet, TicketFolderForm
+from .models import Folder, Memo, Comment, File
+from .forms import FolderForm, MemoForm, CommentForm, FileForm, MemoUpdateForm, MemoStatusUpdateForm, MemoDetailForm, MemoFileFormSet, MemoFolderForm
 
 from cms.ajax import (AjaxCreateView, AjaxDetailView,
                       AjaxUpdateView, AjaxDeleteView, AjaxFilesUpload)
@@ -42,7 +42,7 @@ def handler404(request, exception):
 def home(request):
     # return render(request, 'blank.html', context={'title': 'Blank page'})
     if request.user.is_cleared:
-        return redirect('app:open-tickets')
+        return redirect('app:open-memos')
 
     elif not request.user.is_cleared:
         return redirect('app:inbox')
@@ -93,10 +93,10 @@ class FolderDetailView(LoginRequiredMixin, DetailView):
         context = super().get_context_data(**kwargs)
         # This line retrieve all the products of this category
         if self.request.user.is_cleared: 
-            context['tickets'] = Ticket.objects.filter(folder=self.object)
+            context['memos'] = Memo.objects.filter(folder=self.object)
             context['last_folder_pk']=self.object.pk
         else:
-            context['tickets'] = Ticket.objects.filter(folder=self.object).filter(assigned_to=self.request.user)
+            context['memos'] = Memo.objects.filter(folder=self.object).filter(assigned_to=self.request.user)
         return context
 
     def get(self, request, *args, **kwargs):
@@ -105,11 +105,11 @@ class FolderDetailView(LoginRequiredMixin, DetailView):
         return response
 
 
-class TicketList(LoginRequiredMixin, CoreListView):
-    model = Ticket
+class MemoList(LoginRequiredMixin, CoreListView):
+    model = Memo
 
     def get_context_data(self, *args, **kwargs):
-        context = super(TicketList, self).get_context_data(*args, **kwargs)
+        context = super(MemoList, self).get_context_data(*args, **kwargs)
         new_context_entry = "All Memos"
         context["title"] = new_context_entry
         return context
@@ -119,21 +119,21 @@ class TicketList(LoginRequiredMixin, CoreListView):
         return super().dispatch(request, *args, **kwargs)
 
 
-class UserTicketList(LoginRequiredMixin, CoreListView):
-    model = Ticket
+class UserMemoList(LoginRequiredMixin, CoreListView):
+    model = Memo
 
     def get_queryset(self):
-        return Ticket.objects.filter(assigned_to=self.request.user)
+        return Memo.objects.filter(assigned_to=self.request.user)
 
     def get_context_data(self, *args, **kwargs):
-        context = super(UserTicketList, self).get_context_data(*args, **kwargs)
-        new_context_entry = "Pending Memos"
+        context = super(UserMemoList, self).get_context_data(*args, **kwargs)
+        new_context_entry = "All Memos"
         context["title"] = new_context_entry
         return context
 
 
-class UnassignedTickets(LoginRequiredMixin, CoreListView):
-    model = Ticket
+class UnassignedMemos(LoginRequiredMixin, CoreListView):
+    model = Memo
 
     @permit_if_role_in(['is_cleared', ])
     # @method_decorator(user_is_registrar)
@@ -142,10 +142,10 @@ class UnassignedTickets(LoginRequiredMixin, CoreListView):
 
     def get_queryset(self):
         users = User.objects.all()
-        return Ticket.objects.all().exclude(assigned_to__in=users)
+        return Memo.objects.all().exclude(assigned_to__in=users)
 
     def get_context_data(self, *args, **kwargs):
-        context = super(UnassignedTickets, self).get_context_data(
+        context = super(UnassignedMemos, self).get_context_data(
             *args, **kwargs)
         new_context_entry = "Unassigned Memos"
         context["title"] = new_context_entry
@@ -153,13 +153,13 @@ class UnassignedTickets(LoginRequiredMixin, CoreListView):
 
 
 class InboxList(LoginRequiredMixin, CoreListView):
-    model = Ticket
-    # queryset = Ticket.objects.filter(
-    #     assigned_to=request.user).exclude(ticket_choices__exact=2)
+    model = Memo
+    # queryset = Memo.objects.filter(
+    #     assigned_to=request.user).exclude(memo_choices__exact=2)
     context_object_name = 'inbox'
 
     def get_queryset(self):
-        return Ticket.objects.filter(assigned_to=self.request.user).exclude(ticket_choices__exact=2)
+        return Memo.objects.filter(assigned_to=self.request.user).exclude(memo_choices__exact=2)
 
     def get_context_data(self, *args, **kwargs):
         context = super(InboxList, self).get_context_data(*args, **kwargs)
@@ -169,13 +169,13 @@ class InboxList(LoginRequiredMixin, CoreListView):
 
 
 class CompletedList(LoginRequiredMixin, CoreListView):
-    model = Ticket
-    # queryset = Ticket.objects.filter(
-    #     assigned_to=request.user).exclude(ticket_choices__exact=1)
+    model = Memo
+    # queryset = Memo.objects.filter(
+    #     assigned_to=request.user).exclude(memo_choices__exact=1)
     context_object_name = 'completed'
 
     def get_queryset(self):
-        return Ticket.objects.filter(assigned_to=self.request.user).exclude(ticket_choices__exact=1)
+        return Memo.objects.filter(assigned_to=self.request.user).exclude(memo_choices__exact=1)
 
     def get_context_data(self, *args, **kwargs):
         context = super(CompletedList, self).get_context_data(*args, **kwargs)
@@ -185,7 +185,7 @@ class CompletedList(LoginRequiredMixin, CoreListView):
 
 
 class ArchiveList(LoginRequiredMixin, CoreListView):
-    model = Ticket
+    model = Memo
     context_object_name = 'archive_list'
 
     @permit_if_role_in(['is_cleared', ])
@@ -193,7 +193,7 @@ class ArchiveList(LoginRequiredMixin, CoreListView):
         return super().dispatch(request, *args, **kwargs)
 
     def get_queryset(self):
-        return Ticket.objects.filter(ticket_choices__exact=2)
+        return Memo.objects.filter(memo_choices__exact=2)
 
     def get_context_data(self, *args, **kwargs):
         context = super(ArchiveList, self).get_context_data(*args, **kwargs)
@@ -202,11 +202,11 @@ class ArchiveList(LoginRequiredMixin, CoreListView):
         return context
 
 
-class OpenTicketsList(LoginRequiredMixin, CoreListView):
-    model = Ticket
+class OpenMemosList(LoginRequiredMixin, CoreListView):
+    model = Memo
     users = User.objects.all()
-    queryset = Ticket.objects.exclude(ticket_choices__exact=2).filter(assigned_to__in=users)
-    context_object_name = 'openticket_list'
+    queryset = Memo.objects.exclude(memo_choices__exact=2).filter(assigned_to__in=users)
+    context_object_name = 'openmemo_list'
 
     @permit_if_role_in(['is_cleared', ])
     # @method_decorator(user_is_registrar)
@@ -214,30 +214,30 @@ class OpenTicketsList(LoginRequiredMixin, CoreListView):
         return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, *args, **kwargs):
-        context = super(OpenTicketsList, self).get_context_data(
+        context = super(OpenMemosList, self).get_context_data(
             *args, **kwargs)
-        new_context_entry = "Open Tickets"
+        new_context_entry = "Open Memos"
         context["title"] = new_context_entry
         return context
 
 
 
-class TicketCreate(LoginRequiredMixin, AjaxCreateView):
-    model = Ticket
-    form_class = TicketForm
+class MemoCreate(LoginRequiredMixin, AjaxCreateView):
+    model = Memo
+    form_class = MemoForm
 
     @permit_if_role_in(['is_cleared', ])
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):                
-        context = super(TicketCreate, self).get_context_data(**kwargs)
+        context = super(MemoCreate, self).get_context_data(**kwargs)
         #self.object = self.get_object() #removed
 
         if self.request.POST:
-            context["file_upload"] = TicketFileFormSet(self.request.POST, self.request.FILES, instance=self.object)
+            context["file_upload"] = MemoFileFormSet(self.request.POST, self.request.FILES, instance=self.object)
         else:
-            context["file_upload"] = TicketFileFormSet(instance=self.object)
+            context["file_upload"] = MemoFileFormSet(instance=self.object)
         return context
 
 
@@ -248,29 +248,29 @@ class TicketCreate(LoginRequiredMixin, AjaxCreateView):
         if file_upload.is_valid():
             file_upload.instance = self.object
             file_upload.save()
-        ticket = get_object_or_404(Ticket, id=self.object.id)
+        memo = get_object_or_404(Memo, id=self.object.id)
 
         sender = self.request.user
-        payload = {"head": 'Status update', "body": 'Status update for: '+ ticket.title}
-        for x in ticket.assigned_to.all():
+        payload = {"head": 'Status update', "body": 'Status update for: '+ memo.title}
+        for x in memo.assigned_to.all():
             send_user_notification(user=x, payload=payload, ttl=1000)
-            notify.send(sender, recipient=x, verb='Status Update', description='Ticket update for '+ ticket.title,cta_link='/')
+            notify.send(sender, recipient=x, verb='Status Update', description='Memo update for '+ memo.title,cta_link='/')
 
         return super().form_valid(form)
  
 
-class TicketFolderCreate(LoginRequiredMixin, AjaxCreateView):
-    model = Ticket
-    form_class = TicketFolderForm
+class MemoFolderCreate(LoginRequiredMixin, AjaxCreateView):
+    model = Memo
+    form_class = MemoFolderForm
 
     def get_context_data(self, **kwargs):                
-        context = super(TicketFolderCreate, self).get_context_data(**kwargs)
+        context = super(MemoFolderCreate, self).get_context_data(**kwargs)
         #self.object = self.get_object() #removed
 
         if self.request.POST:
-            context["file_upload"] = TicketFileFormSet(self.request.POST, self.request.FILES, instance=self.object)
+            context["file_upload"] = MemoFileFormSet(self.request.POST, self.request.FILES, instance=self.object)
         else:
-            context["file_upload"] = TicketFileFormSet(instance=self.object)
+            context["file_upload"] = MemoFileFormSet(instance=self.object)
         return context
 
     def get_success_url(self):
@@ -295,17 +295,17 @@ class TicketFolderCreate(LoginRequiredMixin, AjaxCreateView):
 
 
         sender = self.request.user
-        payload = {"head": 'New memo', "body": 'New memo created: '+ ticket.title}
-        for x in ticket.assigned_to.all():
+        payload = {"head": 'New memo', "body": 'New memo created: '+ memo.title}
+        for x in memo.assigned_to.all():
             send_user_notification(user=x, payload=payload, ttl=1000)
-            notify.send(sender, recipient=x, verb='Status Update', description='Memo created '+ ticket.title,cta_link='/')
+            notify.send(sender, recipient=x, verb='Status Update', description='Memo created '+ memo.title,cta_link='/')
 
         return super().form_valid(form)
 
 
-class TicketUpdate(LoginRequiredMixin, AjaxUpdateView):
-    model = Ticket
-    form_class = TicketUpdateForm
+class MemoUpdate(LoginRequiredMixin, AjaxUpdateView):
+    model = Memo
+    form_class = MemoUpdateForm
 
     def form_valid(self, form):
 
@@ -313,53 +313,53 @@ class TicketUpdate(LoginRequiredMixin, AjaxUpdateView):
 
         my_object = form.save()
 
-        ticket = get_object_or_404(Ticket, id=my_object.id)
+        memo = get_object_or_404(Memo, id=my_object.id)
 
               
         sender = self.request.user
-        payload = {"head": 'Status update', "body": 'Memo update for: '+ ticket.title}
-        for x in ticket.assigned_to.all():
+        payload = {"head": 'Status update', "body": 'Memo update for: '+ memo.title}
+        for x in memo.assigned_to.all():
             send_user_notification(user=x, payload=payload, ttl=1000)
-            notify.send(sender, recipient=x, verb='Status Update', description='Memo update for '+ ticket.title,cta_link='/')
+            notify.send(sender, recipient=x, verb='Status Update', description='Memo update for '+ memo.title,cta_link='/')
 
         return super().form_valid(form)
 
 
-class TicketStatusUpdate(LoginRequiredMixin, AjaxUpdateView):
-    model = Ticket
-    form_class = TicketStatusUpdateForm
+class MemoStatusUpdate(LoginRequiredMixin, AjaxUpdateView):
+    model = Memo
+    form_class = MemoStatusUpdateForm
 
     def form_valid(self, form):
         form.instance.user = self.request.user
         my_object = form.save()
 
-        ticket = get_object_or_404(Ticket, id=my_object.id)
+        memo = get_object_or_404(Memo, id=my_object.id)
         sender = self.request.user
-        payload = {"head": 'Status update', "body": 'Status update for: '+ ticket.title}
-        for x in ticket.assigned_to.all():
+        payload = {"head": 'Status update', "body": 'Status update for: '+ memo.title}
+        for x in memo.assigned_to.all():
             send_user_notification(user=x, payload=payload, ttl=1000)
-            notify.send(sender, recipient=x, verb='Status Update', description='Memo update for '+ ticket.title, cta_link='/')
+            notify.send(sender, recipient=x, verb='Status Update', description='Memo update for '+ memo.title, cta_link='/')
 
         return super().form_valid(form)
  
 
-class TicketDelete(LoginRequiredMixin, AjaxDeleteView):
-    model = Ticket
+class MemoDelete(LoginRequiredMixin, AjaxDeleteView):
+    model = Memo
 
 
-class TicketDetail(LoginRequiredMixin, AjaxDetailView):
-    model = Ticket
-    form_class = TicketDetailForm
+class MemoDetail(LoginRequiredMixin, AjaxDetailView):
+    model = Memo
+    form_class = MemoDetailForm
 
     def get_context_data(self, *args, **kwargs):
-        context = super(TicketDetail, self).get_context_data(
+        context = super(MemoDetail, self).get_context_data(
             *args, **kwargs)
-        tickets= Ticket.objects.get(pk=self.object.id)
+        memos= Memo.objects.get(pk=self.object.id)
         
 
         context["comment_overlap"] = 'none of your business'
-        context["comment_count"] = tickets.comment_set.all()
-        context["file_count"] = tickets.file_set.all()
+        context["comment_count"] = memos.comment_set.all()
+        context["file_count"] = memos.file_set.all()
         return context
 
 
@@ -403,9 +403,9 @@ class CommentCreate(LoginRequiredMixin, AjaxCreateView):
 
 
         user = self.request.user
-        payload = {"head": 'New comment for '+ str(comment.ticket), "body": comment.comment}
+        payload = {"head": 'New comment for '+ str(comment.memo), "body": comment.comment}
         send_user_notification(user=user, payload=payload, ttl=1000)
-        notify.send(sender, recipient=recipient, verb='Commented', action_object=my_object.ticket, description=comment.comment, cta_link='/ticket/'+str(comment.ticket.id)+'/comments')
+        notify.send(sender, recipient=recipient, verb='Commented', action_object=my_object.memo, description=comment.comment, cta_link='/memo/'+str(comment.memo.id)+'/comments')
 
         return super().form_valid(form)
 
