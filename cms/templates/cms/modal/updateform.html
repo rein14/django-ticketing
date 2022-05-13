@@ -3,7 +3,9 @@
 {% block extracss %}
 {{form.media.css}}
 {% endblock extracss %}
-<form  enctype="multipart/form-data" method="post" action="{{ request.path }}" class="ajax-save-update-form" id="ajax-save">
+<form  enctype="mu  ltipart/form-data" method="post" action="{{ request.path }}" {% if 'comment' in request.path %} class="ajax-save-update-form"{% else %} class="ajax-save-form"{%endif%} id="ajax-save">
+    {{request.path}}
+    {{request.META.HTTP_REFERER|escape}}
     {% csrf_token %}
     {{ request.path }}
      <div class="modal-header">
