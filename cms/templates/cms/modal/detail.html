@@ -25,7 +25,7 @@
 
     <div class="form-row small">
         <div class="col-sm-6 mb-3">
-            <a  href="{% url 'app:comment-list' ticket.pk %}" title="View comments">
+            <a  href="{% url 'app:comment-list' memo.pk %}" title="View comments">
 
  
             <span class="text-info" style=""><span class="mb-3">{{ comment_count.count }}</span>  <i class="fa fa-comments"></i>Comments</span>
@@ -33,7 +33,7 @@
         </div>
 
         <div class="col-6" style="font-size:inherit" >
-            <a style="font-size:inherit" href="{% url 'app:file-list' ticket.pk %}" title="View files">
+            <a style="font-size:inherit" href="{% url 'app:file-list' memo.pk %}" title="View files">
 
              <span style="font-size:inherit" class="text-success">{{ file_count.count }}  <i class="fa fa-file"></i> Files Association</span>
         </a>

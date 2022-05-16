@@ -1,9 +1,10 @@
 from django import forms
 from .models import Folder, Memo, Comment, File
-from bootstrap_datepicker_plus import DatePickerInput
+# from bootstrap_datepicker_plus.widgets import DatePickerInput
 from cms.forms import BootstrapHelperForm
 from django.forms import inlineformset_factory
 from django_select2 import forms as s2forms
+# from .widgets import XDSoftDateTimePickerInput, BootstrapDateTimePickerInput, FengyuanChenDatePickerInput
 
 
 class MemoWidget(s2forms.ModelSelect2MultipleWidget):
@@ -12,6 +13,7 @@ class MemoWidget(s2forms.ModelSelect2MultipleWidget):
         "first_name__icontains",
         "roles__icontains",
     ]
+
 
 class FolderWidget(s2forms.Select2Widget):
     search_fields = [
@@ -25,7 +27,6 @@ class FolderForm(BootstrapHelperForm, forms.ModelForm):
     class Meta:
         model = Folder
         fields = ('title',)
-       
 
 
 class MemoForm(BootstrapHelperForm, forms.ModelForm):
@@ -34,41 +35,45 @@ class MemoForm(BootstrapHelperForm, forms.ModelForm):
         model = Memo
         fields = ('title', 'date_sent', 'description',
                   'assigned_to', 'sent_by', 'folder',)
+
         widgets = {
-             #'assigned_to': MemoWidget,
+            # 'assigned_to': MemoWidget,
             'folder': FolderWidget,
+            # 'date_sent': DatePickerInput(format='%Y-%m-%d'),
+
         }
 
+
 class MemoFolderForm(BootstrapHelperForm, forms.ModelForm):
+    # date_sent = forms.DateTimeField(input_formats=['%d/%m/%Y %H:%M'], widget=BootstrapDateTimePickerInput())
 
     class Meta:
         model = Memo
         fields = ('title', 'date_sent', 'description',
                   'assigned_to', 'sent_by',)
         widgets = {
-           # 'assigned_to': MemoWidget,
-         }
-
+            # 'assigned_to': MemoWidget,
+            # 'date_sent': forms.DateTimeField(input_formats=['%d/%m/%Y %H:%M']),
+        }
 
 
 class MemoDetailForm(BootstrapHelperForm, forms.ModelForm):
     class Meta:
         model = Memo
-        fields = ('title', 'date_sent','assigned_to',  'description',  'sent_by',)
-
- 
+        fields = ('title', 'date_sent', 'assigned_to',
+                  'description',  'sent_by',)
 
 
 class MemoUpdateForm(BootstrapHelperForm, forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
- 
+
     class Meta:
         model = Memo
         fields = ('title', 'date_sent', 'description', 'sent_by')
         widgets = {
-            'date_sent': DatePickerInput(format='%Y-%m-%d'),
-            #'assigned_to': MemoWidget,
+            # 'date_sent': DatePickerInput(format='%Y-%m-%d'),
+            # 'assigned_to': MemoWidget,
         }
 
 
@@ -89,8 +94,8 @@ class MemoStatusUpdateForm(BootstrapHelperForm, forms.ModelForm):
         model = Memo
         fields = ('title', 'memo_choices', 'assigned_to', 'waiting_for',)
         widgets = {
-        
-            #'assigned_to': MemoWidget,
+
+            # 'assigned_to': MemoWidget,
         }
 
 
@@ -124,4 +129,5 @@ class FileForm(BootstrapHelperForm, forms.ModelForm):
 #     # min_num=None, validate_min=False, field_classes=None
 # )
 
-MemoFileFormSet = inlineformset_factory(Memo, File, form=FileForm, extra=1, can_delete=False)
+MemoFileFormSet = inlineformset_factory(
+    Memo, File, form=FileForm, extra=1, can_delete=False)

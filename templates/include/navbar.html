@@ -9,13 +9,13 @@
     <ul class="list-unstyled components">
         
         {% if request.user.is_staff or request.user.is_superuser %}
-        <li {% if request.path == '/tickets/' %} class="active"{% endif %}>
-            <a href="{% url 'app:home' %}"><i class="fa fa-envelopes-bulk"></i> All Tickets <span
+        <li {% if request.path == '/memos/' %} class="active"{% endif %}>
+            <a href="{% url 'app:home' %}"><i class="fa fa-envelopes-bulk"></i> All memos <span
                     class="sr-only">(current)</span></a>
         </li>
-        <li {% if request.path == '/opentickets/' %} class="active"{% endif %}> 
+        <li {% if request.path == '/openmemos/' %} class="active"{% endif %}> 
 
-            <a href="{% url 'app:open-tickets' %}"><i class="fa fa-envelope-open"></i> Open Tickets</a>
+            <a href="{% url 'app:open-memos' %}"><i class="fa fa-envelope-open"></i> Open memos</a>
         </li>
         {% endif %}
 
@@ -25,13 +25,13 @@
         <li>
             <li {% if request.path == '/completed/' %} class="active"{% endif %}> 
     
-            <a href="{% url 'app:completed-tickets' %}">Completed Tickets</a>
+            <a href="{% url 'app:completed-memos' %}">Completed memos</a>
         </li>
     </li>
         {% endif %}
   {% if request.user.is_cleared %}
     <li {% if request.path == '/archive/' %} class="active"{% endif %}> 
-        <a href="{% url 'app:ticket-archive' %}"><i class="fa fa-briefcase"></i> Archive</a>
+        <a href="{% url 'app:memo-archive' %}"><i class="fa fa-briefcase"></i> Archive</a>
     </li>
     {% endif %}
 

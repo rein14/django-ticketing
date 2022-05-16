@@ -18,7 +18,7 @@
     {{ title }}</span></h5>
 
     {% if request.user.is_cleared%}
-    <div class="btn-toolbar mb-2 mb-md-0">
+    {% comment %} <div class="btn-toolbar mb-2 mb-md-0">
 
     <div class="btn-toolbar mb-2 mb-md-0 me-2">   <a href="{% get_object_url 'create' %}"
       class="btn btn-sm btn-gray-800 d-inline-flex align-items-center ajax-load-form ">
@@ -41,6 +41,22 @@
 </div>
   
 
+</div> {% endcomment %}
+<div class="dropdown">
+  <button class="btn btn-gray-800 d-inline-flex align-items-center me-2 dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <svg class="icon icon-xs me-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+      New Task
+  </button>
+  <div class="dropdown-menu dashboard-dropdown dropdown-menu-start mt-2 py-1">
+      <a class="dropdown-item d-flex align-items-center ajax-load-form" href="{% get_object_url 'create' %}">
+        <i class="far fa-sticky-note me-2" aria-hidden="true"></i>
+                  Create {{ model_verbose_name }}
+      </a>
+      <a class="dropdown-item d-flex align-items-center ajax-load-form" href="{% url 'app:folder-create' %}">
+        <i class="far fa-folder me-2" aria-hidden="true"></i>          Create Folder
+      </a>
+
+  </div>
 </div>
     {% endif %}
 

@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     'app',
     'widget_tweaks',
     'django_cleanup',
-    'bootstrap_datepicker_plus',
+    # 'bootstrap_datepicker_plus',
     'pwa',
     'notifications',
     'webpush',

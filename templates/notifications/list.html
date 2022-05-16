@@ -25,14 +25,14 @@
 
 
    <div class="btn-toolbar mb-2 mb-md-0">
-
+{% if notifications %}
   <div class="btn-toolbar mb-2 mb-md-0 me-2"> <a href="{% url 'notifications:mark_all_as_read'%}"
       class="btn btn-sm btn-success d-inline-flex align-items-center" style="color:white">
       <i class="fa fa-check me-2"></i> Mark all notications as read</a>
 
   </div>
 
-  
+  {% endif %}
 
 </div>
  
@@ -75,6 +75,7 @@
      <table class="table table-flush table-hover" id="table-ajax" data-page-length='10'>
  
        <thead class="thead-light">
+         
          <tr>
            <th>actor</th>
 
