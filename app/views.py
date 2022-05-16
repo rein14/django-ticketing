@@ -283,8 +283,10 @@ class MemoFolderCreate(LoginRequiredMixin, AjaxCreateView):
         folder_pk = self.request.session.get('last_folder_pk')
 
         folder = get_object_or_404(Folder, id=folder_pk)
+
         form.instance.folder = folder
         self.object = form.save()
+        memo = get_object_or_404(Memo, id=self.object.id)
         if file_upload.is_valid():
             file_upload.instance = self.object
             file_upload.save()

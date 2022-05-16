@@ -4,7 +4,6 @@
 {{form.media.css}}
 {% endblock extracss %}
 <form  enctype="mu  ltipart/form-data" method="post" action="{{ request.path }}" {% if 'comment' in request.path %} class="ajax-save-update-form"{% else %} class="ajax-save-form"{%endif%} id="ajax-save">
-    {{request.path}}
     {{request.META.HTTP_REFERER|escape}}
     {% csrf_token %}
     {{ request.path }}
