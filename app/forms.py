@@ -73,7 +73,7 @@ class MemoUpdateForm(BootstrapHelperForm, forms.ModelForm):
         fields = ('title', 'date_sent', 'description', 'sent_by')
         widgets = {
             # 'date_sent': DatePickerInput(format='%Y-%m-%d'),
-            # 'assigned_to': MemoWidget,
+            #   'assigned_to': MemoWidget,
         }
 
 
@@ -130,4 +130,4 @@ class FileForm(BootstrapHelperForm, forms.ModelForm):
 # )
 
 MemoFileFormSet = inlineformset_factory(
-    Memo, File, form=FileForm, extra=1, can_delete=False)
+    Memo, File, form=FileForm, extra=2, can_delete=False)
