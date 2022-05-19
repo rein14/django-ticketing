@@ -2,11 +2,10 @@
 
 {% for folder in folder_list  %}
          <tr id="{{folder.pk}}">
-            <a href="{{ folder.get_absolute_url }}">
- 
+         
          <td class="fw-bold"><a href="{{ folder.get_absolute_url }}"><i class="far fa-folder me-2"></i> </a>
          
-                {{folder.title}}       
+                 {{folder.title}}        </a>
 
          </td>
          
@@ -55,6 +54,5 @@
          
          
          </td>
-        </a>
       </tr>
          {% endfor %}
