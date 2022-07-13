@@ -18,10 +18,12 @@ Django ticketing tracks work progress with
 ## Requierements
 * Django 2.0+
 * Python 3.6+
-* jQuery (full version, not "slim", for drag/drop prioritization)
+* jQuery (full version, not "slim", for drag/drop prioritization0(
 * JQuery DataTables
 * Bootstrap (to work with provided templates, though you can override them)
-      
+* Django-notifications
+* Django-pwa
+
 ## How to use it
 
 ```bash
