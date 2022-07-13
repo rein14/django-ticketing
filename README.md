@@ -13,6 +13,10 @@ Batch-export tasks in CSV Format
 Multiple file attachments per task (see settings)
 Integrated mail tracking (unify a task list with an email box)
 
+ * Bullet list
+              * Nested bullet
+                  * Sub-nested bullet etc
+          * Bullet list item 2
 ## How to use it
 
 ```bash
