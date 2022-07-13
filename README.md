@@ -1,22 +1,27 @@
 
 Django ticketing tracks work progress with
 ##Features
-Drag and drop task prioritization
-Email task notification
-Search
-Comments on tasks
-Public-facing submission form for tickets
-Mobile-friendly (work in progress)
-Separate view for My Tasks (across lists)
-Batch-import tasks via CSV
-Batch-export tasks in CSV Format
-Multiple file attachments per task (see settings)
-Integrated mail tracking (unify a task list with an email box)
+* User friendly dashboard
+* task prioritization
+* Push Notifications
+* In app notification
+* Email task notification
+* Search
+* Comments on tasks
+* Mobile-friendly
+* Separate view for My Tasks (across lists)
+* Batch-import tasks via CSV
+* Batch-export tasks in CSV Format
+* Multiple file attachments per task (see settings)
+* Multiple task assignment assignment with (select2)
 
- * Bullet list
-              * Nested bullet
-                  * Sub-nested bullet etc
-          * Bullet list item 2
+## Requierements
+* Django 2.0+
+* Python 3.6+
+* jQuery (full version, not "slim", for drag/drop prioritization)
+* JQuery DataTables
+* Bootstrap (to work with provided templates, though you can override them)
+      
 ## How to use it
 
 ```bash
