@@ -1,7 +1,8 @@
- #Demo: <http://demotick.herokuapp.com/>
+# Demo: <http://demotick.herokuapp.com/>
  
 Django ticketing tracks work progress with
-##Features
+
+## Features
 * User friendly dashboard
 * task prioritization
 * Push Notifications
@@ -9,10 +10,6 @@ Django ticketing tracks work progress with
 * Email task notification
 * Search
 * Comments on tasks
-* Mobile-friendly
-* Separate view for My Tasks (across lists)
-* Batch-import tasks via CSV
-* Batch-export tasks in CSV Format
 * Multiple file attachments per task (see settings)
 * Multiple task assignment assignment with (select2)
 
