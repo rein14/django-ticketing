@@ -1,6 +1,6 @@
 # Demo: <http://demotick.herokuapp.com/>
  
-Django ticketing tracks work progress with
+Ticketing app made with django. Track documents and task progress with email notifications and push notifications
 
 ## Features
 * User friendly dashboard
